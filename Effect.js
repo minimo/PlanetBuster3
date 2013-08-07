@@ -24,22 +24,27 @@ pb3.Effect = tm.createClass({
         this.vx = 0;            //移動量
         this.vy = 0;            //移動量
         this.blendMode = "souece-over";
-        this.time = 1;
+        this.time = 0;
 
         this.addEventListener("removed", function() {
             this.using = false;
         });
+//        tm.app.CircleShape(32, 32).setPosition(0, 0).addChildTo(this);
     },
     update: function() {
         this.x += this.vx;
         this.y += this.vy;
         this.vx *= this.brake;
         this.vy *= this.brake;
-        if (this.time % this.wait == 0) {
+        if (this.time != 0 && this.time % this.wait == 0) {
             this.nowFrame++;
             if (this.nowFrame > this.numFrame+this.startFrame-1) {
-                this.remove();
-                return;
+                if (this.loop) {
+                    this.nowFrame = this.startFrame;
+                } else {
+                    this.remove();
+                    return;
+                }
             }
             this.setFrameIndex(this.nowFrame, this.width, this.height);
         }
@@ -70,7 +75,7 @@ pb3.effects.init = function() {
         return n;
     }
 
-    pb3.effects.enterEffect = function(name, x, y, vx, vy) {
+    pb3.effects.enter = function(name, x, y, vx, vy) {
         var data = effectData[name] || null;
         x = x || 160;
         y = y || 160;
@@ -82,22 +87,23 @@ pb3.effects.init = function() {
             e = this[i];
             if (!e.using){
                 //情報の初期化とコピー
-                e.image = tm.asset.AssetManager.get(data.name);
+                e.image = tm.asset.AssetManager.get(name);
                 e.x = x;
                 e.y = y;
                 e.vx = vx;
                 e.vy = vy;
                 e.width = data.w;
                 e.height = data.h;
-                e.startFrame = data.start;
-                e.numFrame = data.frame;
-                e.nowFrame = data.start;
-                e.wait = data.wait;
-                e.blendMode = data.blend;
-                e.brake = data.brake;
-                e.under = data.under;
+                e.startFrame = data.start || 0;
+                e.numFrame = data.frame || 1;
+                e.nowFrame = data.start || 0;
+                e.wait = data.wait || 3;
+                e.blendMode = data.blend || 'source-over';
+                e.brake = data.brake || 1;
+                e.under = data.under || false;
                 e.sound = data.sound;
-                e.time = 1;
+                e.loop = data.loop || false;
+                e.time = 0;
                 e.particle = false;
                 e.alpha = 1.0;
                 e.using = true;
@@ -109,28 +115,39 @@ pb3.effects.init = function() {
         }
         return null;
     }
+
+    //爆発エフェクト投入
+    pb3.effects.enterExplode = function(level, x, y, vx, vy) {
+    }
 };
 
 
 //////////////////////////////////////////////////////////////////////////////
 //エフェクトデータ
-//添字		名称
-//name		画像名
-//w,h		画像サイズ
-//start		アニメーション開始フレーム番号
-//frame		アニメーションフレーム数
-//wait		アニメーション更新間隔
-//blend		アルファブレンド処理(default:'source-over')
-//brake		慣性移動ブレーキ係数(default:1.0)
-//under		下位レイヤへの追加(default:false)
-//sound		再生サウンド(default:無し)
+//添字      名称
+//name      画像名
+//w,h       画像サイズ
+//start     アニメーション開始フレーム番号
+//frame     アニメーションフレーム数
+//wait      アニメーション更新間隔
+//blend     アルファブレンド処理(default:'source-over')
+//brake	    慣性移動ブレーキ係数(default:1.0)
+//under	    下位レイヤへの追加(default:false)
+//sound	    再生サウンド(default:無し)
+//loop      フレーム再生ループフラグ(delault: false)
 //////////////////////////////////////////////////////////////////////////////
 var effectData = {
 //自機系
-'shotburn':     {name: 'shotburn',	w: 16, h: 16, start: 0, frame: 8, wait: 3, blend: 'source-over', brake: 0.99 },
+'shotburn':     { w:16, h:16, start: 0, frame: 8, wait: 3, blend: 'source-over', brake: 0.99 },
 
-//弾消エフェクト
-'vanish1':  	{name: 'vanish1',	w: 16, h: 16, start: 0, frame: 8, wait: 3, blend: 'lighter', brake: 1.0 },
+//敵特殊効果
+'roter1':       { w:32, h:32, start: 8, frame: 4, wait: 1, blend: 'source-over', loop: true},
+
+//弾消
+'vanish1':  	{ w:16, h:16, start: 0, frame: 8, wait: 3, blend: 'lighter', brake: 0.99 },
+
+//爆発
+'explode1':  	{ w:16, h:16, start: 0, frame: 8, wait: 3, blend: 'lighter', brake: 0.99 },
 }
 
 

@@ -57,7 +57,6 @@ Player = tm.createClass({
         this.time = 0;
     },
     update: function() {
-
         if (this.startup) {
             var self = this;
             this.x = SCREEN_WIDTH/2;
@@ -118,12 +117,12 @@ Player = tm.createClass({
             //ショット
             if (this.shotON) {
                 if (this.time % 4 == 0) {
-                    pb3.shots.enterShot(0, this.x-12, this.y- 8, -3, 10);
-                    pb3.shots.enterShot(0, this.x- 7, this.y- 8, -1, 10);
-                    pb3.shots.enterShot(0, this.x- 2, this.y-16,  0, 10);
-                    pb3.shots.enterShot(0, this.x+ 2, this.y-16,  0, 10);
-                    pb3.shots.enterShot(0, this.x+ 7, this.y- 8,  1, 10);
-                    pb3.shots.enterShot(0, this.x+12, this.y- 8,  3, 10);
+                    pb3.shots.enter(0, this.x-12, this.y- 8, -3, 10);
+                    pb3.shots.enter(0, this.x- 7, this.y- 8, -1, 10);
+                    pb3.shots.enter(0, this.x- 2, this.y-16,  0, 10);
+                    pb3.shots.enter(0, this.x+ 2, this.y-16,  0, 10);
+                    pb3.shots.enter(0, this.x+ 7, this.y- 8,  1, 10);
+                    pb3.shots.enter(0, this.x+12, this.y- 8,  3, 10);
                 }
             }
         }
@@ -156,11 +155,11 @@ Player = tm.createClass({
         }
         
         //バックファイア
-        var p = Particle(20, 1.0, 0.95, null, 128, 128, 255).addChildTo(app.currentScene);
+        var p = pb3.Particle(20, 1.0, 0.95, null, 128, 128, 255).addChildTo(app.currentScene);
         p.x = this.x;
         p.y = this.y+16;
         p.vy = 1;
-        var p = Particle(20, 1.0, 0.95, null, 128, 128, 255).addChildTo(app.currentScene);
+        var p = pb3.Particle(20, 1.0, 0.95, null, 128, 128, 255).addChildTo(app.currentScene);
         p.x = this.x;
         p.y = this.y+16;
         p.vy = 1;
@@ -196,11 +195,11 @@ var PlayerBit = tm.createClass({
 
         //ショット
         if (this.time % 4 == 0 && this.parent.shotON && this.shotON) {
-            pb3.shots.enterShot(1, g.x + this.offset_x, g.y + this.offset_y, this.rotation, 15);
+            pb3.shots.enter(1, g.x + this.offset_x, g.y + this.offset_y, this.rotation, 15);
         }
 
         //バックファイア
-        var p = Particle(20, 1.0, 0.95, null, 128, 128, 255).addChildTo(app.currentScene);
+        var p = pb3.Particle(20, 1.0, 0.95, null, 128, 128, 255).addChildTo(app.currentScene);
         p.x = g.x;
         p.y = g.y+5;
         p.vy = 1;

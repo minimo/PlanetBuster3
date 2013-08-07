@@ -4,22 +4,14 @@
  *
 */
 
+pb3.particles = [];
 
-particles = [];
-
-Particle = tm.createClass({
+pb3.Particle = tm.createClass({
     superClass: tm.app.CanvasElement,
     alpha: 1.0,
     alphaDecayRate: 0.85,
     size: 0,
     image: null,
-
-    /**
-     * @param {number} size サイズ
-     * @param {number=} initialAlpha アルファ初期値
-     * @param {number=} alphaDecayRate アルファ減衰率
-     * @param {Image=} image 画像
-     */
     init: function(size, initialAlpha, alphaDecayRate, image, r, g, b) {
         this.superInit();
         this.width = this.height = this.size = size;
@@ -68,13 +60,13 @@ Particle = tm.createClass({
 });
 
 
-particles.init = function() {
+pb3.particles.init = function() {
     for (var i = 0; i < MAX_PARTICLES; i++ ){
-        var e = new Particle();
+        var e = new pb3.Particle();
         this.push(e);
     }
 
-    effects.numUsing = function() {
+    particles.numUsing = function() {
         var n = 0;
         for (var i = 0,len = this.length; i < len; i++ ){
             var b = this[i]; 
@@ -82,7 +74,7 @@ particles.init = function() {
         }
         return n;
     }
-    effects.numNotUsing = function() {
+    particles.numNotUsing = function() {
         var n = 0;
         for (var i = 0,len = this.length; i < len; i++ ){
             var b = this[i];
@@ -91,7 +83,7 @@ particles.init = function() {
         return n;
     }
 
-    effects.enterParticle = function(name,x,y) {
+    particles.enter = function(name,x,y) {
         var data = effectData[name];
         if (data === undefined)return null;
         if (x === undefined) x = 160;
@@ -109,7 +101,7 @@ particles.init = function() {
     }
 };
 
-
+Particle = pb3.particle;
 
 
 

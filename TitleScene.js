@@ -12,7 +12,7 @@ pb3.TitleScene = tm.createClass({
 
     init: function() {
         this.superInit({
-            title: "BulletCarnival",
+            title: "PlanetBuster",
             width: SCREEN_WIDTH,
             height: SCREEN_HEIGHT
         });

@@ -75,7 +75,7 @@ pb3.bullets.init = function(){
         return n;
     }
 
-    pb3.bullets.enterBullet = function(parent, type, size, color) {
+    pb3.bullets.enter = function(parent, type, size, color) {
         type = type || 0;
         size = size || 16;
         color = color || 0;
@@ -87,8 +87,6 @@ pb3.bullets.init = function(){
                 b.width = size;
                 b.height = size;
                 b.size = size;
-//                b.originX = ~~(size/2);
-//                b.originY = ~~(size/2);
                 b.color = "hsl({0}, 50%, 50%)".format(color);
                 b.using = true;
                 b.parent = parent;
@@ -159,6 +157,7 @@ pb3.shots.init = function(){
         this.push(s);
     }
 
+    //使用数
     pb3.shots.numUsing = function() {
         var n = 0;
         for (var i = 0,len = this.length; i < len; i++ ){
@@ -167,6 +166,8 @@ pb3.shots.init = function(){
         }
         return n;
     }
+    
+    //未使用数
     pb3.shots.numNotUsing = function() {
         var n = 0;
         for (var i = 0,len = this.length; i < len; i++ ){
@@ -176,7 +177,9 @@ pb3.shots.init = function(){
         return n;
     }
 
-    pb3.shots.enterShot = function(type, x, y, rot, power) {
+    //弾投入
+    pb3.shots.enter = function(type, x, y, rot, power) {
+        power = power || 1;
         var s;
         for (var i = 0,len = this.length; i < len; i++) {
             s = this[i];

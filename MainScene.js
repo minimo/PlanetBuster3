@@ -24,6 +24,13 @@ pb3.MainScene = tm.createClass({
     	}
     	this.addChild(sc);
 
+        //ステージ進行
+        this.stageNum = 1;
+        this.advance = 0;
+        this.phase = 0;
+        this.pattern = stagePattern1;
+        this.stageData = stageData1;
+
         //デバッグ表示セットアップ
         if (_DEBUG) this.setupDebug();
 
@@ -39,7 +46,7 @@ pb3.MainScene = tm.createClass({
         pb3.effects.init();
 
         // 攻撃パターンオブジェクトを作成
-        var pattern = tm.bulletml.AttackPattern(pb3.bulletPattern['test']);
+        var bulletPattern = tm.bulletml.AttackPattern(pb3.bulletPattern['test']);
 
         // 攻撃パターンのオプション設定
         var param = {
@@ -51,7 +58,7 @@ pb3.MainScene = tm.createClass({
             updateProperties: true,
             // 弾生成関数
             bulletFactory: function(spec) {
-                var b = pb3.bullets.enterBullet(null, 0, 16, 100);
+                var b = pb3.bullets.enter(null, 0, 16, 100);
                 return b;
             },
             // 弾が画面内にあることを判定する関数
@@ -60,19 +67,56 @@ pb3.MainScene = tm.createClass({
             }
         };
 
+/*
         // 敵を生成
         var enemy = tm.app.CircleShape(32, 32).setPosition(SCREEN_WIDTH/2, 100).addChildTo(this);
         // 弾発射関数を登録
-        enemy.attack = pattern.createTicker(param);
+        enemy.attack = bulletPattern.createTicker(param);
         enemy.time = 0;
         enemy.update = function() {
             this.x = 160+Math.sin(this.time*toRad)*60;
-//            if (this.time % 2 == 0)
             this.attack();
             this.time++;
         }
+ */
 	    this.time = 0;
     },
+    update: function() {
+        //出現テーブルに従って敵を投入
+        if (this.time > 180 && this.time % 180 == 0) {
+            this.enterEnemy();
+        }
+
+        //当たり判定チェック
+        //ショット＞敵
+		this.time++;
+    },
+    enterEnemy: function() {
+        for (var i = 0; i < 5; i++) {
+            var ad = this.stageData.charAt(this.advance);
+            var pattern = this.pattern[ad];
+            for( var j in pattern ){
+                var obj = pattern[j];
+                if (obj.name != 'nop') {
+                    pb3.enemies.enter(obj.name, obj.x, obj.y);
+                }
+            }
+            this.advance++;
+        }
+    },
+    //オープニング処理開始
+    opening: function() {
+    },
+    //イベント処理開始
+    event: function() {
+    },
+    //ステージ開始
+    stageStart: function() {
+    },
+    //ステージクリア
+    stageClear: function() {
+    },
+    //デバッグ表示セットアップ
     setupDebug: function() {
         var d1 = tm.app.Label("bullets: 0/0");
         d1.fillStyle = "white";
@@ -82,8 +126,8 @@ pb3.MainScene = tm.createClass({
         d1.width = 200;
         d1.update = function() {
             this.text = "bullet:"+pb3.bullets.numUsing()+"/"+pb3.bullets.numNotUsing();
-	    }
-    	this.addChild(d1);
+        }
+        this.addChild(d1);
 
         var d2 = tm.app.Label("enemy: 0/0");
         d2.fillStyle = "white";
@@ -93,8 +137,8 @@ pb3.MainScene = tm.createClass({
         d2.width = 200;
         d2.update = function() {
             this.text = "enemy:"+pb3.enemies.numUsing()+"/"+pb3.enemies.numNotUsing();
-	    }
-    	this.addChild(d2);
+        }
+        this.addChild(d2);
 
         var d3 = tm.app.Label("shot: 0/0");
         d3.fillStyle = "white";
@@ -104,8 +148,8 @@ pb3.MainScene = tm.createClass({
         d3.width = 200;
         d3.update = function() {
             this.text = "shot:"+pb3.shots.numUsing()+"/"+pb3.shots.numNotUsing();
-	    }
-    	this.addChild(d3);
+        }
+        this.addChild(d3);
 
         var d4 = tm.app.Label("effect: 0/0");
         d4.fillStyle = "white";
@@ -115,19 +159,7 @@ pb3.MainScene = tm.createClass({
         d4.width = 200;
         d4.update = function() {
             this.text = "effect:"+pb3.effects.numUsing()+"/"+pb3.effects.numNotUsing();
-	    }
-    	this.addChild(d4);
-    },
-    update: function() {
-		this.time++;
-    },
-    //オープニング処理開始
-    opening: function() {
-    },
-    //ステージ開始
-    stagestart: function() {
-    },
-    //ステージクリア
-    stageclear: function() {
+        }
+        this.addChild(d4);
     },
 });

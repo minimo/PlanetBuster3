@@ -21,7 +21,8 @@ var ASSETS = {
     "shotburn":     "assets/shotburn.png",
     
     //敵機
-    "enemy1":       "assets/enemy1.png",
+    "SkyFish":      "assets/enemy_skyfish.png",
+    "roter1":       "assets/enemy_roter.png",
 
     //ボス
     "boss":         "assets/boss1b.png", 

@@ -7,12 +7,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{64E9
 		BulletPattern.js = BulletPattern.js
 		Effect.js = Effect.js
 		Enemy.js = Enemy.js
-		EnemyPattern.js = EnemyPattern.js
+		EnemyData.js = EnemyData.js
+		EnemySpec.js = EnemySpec.js
 		main.js = main.js
 		MainScene.js = MainScene.js
 		Particle.js = Particle.js
 		PlanetBuster3.js = PlanetBuster3.js
 		Player.js = Player.js
+		StageData.js = StageData.js
 		TitleScene.js = TitleScene.js
 	EndProjectSection
 EndProject

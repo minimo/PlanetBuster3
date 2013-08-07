@@ -1,6 +1,7 @@
 /*
  *  PlanetBuster3
  *  bulletPattern.js
+ *  弾幕パターン定義
  *  2013/06/21
  *  @auther minimo  
  *  This Program is MIT license.
@@ -9,6 +10,27 @@
 //弾幕定義作成
 pb3.bulletPattern = [];
 CreateBulletPattern = function() {
+
+    // 攻撃パターンのオプション設定
+    pb3.defaultOptionParam = {
+        // 狙う対象
+        target: pb3.player,
+        //発射地点オフセット
+        offsetX: 0,
+        offsetY: 0,
+        updateProperties: true,
+        // 弾生成関数
+        bulletFactory: function(spec) {
+            var b = pb3.bullets.enter(null, 0, 16, 100);
+            return b;
+        },
+        // 弾が画面内にあることを判定する関数
+        isInsideOfWorld: function(b) {
+           return -32<b.x && b.x<SCREEN_WIDTH+32 && -32<b.y && b.y<SCREEN_HEIGHT+32;
+        }
+    };
+
+
     var shotAngleRate = 10;
     var shotSpeed = 1;
     //自機狙い弾
