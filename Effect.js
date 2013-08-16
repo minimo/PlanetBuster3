@@ -138,7 +138,7 @@ pb3.effects.init = function() {
 //////////////////////////////////////////////////////////////////////////////
 var effectData = {
 //自機系
-'shotburn':     { w:16, h:16, start: 0, frame: 8, wait: 3, blend: 'source-over', brake: 0.99 },
+'shotburn':     { w:16, h:16, start: 0, frame: 8, wait: 3, blend: 'lighter', brake: 1 },
 
 //敵特殊効果
 'roter1':       { w:32, h:32, start: 8, frame: 4, wait: 1, blend: 'source-over', loop: true},
@@ -147,8 +147,12 @@ var effectData = {
 'vanish1':  	{ w:16, h:16, start: 0, frame: 8, wait: 3, blend: 'lighter', brake: 0.99 },
 
 //爆発
-'explode1':  	{ w:16, h:16, start: 0, frame: 8, wait: 3, blend: 'lighter', brake: 0.99 },
+'explode1':  	{ w:32, h:32, start: 0, frame: 8, wait: 3, blend: 'lighter', brake: 0.9 },
 }
+
+
+
+
 
 
 

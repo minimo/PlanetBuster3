@@ -35,14 +35,42 @@ stageData1 = stageData1.replace(/ /g, "");	//空白を削除
 //name		敵名称
 //x,y		出現位置
 //rx,ry		出現位置ランダム範囲
-//offset	出現フレームオフセット（単位は秒）
+//delay	    出現フレームオフセット（単位:フレーム）
 //option	出現パターン設定用関数（省略可）
 //////////////////////////////////////////////////////////////////////////////
 var stagePattern1 = {
 _: [{name: 'nop'}],
 
 1:[
-	{name: 'SkyFish', x: 160, y: -64,rx: 0, ry: 0, offset: 0},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
+	{name: 'SkyFish', x: rand(260)+30, y: -rand(64)-64,rx: 0, ry: 0, delay: rand(60)},
 ],
 
 //ボス

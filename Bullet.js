@@ -14,21 +14,18 @@ MAX_BULLETS = 200;
 pb3.bullets = [];
 pb3.Bullet = tm.createClass({
     superClass: tm.app.Sprite,
-
+    using: false,
+    parent: null,
+    type: 0,
+    time: 0,
     init: function() {
         this.superInit("bullet1", 24, 24);
         this.setFrameIndex(0, 24, 24);
 
         this.blendMode = "lighter";
-        this.rotation = 0;
 
-        this.type = 0;
-        this.parent = null;
-        this.using = false;
-        this.time = 0;
-        
-        this.colSize = 2;   //当たり判定サイズ
-        
+        this.collision = tm.app.CanvasElement().addChildTo(this);
+
         this.addEventListener("removed", function() {
             this.using = false;
         });
@@ -40,7 +37,7 @@ pb3.Bullet = tm.createClass({
         this.rotation+=5;
         this.time++;
     },
-    //消失時エフェクト投入    
+    //消失時エフェクト投入
     vanish: function() {
         var r = this.rotation * toRad;
         var s = this.speed;
@@ -96,7 +93,7 @@ pb3.bullets.init = function(){
         return null;
     }
 
-    pb3.bullets.vanish = function(parent) {
+    pb3.bullets.erace = function(parent) {
         parent = parent || null;
         for (var i = 0,len = this.length; i < len; i++) {
             var b = this[i];
@@ -121,20 +118,20 @@ MAX_SHOTS = 200;
 pb3.shots = [];
 pb3.Shot = tm.createClass({
     superClass: tm.app.Sprite,
+    rad: 0,
+    vx: 0,
+    vy: 1,
+    speed: 10,
+    power: 10,
+    using: false,
     init: function() {
         this.superInit("shot1", 16, 16);
 
-        this.rad = 0;
-        this.vx = 0;
-        this.vy = 1;
-        this.speed = 10;
-        this.using = false;
-        this.blendMode = "lighter";
-        
-        this.power = 10;
-
         this.scaleX = 1.0;
         this.scaleY = 1.5;
+
+        this.collision = tm.app.CanvasElement().addChildTo(this);
+
         this.addEventListener("removed", function() {
             this.using = false;
         });
@@ -148,6 +145,10 @@ pb3.Shot = tm.createClass({
             this.remove();
         }
     },
+    vanish: function() {
+        pb3.effects.enter('shotburn', this.x, this.y, 0, 0);
+        this.remove();
+    }
 });
 
 //自機ショット初期化
@@ -190,12 +191,20 @@ pb3.shots.init = function(){
                     s.height = 16;
                     s.scaleX = 1.0;
                     s.scaleY = 1.5;
+                    s.collision.x = -2;
+                    s.collision.y = -2;
+                    s.collision.width = 4;
+                    s.collision.height = 4;
                 } else {
                     s.image = tm.asset.AssetManager.get('shot2');
                     s.width = 16;
                     s.height = 32;
-                    s.scaleX = 1.0;
-                    s.scaleY = 0.5;
+                    s.scaleX = 1.5;
+                    s.scaleY = 1.0;
+                    s.collision.x = -3;
+                    s.collision.y = -2;
+                    s.collision.width = 6;
+                    s.collision.height = 4;
                 }
                 s.x = x;
                 s.y = y;

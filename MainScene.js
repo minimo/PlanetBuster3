@@ -88,7 +88,19 @@ pb3.MainScene = tm.createClass({
         }
 
         //当たり判定チェック
-        //ショット＞敵
+        //敵＞ショット＆自機
+        for (var i = 0; i < MAX_ENEMIES; i++) {
+            var e = pb3.enemies[i];
+            if (!e.using)continue;
+            for (var j = 0; j < MAX_SHOTS; j++) {
+                var s = pb3.shots[j];
+                if (!s.using)continue;
+                if (e.isHitElement(s)) {
+                    e.def -= s.power;
+                    s.vanish();
+                }
+            }
+        }
 		this.time++;
     },
     enterEnemy: function() {
@@ -98,7 +110,7 @@ pb3.MainScene = tm.createClass({
             for( var j in pattern ){
                 var obj = pattern[j];
                 if (obj.name != 'nop') {
-                    pb3.enemies.enter(obj.name, obj.x, obj.y);
+                    pb3.enemies.enter(obj.name, obj.x, obj.y, obj.delay);
                 }
             }
             this.advance++;

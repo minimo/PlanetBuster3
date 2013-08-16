@@ -32,10 +32,12 @@ var ASSETS = {
     "vanish1":      "assets/vanish1.png",
 
     //特殊効果
+    "explode1":     "assets/explode1.png",
     "mask":         "assets/mask.png",
     "mask_w":       "assets/mask_w.png",
 
     //sounds
+//    "bomb1":        "assets/se_bomb1.mp3",
 }
 
 //namespace PlanetBuster3

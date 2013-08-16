@@ -14,20 +14,23 @@ pb3.enemies = [];
 //敵オブジェクト本体
 pb3.Enemy = tm.createClass({
     superClass: tm.app.Sprite,
+    using: false,
+    spec: null,
+    time: 0,
+    phase: 0,
+    def: 0,
+    point: 0,
+    beforeX: 0,
+    beforeY: 0,
     init: function() {
         this.superInit("SkyFish", 32, 32);
 
-        this.using = false;
-        this.spec = null;
-        this.time = 0;
-
-        this.phase = 0;
+        this.collision = tm.app.CanvasElement().addChildTo(this);
 
         this.addEventListener("removed", function() {
             this.using = false;
             this.release();
         });
-
 //        tm.app.CircleShape(32, 32).setPosition(0, 0).addChildTo(this);
     },
     setup: function() {},
@@ -35,8 +38,20 @@ pb3.Enemy = tm.createClass({
     attack: function() {},
     dead: function() {},
     release: function() {},
+    deadDefault: function() {
+        var vx = this.x-this.beforeX, vy = this.y-this.beforeY;
+        switch(this.burn) {
+            case 0:
+                pb3.effects.enterEffect("explode1", this.x, this.y, vx, vy);
+            default:
+                pb3.effects.enterEffect("explode1", this.x, this.y, vx, vy);
+        }
+    },
     update: function() {
-        if (this.time < 0)return;
+        if (this.time < 0){
+            this.time++;
+            return;
+        }
         if (this.time == 0)this.setup();
 
         this.algorithm();
@@ -48,6 +63,8 @@ pb3.Enemy = tm.createClass({
         if (this.x < -128 || this.y < -128 || this.x > SCREEN_WIDTH+128 || this.y > SCREEN_HEIGHT+128) {
             this.remove();
         }
+        this.beforeX = this.x;
+        this.beforeY = this.y;
         this.time++;
     },
 });
@@ -68,6 +85,7 @@ pb3.enemies.init = function(){
         }
         return n;
     }
+
     //配列未使用量
     pb3.enemies.numNotUsing = function() {
         var n = 0;
@@ -77,6 +95,7 @@ pb3.enemies.init = function(){
         }
         return n;
     }
+    
     //敵投入
     pb3.enemies.enter = function(name, x, y, delay) {
         name = name || '';
@@ -97,19 +116,27 @@ pb3.enemies.init = function(){
                 e.width = p.width;
                 e.height = p.height;
 
+                e.collision.x = p.colx;
+                e.collision.y = p.coly;
+                e.collision.width = p.colw;
+                e.collision.height = p.colh;
+
                 e.rotation = 0;
                 e.phase = 0;
                 e.scaleX = e.scaleY = 1;
+
+                e.def = p.def;
+                e.point = p.point;
 
                 var emptyFunc = function(){};
                 e.setup = p.setup || emptyFunc;
                 e.algorithm = p.algorithm || emptyFunc;
                 e.attack = p.attack || emptyFunc;
-                e.dead = p.dead || emptyFunc;
+                e.dead = p.dead || e.deadDefault;
                 e.release = p.release || emptyFunc;
 
                 e.time = -delay;
-                if (e.time < 0) e.time*=-1;
+                if (e.time > 0) e.time*=-1;
 
                 e.addChildTo(app.currentScene)
                 return e;

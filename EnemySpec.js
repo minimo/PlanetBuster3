@@ -37,20 +37,21 @@ pb3.EnemySpec['SkyFish'] = {
     name: 'SkyFish',
     width: 32,
     height: 32,
-    colx: 0,
-    coly: 0,
-    colw: 32,
+    colx: -16,  //当たり判定始点
+    coly: -16,
+    colw: 32,   //当たり判定サイズ
     colh: 32,
-    point: 300,
-    def: 30,
-    burn: 0,
-    layer: 1,
+    def: 30,    //耐久力
+    point: 300, //ポイント
+    burn: 0,    //爆発パターン
+    layer: 1,   //レイヤー番号
     type: ENEMY_NORMAL_SKY,
     setup: function() {
         this.roter = pb3.effects.enter('roter1', this.x, this.y, 0, 0);
         var self = this;
         this.tweener.
         to({ x: this.x, y: this.y + 160 }, 1000, "easeOutQuint").
+        wait(1500).
         to({ x: this.x, y: -64 }, 1500).
         call(function(){
             self.remove();
@@ -70,6 +71,8 @@ pb3.EnemySpec['SkyFish'] = {
     attack: function() {
     },
     dead: function() {
+        var vx = this.x-this.beforeX, vy = this.y-this.beforeY;
+        pb3.effects.enter("explode1", this.x, this.y, vx, vy);
     },
     release: function() {
         this.roter.remove();
