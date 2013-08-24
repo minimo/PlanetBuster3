@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{64E9AF14-7399-46B9-83FC-056FC63E4A1B}"
+	ProjectSection(SolutionItems) = preProject
+		bg.js = bg.js
+		bossdata.js = bossdata.js
+		bullet.js = bullet.js
+		config.js = config.js
+		lib\draw.text.js = lib\draw.text.js
+		effect.js = effect.js
+		enemy.js = enemy.js
+		enemydata.js = enemydata.js
+		game.js = game.js
+		main.js = main.js
+		player.js = player.js
+		sound.js = sound.js
+		stagedata1.js = stagedata1.js
+		stagedata2.js = stagedata2.js
+		stagedata3.js = stagedata3.js
+		title.js = title.js
+		lib\tl.enchant.js = lib\tl.enchant.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "media", "media", "{B040B1A5-BB41-4312-AE69-180BD2CBB59A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "html", "html", "{C1CFF6C5-4590-4122-80D8-C99CE38D27F7}"
+	ProjectSection(SolutionItems) = preProject
+		index.html = index.html
+		index2.html = index2.html
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
