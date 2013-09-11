@@ -21,7 +21,7 @@ CreateBulletPattern = function() {
         updateProperties: true,
         // 弾生成関数
         bulletFactory: function(spec) {
-            var b = pb3.bullets.enter(null, 0, 16, 100);
+            var b = pb3.bullets.enterToBulletML(null, 0, 16, 100);
             return b;
         },
         // 弾が画面内にあることを判定する関数
@@ -33,8 +33,9 @@ CreateBulletPattern = function() {
 
     var shotAngleRate = 10;
     var shotSpeed = 1;
+
     //自機狙い弾
-    pb3.bulletPattern['toPlayer'] = new BulletML.Root({
+    pb3.bulletPattern['SkyFish'] = new BulletML.Root({
         top: action(
             fire(direction(0, "absolute"), speed(shotSpeed), bullet()),
             repeat(1,

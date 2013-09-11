@@ -6,6 +6,15 @@
  *  This Program is MIT license.
  */
 
+//レイヤー区分け
+LAYER_FOREGROUND = 6;
+LAYER_EFFECT_UPPER = 5;
+LAYER_OBJECT_UPPER = 4;
+LAYER_OBJECT = 3;
+LAYER_OBJECT_UNDER = 2;
+LAYER_EFFECT_UNDER = 1;
+LAYER_BACKGROUND = 0;
+
 //メインシーン
 pb3.MainScene = tm.createClass({
     superClass: tm.app.Scene,
@@ -14,7 +23,7 @@ pb3.MainScene = tm.createClass({
 
         //通常表示レイヤー（数字が大きい程優先度が高い）
         this.layer = [];
-        for (var i = 0; i < LAYER_SYSTEM; i++) {
+        for (var i = 0; i < 7; i++) {
             var gr = tm.app.Object2D().addChildTo(this);
             this.layer.push(gr);
         }
@@ -43,7 +52,7 @@ pb3.MainScene = tm.createClass({
 
         //プレイヤー投入
         this.player = new Player;
-        this.addChildToLayer(LAYER_OBJECT, this.player);
+        this.player.addChildTo(this);
         pb3.player = this.player;
 
         //初期化
@@ -73,6 +82,7 @@ pb3.MainScene = tm.createClass({
                 return -32<b.x && b.x<SCREEN_WIDTH+32 && -32<b.y && b.y<SCREEN_HEIGHT+32;
             }
         };
+
 /*
         // 敵を生成
         var enemy = tm.app.CircleShape(32, 32).setPosition(SCREEN_WIDTH/2, 100).addChildTo(this);
@@ -133,13 +143,6 @@ pb3.MainScene = tm.createClass({
     },
     //ステージクリア
     stageClear: function() {
-    },
-    //任意レイヤーへオブジェクトを追加
-    addChildToLayer: function(layer, obj) {
-        layer = layer || LAYER_OBJECT;
-        if (layer < 0)return;
-        if (layer > LAYER_SYSTEM)return;
-        this.layer[layer].addChild(obj);
     },
     //デバッグ表示セットアップ
     setupDebug: function() {
@@ -208,5 +211,18 @@ pb3.MainScene = tm.createClass({
             }
         }
         this.addChild(d5);
+    },
+    addChildToLayer: function(obj, layer) {
+        layer = layer || LAYER_OBJECT;
+
+        if (layer == LAYER_FOREGROUND) {
+            this.foreground.addChild(obj);
+            return;
+        }
+        if (layer == LAYER_BACKGROUND) {
+            this.background.addChild(obj);
+            return;
+        }
+        this.layer[layer].addChild(obj);
     },
 });

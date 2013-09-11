@@ -5,11 +5,6 @@
  *  This Program is MIT license.
  */
 
-DIFF_EASY   = 0;
-DIFF_NORMAL = 1;
-DIFF_HARD   = 2;
-DIFF_HELL   = 3;
-
 //アセット登録
 var ASSETS = {
     //images
@@ -25,7 +20,7 @@ var ASSETS = {
     "roter1":       "assets/enemy_roter.png",
 
     //ボス
-    "boss":         "assets/boss1b.png", 
+//    "boss":         "assets/boss1b.png", 
 
     //敵弾
     "bullet1":      "assets/bullet1.png",
@@ -33,11 +28,18 @@ var ASSETS = {
 
     //特殊効果
     "explode1":     "assets/explode1.png",
+    "chip1":        "assets/chip1.png",
+    "chip2":        "assets/chip2.png",
     "mask":         "assets/mask.png",
     "mask_w":       "assets/mask_w.png",
 
     //sounds
-//    "bomb1":        "assets/se_bomb1.mp3",
+    "bomb1":        "assets/se_bomb1.mp3",
+    "bomb2":        "assets/se_bomb2.mp3",
+    "bomb3":        "assets/se_bomb3.mp3",
+    "bomb4":        "assets/se_bomb4.mp3",
+    "bomb5":        "assets/se_bomb5.mp3",
+    "bomb6":        "assets/se_bomb6.mp3",
 }
 
 //namespace PlanetBuster3
@@ -51,6 +53,7 @@ pb3.PlanetBuster3 = tm.createClass({
     highScore: 0,       //ハイスコア
     highScoreStage: 0,  //ハイスコア時ステージ
     difficulty: 0,      //難易度(0-3)
+    mainScene: null,
     init: function(id) {
         this.superInit(id);
 
@@ -64,7 +67,7 @@ pb3.PlanetBuster3 = tm.createClass({
 
         //弾幕パターン作成
         CreateBulletPattern();
-
+        
         this.keyboard = tm.input.Keyboard(window);
 
         this.replaceScene(tm.app.LoadingScene({
