@@ -35,7 +35,7 @@ CreateBulletPattern = function() {
     var shotSpeed = 1;
 
     //自機狙い弾
-    pb3.bulletPattern['SkyFish'] = new BulletML.Root({
+    pb3.bulletPattern.SkyFish = new BulletML.Root({
         top: action(
             fire(direction(0, "absolute"), speed(shotSpeed), bullet()),
             repeat(1,
@@ -52,6 +52,7 @@ CreateBulletPattern = function() {
             )
         )
     });
+    pb3.bulletPattern['SkyFish'] = pb3.bulletPattern.SkyFish.createTicker(pb3.defaultOptionParam);
 
     //テストパターン
     pb3.bulletPattern['test'] = new BulletML.Root({

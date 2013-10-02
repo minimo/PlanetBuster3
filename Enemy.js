@@ -50,6 +50,7 @@ pb3.Enemy = tm.createClass({
         if (this.time == 0)this.setup();
 
         this.algorithm();
+        this.attack();
 
         if (this.def < 1) {
             this.dead();

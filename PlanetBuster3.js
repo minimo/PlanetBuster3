@@ -65,9 +65,6 @@ pb3.PlanetBuster3 = tm.createClass({
         //DSL関数をロード
         BulletML.dsl(); 
 
-        //弾幕パターン作成
-        CreateBulletPattern();
-        
         this.keyboard = tm.input.Keyboard(window);
 
         this.replaceScene(tm.app.LoadingScene({

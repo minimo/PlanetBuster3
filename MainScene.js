@@ -52,39 +52,9 @@ pb3.MainScene = tm.createClass({
         pb3.enemies.init();
         pb3.effects.init();
 
-        // 攻撃パターンオブジェクトを作成
-        var bulletPattern = tm.bulletml.AttackPattern(pb3.bulletPattern['test']);
+        //弾幕パターン作成
+        CreateBulletPattern();
 
-        // 攻撃パターンのオプション設定
-        var param = {
-            // 狙う対象
-            target: this.player,
-            //発射地点オフセット
-            offsetX: 0,
-            offsetY: 0,
-            updateProperties: true,
-            // 弾生成関数
-            bulletFactory: function(spec) {
-                var b = pb3.bullets.enter(null, 0, 16, 100);
-                return b;
-            },
-            // 弾が画面内にあることを判定する関数
-            isInsideOfWorld: function(b) {
-                return -32<b.x && b.x<SCREEN_WIDTH+32 && -32<b.y && b.y<SCREEN_HEIGHT+32;
-            }
-        };
-/*
-        // 敵を生成
-        var enemy = tm.app.CircleShape(32, 32).setPosition(SCREEN_WIDTH/2, 100).addChildTo(this);
-        // 弾発射関数を登録
-        enemy.attack = bulletPattern.createTicker(param);
-        enemy.time = 0;
-        enemy.update = function() {
-            this.x = 160+Math.sin(this.time*toRad)*60;
-            this.attack();
-            this.time++;
-        }
- */
 	    this.time = 0;
     },
     update: function() {

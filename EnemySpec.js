@@ -62,27 +62,7 @@ pb3.EnemySpec['SkyFish'] = {
         call(function(){
             self.remove();
         });
-
-        //弾幕定義
-        // 攻撃パターンのオプション設定
-        var param = {
-            // 狙う対象
-            target: pb3.player,
-            //発射地点オフセット
-            offsetX: 0,
-            offsetY: 0,
-            updateProperties: true,
-            // 弾生成関数
-            bulletFactory: function(spec) {
-                var b = pb3.bullets.enterToBulletML(null, 0, 16, 100);
-                return b;
-            },
-            // 弾が画面内にあることを判定する関数
-            isInsideOfWorld: function(b) {
-                return -32<b.x && b.x<SCREEN_WIDTH+32 && -32<b.y && b.y<SCREEN_HEIGHT+32;
-            }
-        };
-        this.attack = pb3.bulletPattern['SkyFish'].createTicker(param);
+        this._attack = pb3.bulletPattern['SkyFish'];
     },
     //アルゴリズム
     algorithm: function() {
@@ -95,20 +75,18 @@ pb3.EnemySpec['SkyFish'] = {
         
         this.roter.x = this.x;
         this.roter.y = this.y;
-
-//        this.attack();
     },
-/*
     attack: function() {
+//        this._attack();
     },
     dead: function() {
         var vx = this.x-this.beforeX, vy = this.y-this.beforeY;
         pb3.effects.enter("explode1", this.x, this.y, vx, vy);
     },
-*/
     release: function() {
         this.roter.remove();
         delete this.roter;
+        delete this._attack;
     },
 };
 
