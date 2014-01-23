@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{64E9AF14-7399-46B9-83FC-056FC63E4A1B}"
+	ProjectSection(SolutionItems) = preProject
+		Bullet.js = Bullet.js
+		BulletPattern.js = BulletPattern.js
+		Effect.js = Effect.js
+		Enemy.js = Enemy.js
+		EnemySpec.js = EnemySpec.js
+		main.js = main.js
+		MainScene.js = MainScene.js
+		Particle.js = Particle.js
+		PlanetBuster3.js = PlanetBuster3.js
+		Player.js = Player.js
+		StageController.js = StageController.js
+		StageData.js = StageData.js
+		TitleScene.js = TitleScene.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "media", "media", "{B040B1A5-BB41-4312-AE69-180BD2CBB59A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "html", "html", "{C1CFF6C5-4590-4122-80D8-C99CE38D27F7}"
+	ProjectSection(SolutionItems) = preProject
+		index.html = index.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{658473CB-0CD2-4A85-A798-8008BFD5A572}"
+	ProjectSection(SolutionItems) = preProject
+		lib\bulletml.dsl.js = lib\bulletml.dsl.js
+		lib\bulletml.js = lib\bulletml.js
+		lib\bulletml.tmlib.js = lib\bulletml.tmlib.js
+		lib\bulletml.walker.js = lib\bulletml.walker.js
+		lib\math.js = lib\math.js
+		lib\tmlib.js = lib\tmlib.js
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
