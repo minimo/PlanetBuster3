@@ -3,19 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{64E9AF14-7399-46B9-83FC-056FC63E4A1B}"
 	ProjectSection(SolutionItems) = preProject
-		Bullet.js = Bullet.js
-		BulletPattern.js = BulletPattern.js
-		Effect.js = Effect.js
-		Enemy.js = Enemy.js
-		EnemySpec.js = EnemySpec.js
-		main.js = main.js
-		MainScene.js = MainScene.js
-		Particle.js = Particle.js
-		PlanetBuster3.js = PlanetBuster3.js
-		Player.js = Player.js
-		StageController.js = StageController.js
-		StageData.js = StageData.js
-		TitleScene.js = TitleScene.js
+		src\main.js = src\main.js
+		src\PlanetBuster3.js = src\PlanetBuster3.js
+		src\Player.js = src\Player.js
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "media", "media", "{B040B1A5-BB41-4312-AE69-180BD2CBB59A}"
@@ -35,8 +25,47 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{658473CB-0CD
 		lib\tmlib.js = lib\tmlib.js
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scene", "scene", "{130F2035-253A-440C-8614-FFC32DE00015}"
+	ProjectSection(SolutionItems) = preProject
+		src\scene\MainScene.js = src\scene\MainScene.js
+		src\scene\ResultScene.js = src\scene\ResultScene.js
+		src\scene\TitleScene.js = src\scene\TitleScene.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "enemy", "enemy", "{64C733CA-008B-4519-852E-B55F41C5DDC7}"
+	ProjectSection(SolutionItems) = preProject
+		src\enemy\Enemy.js = src\enemy\Enemy.js
+		src\enemy\EnemyData.js = src\enemy\EnemyData.js
+		src\enemy\EnemySpec.js = src\enemy\EnemySpec.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "effect", "effect", "{553A1CE4-A28A-448E-90A5-2E726711918D}"
+	ProjectSection(SolutionItems) = preProject
+		src\effect\Effect.js = src\effect\Effect.js
+		src\effect\Particle.js = src\effect\Particle.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bullet", "bullet", "{3A9C2F15-FD5E-4152-B4E8-AB6BFA0D29D1}"
+	ProjectSection(SolutionItems) = preProject
+		src\bullet\Bullet.js = src\bullet\Bullet.js
+		src\bullet\bulletPattern.js = src\bullet\bulletPattern.js
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "stage", "stage", "{9D7E00E3-48EB-40E9-86AE-3E6FBDA1D75E}"
+	ProjectSection(SolutionItems) = preProject
+		src\stage\StageController.js = src\stage\StageController.js
+		src\stage\StageData.js = src\stage\StageData.js
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{130F2035-253A-440C-8614-FFC32DE00015} = {64E9AF14-7399-46B9-83FC-056FC63E4A1B}
+		{64C733CA-008B-4519-852E-B55F41C5DDC7} = {64E9AF14-7399-46B9-83FC-056FC63E4A1B}
+		{553A1CE4-A28A-448E-90A5-2E726711918D} = {64E9AF14-7399-46B9-83FC-056FC63E4A1B}
+		{3A9C2F15-FD5E-4152-B4E8-AB6BFA0D29D1} = {64E9AF14-7399-46B9-83FC-056FC63E4A1B}
+		{9D7E00E3-48EB-40E9-86AE-3E6FBDA1D75E} = {64E9AF14-7399-46B9-83FC-056FC63E4A1B}
 	EndGlobalSection
 EndGlobal
