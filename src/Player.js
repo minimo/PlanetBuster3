@@ -11,10 +11,10 @@ Player = tm.createClass({
 
     init: function() {
         this.superInit("gunship1", 32, 32);
-        this.x = SCREEN_WIDTH/2;
-        this.y = SCREEN_HEIGHT*0.8;
-        this.bx = SCREEN_WIDTH/2;
-        this.by = SCREEN_HEIGHT*0.8;
+        this.x = SC_W/2;
+        this.y = SC_H*0.8;
+        this.bx = SC_W/2;
+        this.by = SC_H*0.8;
         this.setFrameIndex(4,32,32);
 
         this.startup = true;
@@ -59,20 +59,20 @@ Player = tm.createClass({
     update: function() {
         if (this.startup) {
             var self = this;
-            this.x = SCREEN_WIDTH/2;
-            this.y = SCREEN_HEIGHT+32;
+            this.x = SC_W/2;
+            this.y = SC_H+32;
             
             if (this.stageStartup) {
                 this.tweener.
-                to({x:SCREEN_WIDTH/2,y:SCREEN_HEIGHT/2+32}, 1000, "easeOutQuint").
-                to({x:SCREEN_WIDTH/2,y:SCREEN_HEIGHT-64},1000).
+                to({x:SC_W/2,y:SC_H/2+32}, 1000, "easeOutQuint").
+                to({x:SC_W/2,y:SC_H-64},1000).
                 call(function(){
                     self.shotON = true;
                     self.control = true;
                 });
             } else {
                 this.tweener.
-                to({x:SCREEN_WIDTH/2,y:SCREEN_HEIGHT-64}, 1000, "easeOutQuint").
+                to({x:SC_W/2,y:SC_H-64}, 1000, "easeOutQuint").
                 call(function(){
                     self.shotON = true;
                     self.control = true;
@@ -147,8 +147,8 @@ Player = tm.createClass({
         }
 
         //移動範囲の制限
-        this.x = Math.clamp(this.x, 16, SCREEN_WIDTH-16);
-        this.y = Math.clamp(this.y, 16, SCREEN_HEIGHT-16);
+        this.x = Math.clamp(this.x, 16, SC_W-16);
+        this.y = Math.clamp(this.y, 16, SC_H-16);
         
         //機体ロール
         if (this.time % 2 == 0) {
