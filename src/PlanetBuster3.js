@@ -58,7 +58,7 @@ pb3.PlanetBuster3 = tm.createClass({
         this.superInit(id);
 
         pb3.core = this;
-        this.resize(SCREEN_WIDTH, SCREEN_HEIGHT).fitWindow();
+        this.resize(SC_W, SC_H).fitWindow();
         this.fps = 60;
         this.background = "rgba(0, 0, 0, 0)";
 

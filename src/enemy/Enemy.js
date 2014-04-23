@@ -61,7 +61,7 @@ pb3.Enemy = tm.createClass({
             this.dead();
             this.remove();
         }
-        if (this.x < -128 || this.y < -128 || this.x > SCREEN_WIDTH+128 || this.y > SCREEN_HEIGHT+128) {
+        if (this.x < -128 || this.y < -128 || this.x > SC_W+128 || this.y > SC_H+128) {
             this.remove();
         }
         this.beforeX = this.x;

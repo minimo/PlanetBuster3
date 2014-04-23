@@ -174,7 +174,7 @@ pb3.Shot = tm.createClass({
     update: function() {
         this.x+=this.vx*this.speed;
         this.y-=this.vy*this.speed;
-        if (-10<this.x && this.x<SCREEN_WIDTH+10 && -10<this.y && this.y<SCREEN_HEIGHT+10) {
+        if (-10<this.x && this.x<SC_W+10 && -10<this.y && this.y<SC_H+10) {
         } else {
             this.using = false;
             this.remove();

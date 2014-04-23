@@ -26,7 +26,7 @@ CreateBulletPattern = function() {
         },
         // 弾が画面内にあることを判定する関数
         isInsideOfWorld: function(b) {
-           return -32<b.x && b.x<SCREEN_WIDTH+32 && -32<b.y && b.y<SCREEN_HEIGHT+32;
+           return -32<b.x && b.x<SC_W+32 && -32<b.y && b.y<SC_H+32;
         }
     };
 

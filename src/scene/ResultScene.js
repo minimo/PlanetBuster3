@@ -13,8 +13,8 @@ pb3.TitleScene = tm.createClass({
     init: function() {
         this.superInit({
             title: "PlanetBuster",
-            width: SCREEN_WIDTH,
-            height: SCREEN_HEIGHT
+            width: SC_W,
+            height: SC_H
         });
         this.time = 0;
         app.background = "rgba(0,0,0,0.2)";
@@ -73,8 +73,8 @@ pb3.ResultScene = tm.createClass({
         this.superInit({
             score: gamescore,
             msg: "Game Over",
-        	width: SCREEN_WIDTH,
-            height: SCREEN_HEIGHT
+        	width: SC_W,
+            height: SC_H
         });
         // 9leap に投稿したときだけ反応します
         tm.social.Nineleap.postRanking(gamescore,"SCORE:"+gamescore);
