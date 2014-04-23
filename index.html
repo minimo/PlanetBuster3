@@ -3,11 +3,23 @@
 <html>
     <head>
         <meta charset="UTF-8" />
+        <meta name="author" content="minimo">
         <meta name="viewport" content="width=device-width, user-scalable=no" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+        <style>
+            @font-face {
+                font-family: Orbitron;
+                src: url(font/Orbitron-Regular.ttf) format("truetype");
+            }
+            @font-face {
+                font-family: 'Ubuntu Mono';
+                src: url(font/UbuntuMono-Bold.ttf) format("truetype");
+            }
+        </style>
         
         <title>BulletCarnival</title>
-        
         <link rel="apple-touch-icon-precomposed" href="icon.png" />
 
         <script src="lib/mt.js"></script>
@@ -17,23 +29,29 @@
         <script src="lib/bulletml.dsl.js"></script>
         <script src="lib/bulletml.walker.js"></script>
         <script src="lib/bulletml.tmlib.js"></script>
+
         <script src="src/main.js"></script>
         <script src="src/PlanetBuster3.js"></script>
+        <script src="src/Player.js"></script>
+
+        <script src="src/enemy/Enemy.js"></script>
+        <script src="src/enemy/EnemySpec.js"></script>
+
         <script src="src/stage/StageData.js"></script>
-        <script src="src/effect/Particle.js"></script>
+
         <script src="src/scene/TitleScene.js"></script>
         <script src="src/scene/ResultScene.js"></script>
         <script src="src/scene/MainScene.js"></script>
-        <script src="src/Player.js"></script>
-        <script src="src/enemy/Enemy.js"></script>
-        <script src="src/enemy/EnemySpec.js"></script>
+
         <script src="src/effect/Effect.js"></script>
+        <script src="src/effect/Particle.js"></script>
+
         <script src="src/bullet/Bullet.js"></script>
         <script src="src/bullet/BulletPattern.js"></script>
     </head>
     
     <body>
-        <canvas id="world" width="320" height="320"></canvas>
+        <canvas id="world" width="640" height="640"></canvas>
     </body>
     
 </html>
