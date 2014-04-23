@@ -20,7 +20,7 @@ if (_DEBUG) {
 
 //スクリーンサイズ
 SC_W = 640;
-SC_H= 640;
+SC_H = 640;
 
 //難易度
 DIFF_EASY   = 0;
@@ -58,6 +58,6 @@ var rand = function(max) { return mt.nextInt(0, max); };    //乱数発生
 //アプリケーションメイン
 tm.main(function() {
     app = pb3.PlanetBuster3("#world");
-//    app.enableStats();
+    app.enableStats();
     app.run();
 });
