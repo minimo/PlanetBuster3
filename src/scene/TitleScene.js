@@ -7,79 +7,55 @@
  */
 
 //タイトルシーン
-pb3.TitleScene = tm.createClass({
-    superClass: tm.app.TitleScene,
+tm.define("pb3.TitleScene", {
+    superClass: tm.app.Scene,
 
     init: function() {
-        this.superInit({
-            title: "PlanetBuster",
-            width: SC_W,
-            height: SC_H
-        });
+        this.superInit();
         this.time = 0;
         app.background = "rgba(0,0,0,0.2)";
+
+        //バックグラウンドの追加
+/*
+        this.bg = tm.display.Sprite("bg1",3848, 1280).addChildTo(this);
+        this.bg.x = 0;
+        this.bg.y = 0;
+        this.bg.originX = this.bg.originY = 0;
+*/
+        var baseY = 200;
+
+        var t1 = this.title1 = tm.display.OutlineLabel("PlanetBuster3", 30).addChildTo(this);
+        t1.x = 320;
+        t1.y = baseY;
+        t1.fontFamily = "'UbuntuMono'";
+        t1.align     = "center";
+        t1.baseline  = "middle";
+        t1.fontSize = 70;
+        t1.fontWeight = 700;
+        t1.outlineWidth = 2;
+
+        var ct = this.clickortouch = tm.display.OutlineLabel("Click or Touch", 30).addChildTo(this);
+        ct.x = 320;
+        ct.y = 500;
+        ct.fontFamily = "'UbuntuMono'";
+        ct.align     = "center";
+        ct.baseline  = "middle";
+        ct.fontSize = 40;
+        ct.fontWeight = 700;
+        ct.outlineWidth = 2;
     },
+
     update: function() {
-        if (this.time % 20 == 0 ){
-            var x = rand(320);
-            var y = 400;
-            var sc = (rand(10)+5)/10;
-            var rot = rand(10)-5;
-            if (rot == 0)rot = 1;
-            var sp = rand(3)+2;
-            var color = rand(360);
-            var vertex = rand(3)+2;
-            for (var i = 0; i < rand(4)+2; i++ ){
-                var s = tm.app.Shape(64, 64);
-                s.color = "hsl({0}, 50%, 50%)".format(color+i*10*(rand(1)-1));
-                if (vertex == 2) {
-                    s.canvas.setColorStyle(s.color,s.color).strokeStar(32, 32, 32, 5);
-                } else {
-                    s.canvas.setColorStyle(s.color,s.color).strokePolygon(32, 32, 32, vertex);
-                }
-                s.x = x;
-                s.y = y;
-                s.rot = rot;
-                s.rotation+=i*2;
-                s.speed =sp;
-                s.scaleX = s.scaleY = sc-i*0.2;
-                s.time = 0;
-                s.update = function() {
-                    if (this.y < 160){
-                        this.alpha-=0.02;
-                        if (this.alpha < 0)this.remove();
-                    }
-                    this.y-=this.speed;
-                    this.rotation+=this.rot;
-                    if (this.y < -40) this.remove();
-                    this.time++;
-                }
-                this.addChild(s);
-            }
-        }
+/*
+        this.bg.x -=0.5;
+        if (this.bg.x < -2000)this.bg.x = 0;
+*/
         this.time++;
     },
-    onnextscene: function() {
-        app.background = "rgba(0, 0, 16, 0.8)";
-        app.replaceScene(pb3.MainScene());
-    }
-});
 
-//ゲーム結果シーン
-pb3.ResultScene = tm.createClass({
-    superClass: tm.app.ResultScene,
-
-    init: function() {
-        this.superInit({
-            score: gamescore,
-            msg: "Game Over",
-        	width: SC_W,
-            height: SC_H
-        });
-        // 9leap に投稿したときだけ反応します
-        tm.social.Nineleap.postRanking(gamescore,"SCORE:"+gamescore);
+    ontouchend: function() {
+        app.background = "rgba(0, 0, 0, 0.8)";
+        app.replaceScene(app.gameScene);
     },
-    onnextscene: function() {
-        app.replaceScene(pb3.TitleScene);
-    }
 });
+
