@@ -96,6 +96,8 @@ tm.define("pb3.Enemy", {
     update: function() {
         if (this.isDead) return;
         this.algorithm();
+
+        //スクリーン内入った判定
         if (this.isOnScreen) {
             if (this.x < -100 || this.x > SC_W+100 || this.y < -100 || this.y > SC_H+100) {
                 this.remove();
@@ -112,9 +114,7 @@ tm.define("pb3.Enemy", {
         }
 
         //親機が破壊された場合、自分も破壊
-        if (this.parentEnemy) {
-            if (this.parentEnemy.isDead) this.dead();
-        }
+        if (this.parentEnemy && this.parentEnemy.isDead) this.dead();
 
         this.beforeX = this.x;
         this.beforeY = this.y;
