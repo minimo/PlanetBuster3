@@ -112,7 +112,7 @@ tm.define("pb3.Bullet", {
 });
 
 tm.define("pb3.ShotBullet", {
-    superClass: "tm.display.Shape",
+    superClass: "tm.display.Sprite",
     layer: LAYER_SHOT,
     parentScene: null,
     player: null,
@@ -122,9 +122,14 @@ tm.define("pb3.ShotBullet", {
     defaultSpeed: 15,
     defaultPower: 1,
 
-    init: function(rotation, power) {
-        this.superInit(32, 32);
-        this.canvas = pb3.bulletGraphic["shot"];
+    init: function(rotation, power, type) {
+        if (type == 0) {
+            this.superInit("shot1", 16, 16);
+            this.setScale(3);
+        } else {
+            this.superInit("shot2", 16, 32);
+            this.setScale(2);
+        }
 
         this.rotation = rotation || 0;
         this.speed = this.defaultSpeed;
@@ -139,12 +144,10 @@ tm.define("pb3.ShotBullet", {
 
         //当り判定設定
         this.boundingType = "circle";
-        this.radius = 12;
-
-        //威力により大きさと判定を変更
-        if (power > 1) {
-            this.setScale(1.5);
-            this.radius = 20;
+        if (type == 0) {
+            this.radius = 6;
+        } else {
+            this.radius = 12;
         }
 
         this.beforeX = this.x;

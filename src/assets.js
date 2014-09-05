@@ -11,6 +11,8 @@ pb3.assets = {
     //images
     "bit":     "assets/images/bit1.png",
     "gunship": "assets/images/gunship1.png",
+    "shot1":     "assets/images/shot1.png",
+    "shot2":     "assets/images/shot2.png",
 
     //SE
     "explodeSmall":  "assets/sounds/sen_ge_taihou03.mp3", 

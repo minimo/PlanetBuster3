@@ -165,33 +165,33 @@ tm.define("pb3.Player", {
 
     enterShot: function() {
         var shotPower = 1;
-        pb3.ShotBullet(0, shotPower).addChildTo(this.parentScene).setPosition(this.x, this.y-16);
-        pb3.ShotBullet( 5, shotPower).addChildTo(this.parentScene).setPosition(this.x+16, this.y-16);
-        pb3.ShotBullet(-5, shotPower).addChildTo(this.parentScene).setPosition(this.x-16, this.y-16);
+        pb3.ShotBullet(0, shotPower, 0).addChildTo(this.parentScene).setPosition(this.x   , this.y-16);
+        pb3.ShotBullet(0, shotPower, 0).addChildTo(this.parentScene).setPosition(this.x+24, this.y-16);
+        pb3.ShotBullet(0, shotPower, 0).addChildTo(this.parentScene).setPosition(this.x-24, this.y-16);
 
         var x = this.x + this.bits[0].x;
         var y = this.y + this.bits[0].y;
-        pb3.ShotBullet( 10, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
+        pb3.ShotBullet( this.bits[0].rotation, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
 
         var x = this.x + this.bits[1].x;
         var y = this.y + this.bits[1].y;
-        pb3.ShotBullet(-10, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
+        pb3.ShotBullet( this.bits[1].rotation, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
 
         var x = this.x + this.bits[2].x;
         var y = this.y + this.bits[2].y;
-        pb3.ShotBullet( 10, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
+        pb3.ShotBullet( this.bits[2].rotation, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
 
         var x = this.x + this.bits[3].x;
         var y = this.y + this.bits[3].y;
-        pb3.ShotBullet(-10, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
+        pb3.ShotBullet( this.bits[3].rotation, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
     },
 
     //ビット展開
     openBit: function() {
         this.bits[0].tweener.clear().to({ x: 24, y:  8, rotation:  5, alpha:1}, 300);
         this.bits[1].tweener.clear().to({ x:-24, y:  8, rotation: -5,  alpha:1}, 300);
-        this.bits[2].tweener.clear().to({ x: 40, y: 16, rotation: 15, alpha:1}, 300);
-        this.bits[3].tweener.clear().to({ x:-40, y: 16, rotation:-15, alpha:1}, 300);
+        this.bits[2].tweener.clear().to({ x: 40, y: 16, rotation: 10, alpha:1}, 300);
+        this.bits[3].tweener.clear().to({ x:-40, y: 16, rotation:-10, alpha:1}, 300);
     },
 
     closeBit: function() {
