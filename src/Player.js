@@ -35,16 +35,14 @@ tm.define("pb3.Player", {
     shotInterval: 6,    //ショット間隔
 
     rollcount: 50,
-    rollmax: 8,
-    pitchcount: 0,
-    pitchmax: 8,
+    pitchcount: 50,
 
     parentScene: null,
 
     init: function() {
         this.superInit("gunship", 32, 32);
         this.setFrameIndex(4);
-        this.setScale(2);
+//        this.setScale(2);
 
         this.setupBody();
 
@@ -166,27 +164,26 @@ tm.define("pb3.Player", {
     },
 
     enterShot: function() {
-        var shotPower = this.level>4?2:1;
+        var shotPower = 1;
         pb3.ShotBullet(0, shotPower).addChildTo(this.parentScene).setPosition(this.x, this.y-16);
         pb3.ShotBullet( 5, shotPower).addChildTo(this.parentScene).setPosition(this.x+16, this.y-16);
         pb3.ShotBullet(-5, shotPower).addChildTo(this.parentScene).setPosition(this.x-16, this.y-16);
 
-        if (this.level > 0) {
-            var x = this.x + this.bits[0].x;
-            var y = this.y + this.bits[0].y;
-            pb3.ShotBullet( 10, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
-            var x = this.x + this.bits[1].x;
-            var y = this.y + this.bits[1].y;
-            pb3.ShotBullet(-10, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
-        }
-        if (this.level > 1) {
-            var x = this.x + this.bits[2].x;
-            var y = this.y + this.bits[2].y;
-            pb3.ShotBullet( 10, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
-            var x = this.x + this.bits[3].x;
-            var y = this.y + this.bits[3].y;
-            pb3.ShotBullet(-10, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
-        }
+        var x = this.x + this.bits[0].x;
+        var y = this.y + this.bits[0].y;
+        pb3.ShotBullet( 10, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
+
+        var x = this.x + this.bits[1].x;
+        var y = this.y + this.bits[1].y;
+        pb3.ShotBullet(-10, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
+
+        var x = this.x + this.bits[2].x;
+        var y = this.y + this.bits[2].y;
+        pb3.ShotBullet( 10, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
+
+        var x = this.x + this.bits[3].x;
+        var y = this.y + this.bits[3].y;
+        pb3.ShotBullet(-10, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
     },
 
     //ビット展開
