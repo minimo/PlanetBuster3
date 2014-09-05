@@ -7,7 +7,7 @@
 (function() {
 
 tm.define("pb3.Player", {
-    superClass: "tm.app.Object2D",
+    superClass: "tm.display.Sprite",
     layer: LAYER_OBJECT,
 
     width: 2,
@@ -24,7 +24,7 @@ tm.define("pb3.Player", {
     timeMuteki: 0, //無敵フレーム残り時間
 
     speed: 7,       //移動速度
-    type: 0,        //自機タイプ
+    type: 0,        //自機タイプ(0:赤 1:緑 2:青)
 
     power: 0,           //パワーチャージ
     powerMax: 120,      //パワーチャージ最大
@@ -32,17 +32,19 @@ tm.define("pb3.Player", {
     levelMax: 5,        //ショットレベル
     shotPower: 1,       //ショット威力
     shotLimit: 0,       //ショットレベル上限
-    shotInterval: 10,   //ショット間隔
+    shotInterval: 6,    //ショット間隔
 
-    rollcount: 0,
-    rollmax: 9,
+    rollcount: 50,
+    rollmax: 8,
     pitchcount: 0,
-    pitchmax: 6,
+    pitchmax: 8,
 
     parentScene: null,
 
     init: function() {
-        this.superInit();
+        this.superInit("gunship", 32, 32);
+        this.setFrameIndex(4);
+        this.setScale(2);
 
         this.setupBody();
 
@@ -54,47 +56,20 @@ tm.define("pb3.Player", {
         this.time = 0;
         return this;
     },
+
     setupBody: function() {
-
-        //機体
-        this.body = tm.display.Shape(64, 64).addChildTo(this);
-        this.body.y = -7;
-        var c = this.body.canvas;
-        c.setColorStyle("hsla(200, 50%, 50%, 1.0)", "hsla(200, 50%, 50%, 0.0)");
-        c.setLineStyle(3);
-        var path = [
-            [32,0], [22,48], [32,64], [42,48],
-        ];
-        c.beginPath();
-        c.moveTo(path[0][0], path[0][1]);
-        for (var i = 1; i < path.length; i++) {
-            c.lineTo(path[i][0], path[i][1]);
-        }
-        c.lineTo(path[0][0], path[0][1]);
-        c.stroke().fill().closePath();
-
-        //翼
-        this.wing = tm.display.Shape(96, 32).addChildTo(this);
-        this.wing.y = 0;
-        var c = this.wing.canvas;
-        c.setColorStyle("hsla(200, 50%, 50%, 1.0)", "hsla(200, 50%, 50%, 0.5)");
-        c.setLineStyle(3);
-        var path = [
-            [32,10], [32,32], [0,12], [26,20],    
-        ];
-        c.beginPath();
-        c.moveTo(path[0][0], path[0][1]);
-        for (var i = 1; i < path.length; i++) {
-            c.lineTo(path[i][0], path[i][1]);
-        }
-        c.lineTo(path[0][0], path[0][1]);
-        c.moveTo(96-path[0][0], path[0][1]);
-        for (var i = 1; i < path.length; i++) {
-            c.lineTo(96-path[i][0], path[i][1]);
-        }
-        c.lineTo(96-path[0][0], path[0][1]);
-
-        c.stroke().fill().closePath();
+        //コア
+        core = tm.display.Shape(16, 16).addChildTo(this);
+        core.canvas.setFillStyle(
+            tm.graphics.RadialGradient(8, 8, 0, 8, 8, 8)
+                .addColorStopList([
+                    {offset:0.0, color: "hsla(200, 60%, 70%, 1.0)"},
+                    {offset:0.5, color: "hsla(240, 60%, 70%, 1.0)"},
+                    {offset:1.0, color: "hsla(240, 60%, 50%, 0.0)"},
+                ]).toStyle()
+            ).fillRect(0, 0, 16, 16);
+        core.tweener.clear();
+        core.tweener.scale(1.0, 100, "easeInOutQuad").scale(0.5, 150, "easeInOutQuad").setLoop(true);
 
         //ビット
         this.bits = [];
@@ -105,21 +80,7 @@ tm.define("pb3.Player", {
         this.bits[2] = pb3.PlayerBit().addChildTo(this);
         this.bits[3] = pb3.PlayerBit().addChildTo(this);
 
-        //コア
-        core = tm.display.Shape(32, 32).addChildTo(this);
-        core.canvas.setFillStyle(
-            tm.graphics.RadialGradient(16, 16, 0, 16, 16, 16)
-                .addColorStopList([
-                    {offset:0.0, color: "hsla(200, 60%, 50%, 1.0)"},
-                    {offset:0.5, color: "hsla(240, 60%, 50%, 1.0)"},
-                    {offset:1.0, color: "hsla(240, 60%, 50%, 0.0)"},
-                ]).toStyle()
-            ).fillRect(0, 0, 32, 32);
-        core.tweener.clear();
-        core.tweener.scale(1.0, 100, "easeInOutQuad").scale(0.5, 200, "easeInOutQuad").setLoop(true);
-
-        //パワーゲージ
-        this.gauge = pb3.PowerGauge().addChildTo(this);
+        this.openBit();
     },
 
     update: function() {
@@ -137,22 +98,28 @@ tm.define("pb3.Player", {
             }
         }
 
-        //パーツ遅延追従
-        if (this.bx > this.x) this.rollcount--;
-        if (this.bx < this.x) this.rollcount++;
+        //機体ロール
+        if (this.bx > this.x) {
+            this.rollcount-=3;
+            if (this.rollcount < 0) this.rollcount = 0;
+        }
+        if (this.bx < this.x) {
+            this.rollcount+=3;
+            if (this.rollcount > 80) this.rollcount = 80;
+        }
         if (this.bx == this.x) {
-            if (this.rollcount < 0) this.rollcount++; else this.rollcount--;
+            if (this.rollcount < 50) this.rollcount+=3;
+            else this.rollcount-=3;
+            if (this.rollcount < 0) this.rollcount = 0;
+            if (this.rollcount > 80) this.rollcount = 80;
         }
-        if (this.by > this.y) this.pitchcount--;
-        if (this.by < this.y) this.pitchcount++;
-        if (this.by == this.y) {
-            if (this.pitchcount < 0) this.pitchcount++;
-            else this.pitchcount--;
+        //機体ロール
+        if (this.time % 2 == 0) {
+            var i = ~~(this.rollcount/10);
+            if (i < 0) i = 0;
+            if (i > 8) i = 8;
+            this.setFrameIndex(i,32,32);
         }
-        this.rollcount = Math.clamp(this.rollcount, -this.rollmax, this.rollmax);
-        this.pitchcount = Math.clamp(this.pitchcount, -this.pitchmax, this.pitchmax);
-        this.wing.x = -~~(this.rollcount*0.75);
-        this.wing.y = -~~(this.pitchcount*0.75);
 
         //移動範囲の制限
         if (this.control) {
@@ -162,67 +129,14 @@ tm.define("pb3.Player", {
 
         //タッチorクリック中
         if (this.mouseON && this.control) {
-            this.shieldON = false;
-
             //ショット
             if (this.shotON && this.time % this.shotInterval == 0) {
                 this.enterShot();
             }
-        } else {
-            this.shieldON = true;
         }
 
-        if (!this.shieldON) {
-            //オーラ処理
-            if (this.time % 6 == 0) {
-                for (var i = 0; i < (this.level+1)/2; i++) {
-                    var rad = rand(0, 628) / 100;
-                    var dis = rand(10, 150);
-                    var x = Math.cos(rad)*dis;
-                    var y = Math.sin(rad)*dis;
-                    var s = rand(50, 150);
-                    var p = pb3.Effect.Aura(this, s, 0.99).addChildTo(this.parent);
-                    p.setPosition(x+this.x, y+this.y);
-                    p.vx = -x / 50;
-                    p.vy = -y / 50;
-                }
-            }
-
-            //パワーチャージ
-            this.power++;
-            if (this.power > this.powerMax) {
-                this.level++;
-                this.levelUp();
-                this.power = 0;
-                if (this.level > this.levelMax) {
-                    this.level = this.levelMax;
-                    this.power = this.powerMax;
-                }
-            }
-
-            //初回検出
-            if (this.beforeShieldON) {
-                this.levelUp();
-            }
-        } else {
-            //パワーとレベルを初期状態にする
-            this.power-=10;
-            if (this.power < 0) {
-                this.power = this.powerMax;
-                this.level--;
-                if (this.level < 0) {
-                    this.level = 0;
-                    this.power = 0;
-                }
-            }
-            this.shotInterval = 10;
-            this.rollingBit();
-        }
-
-        this.gauge.value = this.level*this.powerMax+this.power;
         this.bx = this.x;
         this.by = this.y;
-        this.beforeShieldON = this.shieldON;
         this.time++;
         this.timeMuteki--;
     },
@@ -242,7 +156,6 @@ tm.define("pb3.Player", {
         this.parentScene.life--;
         this.parentScene.dispLife.dec();
         if (this.parentScene.life > -1) {
-            this.rollingBit();
             this.startup();
             this.parentScene.eraseBullet();
             this.parentScene.eraseBulletTime = 60;
@@ -252,32 +165,12 @@ tm.define("pb3.Player", {
         }
     },
 
-    levelUp: function() {
-        if (this.level == 0) {
-            this.closeBit();
-        }
-        if (this.level > 0) {
-            this.openBit1();
-        }
-        if (this.level > 1) {
-            this.openBit2();
-            this.shotInterval = 8;
-        }
-        if (this.level > 2) {
-            this.shotInterval = 7;
-        }
-        if (this.level > 3) {
-            this.shotInterval = 6;
-        }
-    },
-
     enterShot: function() {
         var shotPower = this.level>4?2:1;
         pb3.ShotBullet(0, shotPower).addChildTo(this.parentScene).setPosition(this.x, this.y-16);
-        if (this.level > 0 || this.power > 90) {
-            pb3.ShotBullet( 5, shotPower).addChildTo(this.parentScene).setPosition(this.x+16, this.y-16);
-            pb3.ShotBullet(-5, shotPower).addChildTo(this.parentScene).setPosition(this.x-16, this.y-16);
-        }
+        pb3.ShotBullet( 5, shotPower).addChildTo(this.parentScene).setPosition(this.x+16, this.y-16);
+        pb3.ShotBullet(-5, shotPower).addChildTo(this.parentScene).setPosition(this.x-16, this.y-16);
+
         if (this.level > 0) {
             var x = this.x + this.bits[0].x;
             var y = this.y + this.bits[0].y;
@@ -296,20 +189,12 @@ tm.define("pb3.Player", {
         }
     },
 
-    //ビット展開１段階目
-    openBit1: function() {
-        this.bits.status = 1;
-        this.bits[0].tweener.clear().to({ x: 48, y: 16, alpha:1}, 300);
-        this.bits[1].tweener.clear().to({ x:-48, y: 16, alpha:1}, 300);
-        this.bits[2].tweener.clear().to({ x:0, y: 0, alpha:0}, 300);
-        this.bits[3].tweener.clear().to({ x:0, y: 0, alpha:0}, 300);
-    },
-
-    //ビット展開２段階目
-    openBit2: function() {
-        this.bits.status = 2;
-        this.bits[2].tweener.clear().to({ x: 80, y: 32, alpha:1}, 300);
-        this.bits[3].tweener.clear().to({ x:-80, y: 32, alpha:1}, 300);
+    //ビット展開
+    openBit: function() {
+        this.bits[0].tweener.clear().to({ x: 24, y:  8, rotation:  5, alpha:1}, 300);
+        this.bits[1].tweener.clear().to({ x:-24, y:  8, rotation: -5,  alpha:1}, 300);
+        this.bits[2].tweener.clear().to({ x: 40, y: 16, rotation: 15, alpha:1}, 300);
+        this.bits[3].tweener.clear().to({ x:-40, y: 16, rotation:-15, alpha:1}, 300);
     },
 
     closeBit: function() {
@@ -319,28 +204,6 @@ tm.define("pb3.Player", {
         this.bits[1].tweener.clear().to({ x:0, y: 0, alpha:0}, 300);
         this.bits[2].tweener.clear().to({ x:0, y: 0, alpha:0}, 300);
         this.bits[3].tweener.clear().to({ x:0, y: 0, alpha:0}, 300);
-    },
-
-    rollingBit: function() {
-        if (this.bits.status < 3) {
-            this.bits[0].tweener.clear().to({ x:  0, y: -48, alpha:1}, 200).call(function(){this.bits.status = 5}.bind(this));
-            this.bits[1].tweener.clear().to({ x: 48, y:   0, alpha:1}, 200);
-            this.bits[2].tweener.clear().to({ x:  0, y:  48, alpha:1}, 200);
-            this.bits[3].tweener.clear().to({ x:-48, y:   0, alpha:1}, 200);
-            this.bits.status = 4;
-        }
-        if (this.bits.status == 5) {
-            this.bits.roll+=10;
-            var rad = this.bits.roll*toRad;
-            this.bits[0].x = Math.cos(rad)*48;
-            this.bits[0].y = Math.sin(rad)*48;
-            this.bits[1].x = Math.cos(rad+1.57)*48;
-            this.bits[1].y = Math.sin(rad+1.57)*48;
-            this.bits[2].x = Math.cos(rad+3.14)*48;
-            this.bits[2].y = Math.sin(rad+3.14)*48;
-            this.bits[3].x = Math.cos(rad+4.71)*48;
-            this.bits[3].y = Math.sin(rad+4.71)*48;
-        }
     },
 
     //プレイヤー投入時演出
@@ -385,22 +248,17 @@ tm.define("pb3.Player", {
 
 //ビット
 tm.define("pb3.PlayerBit", {
-    superClass: "tm.app.Shape",
+    superClass: "tm.display.Sprite",
 
     active: false,
 
     init: function() {
-        this.superInit(16, 16);
+        this.superInit("bit", 32, 32);
+        this.setScale(0.5);
         this.parentScene = app.currentScene;
+        this.index = 0;
 
         this.alpha = 1;
-
-        var param = {
-            strokeStyle:"hsla(200, 50%, 50%, 1.0)",
-            fillStyle: "hsla(200, 50%, 50%, 0.3)",
-            lineWidth: 3,
-        };
-        this.renderRectangle(param);
 
         this.beforeX = 0;
         this.beforeY = 0;
@@ -409,14 +267,10 @@ tm.define("pb3.PlayerBit", {
     },
 
     update: function() {
-        this.rotation+=4;
-        if (this.alpha == 1 && this.beforeX != this.x && this.beforeY != this.y && this.time % 2 == 0) {
-            var x = this.x + this.parent.x;
-            var y = this.y + this.parent.y;
-            pb3.Effect.Particle(32, 1, 0.9, 200).addChildTo(app.currentScene).setPosition(x, y);
+        if (this.time % 2 == 0) {
+            this.index = (this.index+1)%9;
+            this.setFrameIndex(this.index, 32, 32);
         }
-        this.beforeX = this.x;
-        this.beforeY = this.y;
         this.time++;
     },
 });
@@ -438,13 +292,6 @@ tm.define("pb3.PowerGauge", {
     },
 
     update: function() {
-        if (this.parent.level == 0 && this.parent.power == 0) {
-            this.alpha-=0.05;
-            if (this.alpha < 0.0)this.alpha = 0.0;
-        } else {
-            this.alpha+=0.05;
-            if (this.alpha > 1.0)this.alpha = 1.0;
-        }
     },
 
     draw: function(canvas) {
@@ -454,10 +301,7 @@ tm.define("pb3.PowerGauge", {
         var rad = this._value*this.toRad;
         var color1 = "hsla({0}, 60%, 50%, 0.5)".format(240);
         var color2 = "hsla({0}, 60%, 50%, 0.5)".format(120);
-/*
-        var color1 = "hsla({0}, 60%, 50%, 0.5)".format(100+this.parent.level*200+this.parent.power*0.4);
-        var color2 = "hsla({0}, 60%, 50%, 0.5)".format(100+(this.parent.level+1)*200);
-*/
+
         canvas.strokeStyle = color1
         canvas.shadowBlur = 15;
         canvas.strokeArc(0, 0, 80, Math.PI*2, rad, true);
@@ -473,64 +317,26 @@ pb3.PowerGauge.prototype.accessor("value", {
 
 //残機表示用
 tm.define("pb3.PlayerDisp", {
-    superClass: "tm.app.Object2D",
+    superClass: "tm.display.Sprite",
 
     init: function() {
-        this.superInit();
-        this.setScale(0.5);
-
-        //機体
-        this.body = tm.display.Shape(64, 64).addChildTo(this);
-        this.body.y = -7;
-        var c = this.body.canvas;
-        c.setColorStyle("hsla(200, 50%, 50%, 1.0)", "hsla(200, 50%, 50%, 0.0)");
-        c.setLineStyle(3);
-        var path = [
-            [32,0], [22,48], [32,64], [42,48],
-        ];
-        c.beginPath();
-        c.moveTo(path[0][0], path[0][1]);
-        for (var i = 1; i < path.length; i++) {
-            c.lineTo(path[i][0], path[i][1]);
-        }
-        c.lineTo(path[0][0], path[0][1]);
-        c.stroke().fill().closePath();
-
-        //翼
-        this.wing = tm.display.Shape(96, 32).addChildTo(this);
-        this.wing.y = 0;
-        var c = this.wing.canvas;
-        c.setColorStyle("hsla(200, 50%, 50%, 1.0)", "hsla(200, 50%, 50%, 0.5)");
-        c.setLineStyle(3);
-        var path = [
-            [32,10], [32,32], [0,12], [26,20],    
-        ];
-        c.beginPath();
-        c.moveTo(path[0][0], path[0][1]);
-        for (var i = 1; i < path.length; i++) {
-            c.lineTo(path[i][0], path[i][1]);
-        }
-        c.lineTo(path[0][0], path[0][1]);
-        c.moveTo(96-path[0][0], path[0][1]);
-        for (var i = 1; i < path.length; i++) {
-            c.lineTo(96-path[i][0], path[i][1]);
-        }
-        c.lineTo(96-path[0][0], path[0][1]);
-
-        c.stroke().fill().closePath();
+        this.superInit("gunship", 32, 32);
+        this.setFrameIndex(4);
+        this.setScale(1);
 
         //コア
-        core = tm.display.Shape(32, 32).addChildTo(this);
+        core = tm.display.Shape(16, 16).addChildTo(this);
         core.canvas.setFillStyle(
-            tm.graphics.RadialGradient(16, 16, 0, 16, 16, 16)
+            tm.graphics.RadialGradient(8, 8, 0, 8, 8, 8)
                 .addColorStopList([
-                    {offset:0.0, color: "hsla(200, 60%, 50%, 1.0)"},
-                    {offset:0.5, color: "hsla(240, 60%, 50%, 1.0)"},
+                    {offset:0.0, color: "hsla(200, 60%, 70%, 1.0)"},
+                    {offset:0.5, color: "hsla(240, 60%, 70%, 1.0)"},
                     {offset:1.0, color: "hsla(240, 60%, 50%, 0.0)"},
                 ]).toStyle()
-            ).fillRect(0, 0, 32, 32);
+            ).fillRect(0, 0, 16, 16);
         core.tweener.clear();
-        core.tweener.scale(1.0, 100, "easeInOutQuad").scale(0.5, 200, "easeInOutQuad").setLoop(true);
+        core.tweener.scale(1.0, 100, "easeInOutQuad").scale(0.5, 150, "easeInOutQuad").setLoop(true);
     },
 });
+
 })();
