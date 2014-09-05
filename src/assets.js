@@ -11,12 +11,12 @@ pb3.assets = {
     //images
 
     //SE
-    "explodeSmall": "assets/sen_ge_taihou03.mp3", 
-    "explodeLarge": "assets/sen_ge_hasai01.mp3", 
-    "explodePlayer": "assets/ta_ta_zuban_d01.mp3", 
+    "explodeSmall":  "assets/sounds/sen_ge_taihou03.mp3", 
+    "explodeLarge":  "assets/sounds/sen_ge_hasai01.mp3", 
+    "explodePlayer": "assets/sounds/ta_ta_zuban_d01.mp3", 
 
     //BGM
-    "warning":  "assets/bgm_warning.mp3",
+    "warning": "assets/sounds/bgm_warning.mp3",
 }
 
 })();
