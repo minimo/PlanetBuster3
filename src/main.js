@@ -17,8 +17,8 @@ var DEBUG = false;
 var MUTEKI = false;
 
 //スクリーンサイズ
-SC_W = 640;
-SC_H = 640;
+SC_W = 480;
+SC_H = 480;
 
 SC_W_L = -64;
 SC_W_R = 704;
