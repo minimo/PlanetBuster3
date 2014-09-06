@@ -42,7 +42,7 @@ tm.define("pb3.Player", {
     init: function() {
         this.superInit("gunship", 32, 32);
         this.setFrameIndex(4);
-//        this.setScale(2);
+//        this.setScale(1.5);
 
         this.setupBody();
 

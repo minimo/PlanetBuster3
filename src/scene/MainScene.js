@@ -52,6 +52,8 @@ tm.define("pb3.MainScene", {
 
         this.mask = tm.display.Shape(SC_W, SC_H).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
         this.mask.renderRectangle({fillStyle: "rgba(0,0,0,1.0)", strokeStyle: "rgba(0,0,0,1.0)"});
+//        this.map = tm.display.MapSprite("map1").addChildTo(this);
+        this.map = tm.display.Sprite("map1g").addChildTo(this).setPosition(0, -1000).setScale(0.5);
 
         //レイヤー作成
         this.layers = [];
@@ -98,6 +100,7 @@ tm.define("pb3.MainScene", {
     },
 
     update: function() {
+        this.map.y++;
         //ステージ進行
         var event = this.stage.get(this.time);
         if (event) {
