@@ -121,8 +121,8 @@ tm.define("pb3.Player", {
 
         //移動範囲の制限
         if (this.control) {
-            this.x = Math.clamp(this.x, 16, SC_W-16);
-            this.y = Math.clamp(this.y, 16, SC_H-16);
+            this.x = Math.clamp(this.x, 16, GS_W-16);
+            this.y = Math.clamp(this.y, 16, GS_H-16);
         }
 
         //タッチorクリック中
@@ -158,7 +158,7 @@ tm.define("pb3.Player", {
             this.parentScene.eraseBullet();
             this.parentScene.eraseBulletTime = 60;
         } else {
-            this.setPosition(SC_W*0.5, SC_H*3);
+            this.setPosition(GS_W*0.5, GS_H*3);
             this.control = false;
         }
     },
@@ -171,19 +171,19 @@ tm.define("pb3.Player", {
 
         var x = this.x + this.bits[0].x;
         var y = this.y + this.bits[0].y;
-        pb3.ShotBullet( this.bits[0].rotation, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
+        pb3.ShotBullet(this.bits[0].rotation, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
 
         var x = this.x + this.bits[1].x;
         var y = this.y + this.bits[1].y;
-        pb3.ShotBullet( this.bits[1].rotation, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
+        pb3.ShotBullet(this.bits[1].rotation, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
 
         var x = this.x + this.bits[2].x;
         var y = this.y + this.bits[2].y;
-        pb3.ShotBullet( this.bits[2].rotation, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
+        pb3.ShotBullet(this.bits[2].rotation, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
 
         var x = this.x + this.bits[3].x;
         var y = this.y + this.bits[3].y;
-        pb3.ShotBullet( this.bits[3].rotation, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
+        pb3.ShotBullet(this.bits[3].rotation, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
     },
 
     //ビット展開
@@ -205,11 +205,11 @@ tm.define("pb3.Player", {
 
     //プレイヤー投入時演出
     startup: function() {
-        this.x = SC_W/2;
-        this.y = SC_H+128;
+        this.x = GS_W/2;
+        this.y = GS_H+128;
         this.tweener.clear()
             .wait(2000)
-            .to({x: SC_W/2, y: SC_H-128}, 2000, "easeOutQuint")
+            .to({x: GS_W/2, y: GS_H-128}, 2000, "easeOutQuint")
             .call(function(){
                 this.shotON = true;
                 this.control = true;
@@ -225,11 +225,11 @@ tm.define("pb3.Player", {
 
     //ステージ開始時演出
     stageStartup: function() {
-        this.x = SC_W/2;
-        this.y = SC_H+128;
+        this.x = GS_W/2;
+        this.y = GS_H+128;
         this.tweener.clear()
-            .to({x: SC_W/2, y: SC_H/2+32}, 1000, "easeOutCubic")
-            .to({x: SC_W/2, y: SC_H-64  }, 1000)
+            .to({x: GS_W/2, y: GS_H/2+32}, 1000, "easeOutCubic")
+            .to({x: GS_W/2, y: GS_H-64  }, 1000)
             .call(function(){
                 this.shotON = true;
                 this.control = true;
