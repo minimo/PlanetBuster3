@@ -47,8 +47,8 @@ pb3.enemyData['cube1'] = {
 
     algorithm: function() {
         //自機の方向を向く
-        var ax = this.x - this.player.x;
-        var ay = this.y - this.player.y;
+        var ax = this.x - app.player.x;
+        var ay = this.y - app.player.y;
         var rad = Math.atan2(ay, ax);
         var deg = ~~(rad * toDeg);
         this.rotation = deg + 90;
@@ -91,7 +91,7 @@ pb3.enemyData['cube2'] = {
         sh.update = function() {
             this.rotation += 30;
         }
-        this.moveTo(this.player, 5, true);
+        this.moveTo(app.player, 5, true);
     },
 
     algorithm: function() {

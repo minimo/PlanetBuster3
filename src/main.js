@@ -23,6 +23,8 @@ SC_H = 480;
 //ゲームスクリーンサイズ
 GS_W = 320;
 GS_H = 480;
+GS_OFFSET_X = 0;
+GS_OFFSET_Y = 0;
 
 //難易度
 DIFF_EASY   = 0;

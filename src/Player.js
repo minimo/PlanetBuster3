@@ -22,7 +22,7 @@ tm.define("pb3.Player", {
 
     timeMuteki: 0, //無敵フレーム残り時間
 
-    speed: 20,      //移動係数
+    speed: 10,      //移動係数
     type: 0,        //自機タイプ(0:赤 1:緑 2:青)
 
     shotPower: 10,      //ショット威力
@@ -263,30 +263,6 @@ tm.define("pb3.PlayerBit", {
     },
 });
 
-//残機表示用
-tm.define("pb3.PlayerDisp", {
-    superClass: "tm.display.Sprite",
-
-    init: function() {
-        this.superInit("gunship", 32, 32);
-        this.setFrameIndex(4);
-        this.setScale(1);
-
-        //コア
-        core = tm.display.Shape(16, 16).addChildTo(this);
-        core.canvas.setFillStyle(
-            tm.graphics.RadialGradient(8, 8, 0, 8, 8, 8)
-                .addColorStopList([
-                    {offset:0.0, color: "hsla(200, 60%, 70%, 1.0)"},
-                    {offset:0.5, color: "hsla(240, 60%, 70%, 1.0)"},
-                    {offset:1.0, color: "hsla(240, 60%, 50%, 0.0)"},
-                ]).toStyle()
-            ).fillRect(0, 0, 16, 16);
-        core.tweener.clear();
-        core.tweener.scale(1.0, 100, "easeInOutQuad").scale(0.5, 150, "easeInOutQuad").setLoop(true);
-    },
-});
-
 //プレイヤー操作用ポインタ
 tm.define("pb3.PlayerPointer", {
     superClass: "tm.display.Shape",
@@ -294,24 +270,28 @@ tm.define("pb3.PlayerPointer", {
 
     init: function() {
         this.superInit(32, 32);
-        this.canvas.lineWidth = 6;
+        this.canvas.lineWidth = 3;
         this.canvas.globalCompositeOperation = "lighter";
         this.canvas.strokeStyle = "rgb(255, 255, 255)";
         this.canvas.strokeArc(16, 16, 8, Math.PI*2, 0, true);
     },
 
     update: function() {
-        if (this.player.control) {
-            var p = app.pointing;
-            if (p.getPointing()) {
-                this.alpha = 0.5;
-                this.x += p.position.x - p.prevPosition.x;
-                this.y += p.position.y - p.prevPosition.y;
-            } else {
-                this.x = app.player.x;
-                this.y = app.player.y;
+        var p = app.pointing;
+        if (app.player.control && p.getPointing()) {
+            if (~~(this.x) == ~~(app.player.x) && ~~(this.y) == ~~(app.player.y)) {
                 this.alpha = 0;
+            } else {
+                this.alpha = 0.5;
             }
+            this.x += (p.position.x - p.prevPosition.x)*2;
+            this.y += (p.position.y - p.prevPosition.y)*2;
+            this.x = Math.clamp(this.x, 0, GS_W);
+            this.y = Math.clamp(this.y, 0, GS_H);
+        } else {
+            this.x = app.player.x;
+            this.y = app.player.y;
+            this.alpha = 0;
         }
     },
 });

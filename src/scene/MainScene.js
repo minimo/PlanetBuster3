@@ -56,9 +56,10 @@ tm.define("pb3.MainScene", {
         this.map = tm.display.Sprite("map1g").addChildTo(this).setPosition(0, -1000).setScale(1);
 
         //レイヤー作成
+        this.base = tm.app.Object2D().addChildTo(this);
         this.layers = [];
         for (var i = 0; i < LAYER_SYSTEM+1; i++) {
-            this.layers[i] = tm.app.Object2D().addChildTo(this);
+            this.layers[i] = tm.app.Object2D().addChildTo(this.base);
         }
 
         //プレイヤー
@@ -83,21 +84,25 @@ tm.define("pb3.MainScene", {
 
         //残機表示
         this.dispLife = tm.app.Object2D().addChildTo(this.systemBase);
-        this.dispLife.player = [];
+        this.dispLife.players = [];
         this.dispLife.life = 0;
         this.dispLife.inc = function() {
             this.life++;
-            this.player[this.life] = pb3.PlayerDisp().addChildTo(this).setPosition(this.life*50-20, 64);
+            this.players[this.life] = pb3.PlayerDisp().addChildTo(this).setPosition(this.life*50-20, 64);
         }
         this.dispLife.dec = function() {
             if (this.life == 0) return;
-            this.player[this.life].remove();
+            this.players[this.life].remove();
             this.life--;
         }
         for (var i = 0; i < this.life; i++) this.dispLife.inc();
 
         //ボス耐久力ゲージ
         this.bossGauge = pb3.BossGauge().addChildTo(this.systemBase).setPosition(0, -24);
+
+        this.systemMask = tm.display.Shape(SC_W-GS_W, SC_H).addChildTo(this).setPosition(GS_W, 0);
+        this.systemMask.renderRectangle({fillStyle: "rgba(0,0,0,1.0)", strokeStyle: "rgba(0,0,0,1.0)"});
+        this.systemMask.origin.set(0, 0);
 
         //ステージ制御
         this.initStage();
@@ -216,13 +221,13 @@ tm.define("pb3.MainScene", {
     initStage: function() {
         switch (this.nowStage) {
             case 1:
-                this.stage = pb3.Stage1(this, this.player);
+                this.stage = pb3.Stage1(this, app.player);
                 break;
             case 2:
-                this.stage = pb3.Stage1(this, this.player);
+                this.stage = pb3.Stage1(this, app.player);
                 break;
             case 3:
-                this.stage = pb3.Stage1(this, this.player);
+                this.stage = pb3.Stage1(this, app.player);
                 break;
         }
         this.time = 0;
@@ -320,7 +325,6 @@ tm.define("pb3.MainScene", {
             return this.superClass.prototype.addChild.apply(this, arguments);
         }
         child.parentScene = this;
-        child.player = this.player;
         return this.layers[child.layer].addChild(child);
     },
 });

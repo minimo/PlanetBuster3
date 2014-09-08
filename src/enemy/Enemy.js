@@ -67,11 +67,10 @@ tm.define("pb3.Enemy", {
         }
 
         this.parentScene = app.currentScene;
-        this.player = app.player;
         this.setup(param);
 
         var bulletMLparams = {
-            target: this.player,
+            target: app.player,
             createNewBullet: function(runner, attr) {
                 pb3.Bullet(runner, attr, this.id).addChildTo(this.parentScene);
             }.bind(this)
@@ -108,9 +107,10 @@ tm.define("pb3.Enemy", {
         }
 
         //自機との当り判定チェック
-        this.player.radius = 2;
-        if (this.isCollision && this.player.isCollision && this.isHitElement(this.player)) {
-            this.player.damage();
+        var player = app.player;
+        player.radius = 2;
+        if (this.isCollision && player.isCollision && this.isHitElement(player)) {
+            player.damage();
         }
 
         //親機が破壊された場合、自分も破壊
@@ -150,11 +150,10 @@ tm.define("pb3.Enemy", {
             if (this.parentEnemy) this.parentEnemy.deadChild(this);
 
             //スコア加算
-            var pow = Math.clamp(this.player.level, 1, 10);
-            app.score += this.data.point*pow;
+            app.score += this.data.point;
 
             //得点表示
-            var sc = tm.display.OutlineLabel(this.data.point+"x"+pow, 30).addChildTo(this.parentScene).setPosition(this.x, this.y);
+            var sc = tm.display.OutlineLabel(this.data.point, 30).addChildTo(this.parentScene).setPosition(this.x, this.y);
             sc.fontFamily = "'UbuntuMono'"; sc.align = "center"; sc.baseline  = "middle"; sc.fontWeight = 300; sc.outlineWidth = 2;
             sc.tweener.to({x: this.x, y: this.y-50, alpha:0}, 1000).call(function(){this.remove()}.bind(sc));
         }
@@ -214,7 +213,7 @@ tm.define("pb3.Enemy", {
 
     //指定ターゲットの方向を向く
     lookAt: function(target) {
-        target = target || this.player;
+        target = target || app.player;
 
         //ターゲットの方向を向く
         var ax = this.x - target.x;
@@ -226,7 +225,7 @@ tm.define("pb3.Enemy", {
 
     //指定ターゲットの方向に進む
     moveTo: function(target, speed, look) {
-        target = target || this.player;
+        target = target || app.player;
         speed = speed || 5;
 
         //ターゲットの方向を計算

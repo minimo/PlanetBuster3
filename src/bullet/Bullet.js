@@ -75,20 +75,10 @@ tm.define("pb3.Bullet", {
             this.rotation += this.speedRoll;
 
             //自機との当り判定チェック
-            if (this.player.isCollision) {
-                if (this.player.shieldON) {
-                    //シールド着弾
-                    this.player.radius = 48;
-                    if (this.isHitElement(this.player) ) {
-                        this.isVanish = true;
-                    }
-                } else {
-                    //自機着弾
-                    this.player.radius = 2;
-                    if (this.isHitElement(this.player) ) {
-                        this.player.damage();
-                        this.isVanish = true;
-                    }
+            if (app.player.isCollision) {
+                if (this.isHitElement(app.player) ) {
+                    app.player.damage();
+                    this.isVanish = true;
                 }
             }
 
@@ -166,7 +156,7 @@ tm.define("pb3.ShotBullet", {
         for (var i = 0; i < 3; i++) {
             var layer = this.parentScene.layers[s[i]];
             layer.children.each(function(a) {
-                if (a === this.player) return;
+                if (a === app.player) return;
                 if (this.parent && a.isCollision && a.isHitElement(this)) {
                     a.damage(this.power);
                     this.vanish();

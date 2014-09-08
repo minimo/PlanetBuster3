@@ -18,8 +18,6 @@ tm.define("pb3.StageController", {
 
     init: function(scene, player) {
         this.parentScene = scene;
-        this.player = player;
-
         this.seq = [];
     },
 
