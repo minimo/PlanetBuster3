@@ -1,182 +1,332 @@
 /*
- *  PlanetBuster3
  *  MainScene.js
- *  2013/06/21
+ *  2014/07/10
  *  @auther minimo  
  *  This Program is MIT license.
+ *
  */
+(function() {
 
-//メインシーン
-pb3.MainScene = tm.createClass({
+tm.define("pb3.MainScene", {
     superClass: tm.app.Scene,
+
+    //マルチタッチ補助クラス
+    touches: null,
+    touchID: -1,
+
+    //タッチ情報
+    startX: 0,
+    startY: 0,
+    moveX: 0,
+    moveY: 0,
+    beforeX: 0,
+    beforeY: 0,
+
+    //経過時間
+    time: 0,
+    absTime: 0,
+
+    //ステージ制御
+    nowStage: 1,    //現在ステージ番号
+    maxStage: 1,    //最大ステージ番号
+    stage: null,    //ステージコントローラー
+    enemyID: 0,     //敵投入ＩＤ
+    timeVinish: 0,  //敵弾強制消去
+    boss: false,    //ボス戦中フラグ
+    stageClear: false,  //ステージクリアフラグ
+    stageMiss: 0,   //ステージ内ミス回数
+
+    //敵投入数と撃破数
+    enemyCount: 0,
+    enemyKill: 0,
+
+    //プレイヤー情報
+    life: 2,
+
     init: function() {
         this.superInit();
+        this.background = "rgba(0, 0, 0, 1.0)";
 
-        //通常表示レイヤー（数字が大きい程優先度が高い）
-        this.layer = [];
+        //マルチタッチ初期化
+        this.touches = tm.input.TouchesEx(this);
+
+        this.mask = tm.display.Shape(SC_W, SC_H).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
+        this.mask.renderRectangle({fillStyle: "rgba(0,0,0,1.0)", strokeStyle: "rgba(0,0,0,1.0)"});
+//        this.map = tm.display.MapSprite("map1").addChildTo(this);
+        this.map = tm.display.Sprite("map1g").addChildTo(this).setPosition(0, -1000).setScale(1);
+
+        //レイヤー作成
+        this.base = tm.app.Object2D().addChildTo(this);
+        this.layers = [];
         for (var i = 0; i < LAYER_SYSTEM+1; i++) {
-            var gr = tm.app.Object2D().addChildTo(this);
-            this.layer.push(gr);
+            this.layers[i] = tm.app.Object2D().addChildTo(this.base);
         }
 
-        //スコア表示
-        var sc = tm.app.Label("SCORE: 0");
-        sc.fillStyle = "white";
-        sc.fontSize = 15;
-        sc.x = 0;
-        sc.y = 13;
-        sc.width = 200;
+        //プレイヤー
+        this.player = pb3.Player().addChildTo(this);
+        this.player.stageStartup();
+        app.player = this.player;
+
+        //操作用ポインタ
+        this.pointer = pb3.PlayerPointer().addChildTo(this);
+        app.pointer = this.pointer;
+
+        //システム表示ベース
+        this.systemBase = tm.app.Object2D().addChildTo(this).setPosition(0, 0);
+
+        //スコア表示ラベル
+        app.score = 0;
+        var sc = this.scoreLabel = tm.display.OutlineLabel("SCORE:0", 30).addChildTo(this.systemBase);
+        sc.fontFamily = "'Orbitron'"; sc.align = "left"; sc.baseline  = "top"; sc.fontWeight = 700; sc.outlineWidth = 2;
         sc.update = function() {
-            this.text = "SCORE :"+app.score;
-    	}
-    	this.addChild(sc);
+            this.text = "SCORE:"+app.score;
+        };
 
-        //ステージ進行
-        this.stageNum = 1;
-        this.advance = 0;
-        this.phase = 0;
-        this.pattern = stagePattern1;
-        this.stageData = stageData1;
+        //残機表示
+        this.dispLife = tm.app.Object2D().addChildTo(this.systemBase);
+        this.dispLife.players = [];
+        this.dispLife.life = 0;
+        this.dispLife.inc = function() {
+            this.life++;
+            this.players[this.life] = pb3.PlayerDisp().addChildTo(this).setPosition(this.life*50-20, 64);
+        }
+        this.dispLife.dec = function() {
+            if (this.life == 0) return;
+            this.players[this.life].remove();
+            this.life--;
+        }
+        for (var i = 0; i < this.life; i++) this.dispLife.inc();
 
-        //デバッグ表示セットアップ
-        if (_DEBUG) this.setupDebug();
+        //ボス耐久力ゲージ
+        this.bossGauge = pb3.BossGauge().addChildTo(this.systemBase).setPosition(0, -24);
 
-        //プレイヤー投入
-        this.player = new Player;
-        this.addChildToLayer(LAYER_OBJECT, this.player);
-        pb3.player = this.player;
+        this.systemMask = tm.display.Shape(SC_W-GS_W, SC_H).addChildTo(this).setPosition(GS_W, 0);
+        this.systemMask.renderRectangle({fillStyle: "rgba(0,0,0,1.0)", strokeStyle: "rgba(0,0,0,1.0)"});
+        this.systemMask.origin.set(0, 0);
 
-        //初期化
-        pb3.shots.init();
-        pb3.bullets.init();
-        pb3.enemies.init();
-        pb3.effects.init();
-
-        //弾幕パターン作成
-        CreateBulletPattern();
-
-	    this.time = 0;
+        //ステージ制御
+        this.initStage();
     },
+
     update: function() {
-        //出現テーブルに従って敵を投入
-        if (this.time > 180 && this.time % 180 == 0) {
-            this.enterEnemy();
-        }
-
-        //当たり判定チェック
-        //敵＞ショット＆自機
-        for (var i = 0; i < MAX_ENEMIES; i++) {
-            var e = pb3.enemies[i];
-            if (!e.using || e.time < 0)continue;
-            for (var j = 0; j < MAX_SHOTS; j++) {
-                var s = pb3.shots[j];
-                if (!s.using)continue;
-                if (e.isHitElement(s)) {
-                    e.def -= s.power;
-                    s.vanish();
-                }
+        this.map.y++;
+        //ステージ進行
+        var event = this.stage.get(this.time);
+        if (event) {
+            if (typeof(event.value) === 'function') {
+                event.value.call(this);
+            } else {
+                this.enterEnemyUnit(event.value);
             }
         }
-		this.time++;
-    },
-    enterEnemy: function() {
-        for (var i = 0; i < 5; i++) {
-            var ad = this.stageData.charAt(this.advance);
-            var pattern = this.pattern[ad];
-            for( var j in pattern ){
-                var obj = pattern[j];
-                if (obj.name != 'nop') {
-                    pb3.enemies.enter(obj.name, obj.x, obj.y, obj.delay);
-                }
-            }
-            this.advance++;
-        }
-    },
-    //オープニング処理開始
-    opening: function() {
-    },
-    //イベント処理開始
-    event: function() {
-    },
-    //ステージ開始
-    stageStart: function() {
-    },
-    //ステージクリア
-    stageClear: function() {
-    },
-    //任意レイヤーへオブジェクトを追加
-    addChildToLayer: function(layer, obj) {
-        layer = layer || LAYER_OBJECT;
-        if (layer < 0)return;
-        if (layer > LAYER_SYSTEM)return;
-        this.layer[layer].addChild(obj);
-    },
-    //デバッグ表示セットアップ
-    setupDebug: function() {
-        var d1 = tm.app.Label("bullets: 0/0");
-        d1.fillStyle = "white";
-        d1.fontSize = 15;
-        d1.x = 0;
-        d1.y = 100;
-        d1.width = 200;
-        d1.update = function() {
-            this.text = "bullet:"+pb3.bullets.numUsing()+"/"+pb3.bullets.numNotUsing();
-        }
-        this.addChild(d1);
 
-        var d2 = tm.app.Label("enemy: 0/0");
-        d2.fillStyle = "white";
-        d2.fontSize = 15;
-        d2.x = 0;
-        d2.y = 120;
-        d2.width = 200;
-        d2.update = function() {
-            this.text = "enemy:"+pb3.enemies.numUsing()+"/"+pb3.enemies.numNotUsing();
+        //敵弾強制消去
+        if (this.timeVanish > 0 && this.time % 6 == 0) {
+            this.eraseBullet();
         }
-        this.addChild(d2);
 
-        var d3 = tm.app.Label("shot: 0/0");
-        d3.fillStyle = "white";
-        d3.fontSize = 15;
-        d3.x = 0;
-        d3.y = 140;
-        d3.width = 200;
-        d3.update = function() {
-            this.text = "shot:"+pb3.shots.numUsing()+"/"+pb3.shots.numNotUsing();
+        //ステージクリア検知
+        if (this.stageClear) {
+            this.stageClear = false;
+            //ボス耐久ゲージ隠し
+            this.systemBase.tweener.clear().moveBy(0, -24, 1000).call(function(){this.bossGauge.setTarget(null)}.bind(this));
+
+            //５秒後にステージクリアメッセージ投入
+            tm.app.Object2D().addChildTo(this).tweener.wait(5000).call(function(){this.enterStageClear()}.bind(this));
         }
-        this.addChild(d3);
 
-        var d4 = tm.app.Label("effect: 0/0");
-        d4.fillStyle = "white";
-        d4.fontSize = 15;
-        d4.x = 0;
-        d4.y = 160;
-        d4.width = 200;
-        d4.update = function() {
-            this.text = "effect:"+pb3.effects.numUsing()+"/"+pb3.effects.numNotUsing();
-        }
-        this.addChild(d4);
-
-        var d5 = tm.app.Label("stage:");
-        d5.fillStyle = "white";
-        d5.fontSize = 15;
-        d5.x = 0;
-        d5.y = 180;
-        d5.width = 200;
-        d5.parent = this;
-        d5.update = function() {
-            var num = this.parent.advance-5;
-            this.text = "stage:";
-            if (num < 0) {
-                this.text += "0:";
-                return;
-            }
-            this.text += (num/5+1)+":";
-            for (var i = 0; i < 5; i++) {
-                var ad = this.parent.stageData.charAt(num+i);
-                this.text += ad;
+        //エクステンド検知
+        if (app.extendNumber < app.extendScore.length) {
+            if (app.score > app.extendScore[app.extendNumber]) {
+                app.extendNumber++;
+                this.dispLife.inc();
             }
         }
-        this.addChild(d5);
+
+        //ゲームオーバー検知
+        if (this.life == -1) {
+            this.life = -99;
+            var tmp = tm.app.Object2D().addChildTo(this);
+            tmp.tweener.clear().wait(3000).call(function(){app.replaceScene(pb3.GameoverScene(this.nowStage, this.boss))}.bind(this));
+        }
+        this.time++;
+        this.absTime++;
+        this.timeVanish--; 
+    },
+
+    //敵ユニット単位の投入
+    enterEnemyUnit: function(name) {
+        var unit = pb3.enemyUnit[name];
+        if (unit === undefined)return;
+
+        var len = unit.length;
+        for (var i = 0; i < len; i++) {
+            var e = unit[i];
+            var en = pb3.Enemy(e.name,e.x, e.y, this.enemyID, e.param).addChildTo(this);
+            if (en.data.type == ENEMY_BOSS) {
+                this.bossGauge.setTarget(en);
+                this.systemBase.tweener.clear().moveBy(0, 32, 1000);
+            }
+            this.enemyID++;
+            this.enemyCount++;
+        }
+    },
+
+    //敵単体の投入
+    enterEnemy: function(name, x, y, param) {
+        this.enemyID++;
+        this.enemyCount++;
+        return pb3.Enemy(name, x, y, this.enemyID-1, param).addChildTo(this);
+    },
+
+    //弾の消去
+    eraseBullet: function(target) {
+        if (target) {
+            //個別弾消し
+            this.layers[LAYER_BULLET].children.each(function(a) {
+                if (target.id == a.id) a.isVanish = true;
+            });
+        } else {
+            //全消し
+            this.layers[LAYER_BULLET].children.each(function(a) {
+                a.isVanish = true;
+            });
+        }
+    },
+
+    //WARNING表示投入
+    enterWarning: function() {
+        this.boss = true;
+        app.playBGM("warning", false);
+        var wg = tm.display.OutlineLabel("WARNING!!", 60).addChildTo(this);
+        wg.x = -SC_W; wg.y = SC_H*0.5;
+        wg.fontFamily = "'Orbitron'"; wg.align = "center"; wg.baseline  = "middle"; wg.fontWeight = 800; wg.outlineWidth = 2;
+        wg.fillStyle = tm.graphics.LinearGradient(-SC_W*0.5, 0, SC_W*0.5, 64)
+            .addColorStopList([
+                { offset: 0.1, color: "hsla(230, 90%, 50%, 0.5)"},
+                { offset: 0.5, color: "hsla(230, 80%, 90%, 0.9)"},
+                { offset: 0.9, color: "hsla(230, 90%, 50%, 0.5)"},
+            ]).toStyle();
+        wg.shadowColor = "red";
+        wg.shadowBlur = 10;
+        wg.tweener
+            .moveBy(SC_W*1.5, 0, 700, "easeInOutCubic")
+            .fadeOut(700).fadeIn(1).wait(1000)
+            .fadeOut(700).fadeIn(1).wait(1000)
+            .fadeOut(700).fadeIn(1).wait(1000)
+            .moveBy(SC_W*1.5, 0, 1000, "easeInOutCubic");
+    },
+
+    //ステージ初期化
+    initStage: function() {
+        switch (this.nowStage) {
+            case 1:
+                this.stage = pb3.Stage1(this, app.player);
+                break;
+            case 2:
+                this.stage = pb3.Stage1(this, app.player);
+                break;
+            case 3:
+                this.stage = pb3.Stage1(this, app.player);
+                break;
+        }
+        this.time = 0;
+        this.timeVanish = 0;
+        this.enemyCount = 0;
+        this.enemyKill = 0;
+        this.stageMiss = 0;
+
+        //ステージ番号表示
+        var m1 = tm.display.OutlineLabel("STAGE "+this.nowStage, 50).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
+        m1.fontFamily = "'Orbitron'"; m1.align = "center"; m1.baseline  = "middle"; m1.fontWeight = 800; m1.outlineWidth = 2;
+        m1.alpha = 0;
+        m1.tweener.wait(500).fadeIn(250).wait(1000).fadeOut(250).call(function(){this.remove()}.bind(m1));
+    },
+
+    //ステージクリア情報表示
+    enterStageClear: function() {
+        //リザルト表示
+        var clearBonus = 100000*this.nowStage;
+        var res = pb3.Result(this.nowStage, this.enemyCount, this.enemyKill, clearBonus, (this.stageMiss==0)?true:false).addChildTo(this);
+        if (this.nowStage < this.maxStage) {
+            res.tweener.wait(10000)
+                .call(function() {
+                    this.nowStage++;
+                    this.initStage();
+                    res.remove();
+                }.bind(this));
+        } else {
+            //ゲームオーバー表示へ移行
+            res.tweener.wait(10000)
+                .call(function() {
+                    app.replaceScene(pb3.GameoverScene(this.nowStage, this.boss, true));
+                    res.remove();
+                }.bind(this));
+        }
+    },
+
+    //全ステージクリア情報表示
+    enterAllStageClear: function() {
+        var mask = tm.display.Shape(SC_W*0.8, SC_H*0.8).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
+        mask.renderRectangle({fillStyle: "rgba(0,0,128,0.5)", strokeStyle: "rgba(128,128,128,0.5)"});
+        mask.alpha = 0;
+
+        var m1 = tm.display.OutlineLabel("ALL CLEAR!", 30).addChildTo(mask).setPosition(SC_W*0.4, SC_H*0.1);
+        m1.fontFamily = "'Orbitron'"; m1.align = "center"; m1.baseline  = "middle"; m1.fontWeight = 800; m1.outlineWidth = 2;
+
+        //ゲームオーバー表示へ移行
+        mask.tweener.fadeIn(1000).wait(5000).fadeOut(2000)
+            .call(function(){
+                app.replaceScene(pb3.GameoverScene(this.nowStage, this.boss, true))
+            }.bind(this));
+    },
+
+    //タッチorクリック開始処理
+    ontouchesstart: function(e) {
+        if (this.touchID > 0)return;
+        this.touchID = e.ID;
+
+        var sx = this.startX = e.pointing.x;
+        var sy = this.startY = e.pointing.y;
+        this.moveX = 0;
+        this.moveY = 0;
+
+        this.beforeX = sx;
+        this.beforeY = sy;
+    },
+
+    //タッチorクリック移動処理
+    ontouchesmove: function(e) {
+        if (this.touchID != e.ID) return;
+
+        var sx = e.pointing.x;
+        var sy = e.pointing.y;
+        var moveX = Math.abs(sx - this.beforeX);
+        var moveY = Math.abs(sx - this.beforeY);
+
+        if (this.time % 10 == 0) {
+            this.beforeX = sx;
+            this.beforeY = sy;
+        }
+    },
+
+    //タッチorクリック終了処理
+    ontouchesend: function(e) {
+        if (this.touchID != e.ID) return;
+        this.touchID = -1;
+
+        var sx = e.pointing.x;
+        var sy = e.pointing.y;
+    },
+
+    //addChildオーバーライド
+    addChild: function(child) {
+        if (child.layer === undefined) {
+            return this.superClass.prototype.addChild.apply(this, arguments);
+        }
+        child.parentScene = this;
+        return this.layers[child.layer].addChild(child);
     },
 });
+
+})();

@@ -1,155 +1,109 @@
 /*
- *  PlanetBuster3
  *  player.js
- *  2013/06/21
+ *  2014/09/05
  *  @auther minimo  
  *  This Program is MIT license.
  */
- 
-Player = tm.createClass({
-    superClass: tm.app.Sprite,
+(function() {
+
+tm.define("pb3.Player", {
+    superClass: "tm.display.Sprite",
+    layer: LAYER_OBJECT,
+
+    //当り判定サイズ
+    width: 2,
+    height: 2,
+
+    control: true,  //操作可能フラグ
+    shotON: true,   //ショットフラグ
+    mouseON: false, //マウス操作中フラグ
+
+    isCollision: false, //当り判定有効フラグ
+
+    timeMuteki: 0, //無敵フレーム残り時間
+
+    speed: 10,      //移動係数
+    type: 0,        //自機タイプ(0:赤 1:緑 2:青)
+
+    shotPower: 10,      //ショット威力
+    shotInterval: 6,    //ショット間隔
+
+    rollcount: 50,
+    pitchcount: 50,
+
+    parentScene: null,
 
     init: function() {
-        this.superInit("gunship1", 32, 32);
-        this.x = SC_W/2;
-        this.y = SC_H*0.8;
-        this.bx = SC_W/2;
-        this.by = SC_H*0.8;
-        this.setFrameIndex(4,32,32);
+        this.superInit("gunship", 32, 32);
+        this.setFrameIndex(4);
+//        this.setScale(1.5);
 
-        this.startup = true;
-        this.stageStartup = false;
-        this.control = true;    //操作可能フラグ
-        this.shotON  = true;    //ショットフラグ
-        this.mouseON = false;   //マウス操作中フラグ
-        
-        this.speed = 3;         //移動速度
-        this.rollcount = 50;    //機体ロール具合
-        this.bitOpen = true;    //ビット展開
-        
-        this.type = 0;  //自機タイプ
-        
-        //ビット
-        var bit = this.bit1 = PlayerBit();
-        bit.x = -40;
-        bit.y = 20;
-        bit.setDirection(-10);
-        bit.addChildTo(this);
-        var bit = this.bit2 = PlayerBit();
-        bit.x = 40;
-        bit.y = 20;
-        bit.setDirection(10);
-        bit.reverse = true;
-        bit.addChildTo(this);
+        this.setupBody();
 
-        var bit = this.bit3 = PlayerBit();
-        bit.x = -25;
-        bit.y = 10;
-        bit.setDirection(-5);
-        bit.addChildTo(this);
-        var bit = this.bit4 = PlayerBit();
-        bit.x = 25;
-        bit.y = 10;
-        bit.setDirection(5);
-        bit.reverse = true;
-        bit.addChildTo(this);
-        
+        //当り判定設定
+        this.boundingType = "circle";
+        this.radius = 2;
+        this.checkHierarchy = true;
+
         this.time = 0;
+        return this;
     },
+
+    //機体準備
+    setupBody: function() {
+        //コア
+        core = tm.display.Shape(16, 16).addChildTo(this);
+        core.canvas.setFillStyle(
+            tm.graphics.RadialGradient(8, 8, 0, 8, 8, 8)
+                .addColorStopList([
+                    {offset:0.0, color: "hsla(200, 60%, 70%, 1.0)"},
+                    {offset:0.5, color: "hsla(240, 60%, 70%, 1.0)"},
+                    {offset:1.0, color: "hsla(240, 60%, 50%, 0.0)"},
+                ]).toStyle()
+            ).fillRect(0, 0, 16, 16);
+        core.tweener.clear();
+        core.tweener.scale(1.0, 100, "easeInOutQuad").scale(0.5, 150, "easeInOutQuad").setLoop(true);
+
+        //ビット
+        this.bits = [];
+        this.bits.status = 0; //0:close 1:open1 2:open2 3:rollingStanby 4:rollingReady
+        this.bits.roll = 0;
+        this.bits[0] = pb3.PlayerBit().addChildTo(this);
+        this.bits[1] = pb3.PlayerBit().addChildTo(this);
+        this.bits[2] = pb3.PlayerBit().addChildTo(this);
+        this.bits[3] = pb3.PlayerBit().addChildTo(this);
+
+        this.openBit();
+    },
+
     update: function() {
-        if (this.startup) {
-            var self = this;
-            this.x = SC_W/2;
-            this.y = SC_H+32;
-            
-            if (this.stageStartup) {
-                this.tweener.
-                to({x:SC_W/2,y:SC_H/2+32}, 1000, "easeOutQuint").
-                to({x:SC_W/2,y:SC_H-64},1000).
-                call(function(){
-                    self.shotON = true;
-                    self.control = true;
-                });
-            } else {
-                this.tweener.
-                to({x:SC_W/2,y:SC_H-64}, 1000, "easeOutQuint").
-                call(function(){
-                    self.shotON = true;
-                    self.control = true;
-                });
-            }
-            
-            this.shotON = false;
-            this.control = false;
-            this.startup = false;
-            this.stageStartup = false;
-        }
-    
         //操作系
-        if (this.control) {
-            var p = app.pointing;
-            var dx = p.position.x - p.prevPosition.x;
-            var dy = p.position.y - p.prevPosition.y;
-            if (p.getPointing()) {
-//                this.x += p.deltaPosition.x;
-//                this.y += p.deltaPosition.y;
-                this.x += dx;
-                this.y += dy;
-                this.mouseON = true;
-            }else{
-                this.mouseON = false;
-            }
-            
-            var kb = app.keyboard;
-            if (kb.getKey("up")) {
-                this.y -= this.speed;
-            } else
-            if (kb.getKey("down")) {
-                this.y += this.speed;
-            }
-            if (kb.getKey("left")) {
-                this.x -= this.speed;
-            } else
-            if (kb.getKey("right")) {
-                this.x += this.speed;
-            }
+        var p = app.pointing;
+        if (p.getPointing()) {
+            var pt = this.parentScene.pointer;
+            this.x += (pt.x - this.x)/this.speed;
+            this.y += (pt.y - this.y)/this.speed;
 
-            if (kb.getKey("space")) {
-                pb3.bullets.vanish();
-            }
-
-            //ショット
-            if (this.shotON) {
-                if (this.time % 4 == 0) {
-                    pb3.shots.enter(0, this.x-12, this.y- 8, -3, 10);
-                    pb3.shots.enter(0, this.x- 7, this.y- 8, -1, 10);
-                    pb3.shots.enter(0, this.x- 2, this.y-16,  0, 10);
-                    pb3.shots.enter(0, this.x+ 2, this.y-16,  0, 10);
-                    pb3.shots.enter(0, this.x+ 7, this.y- 8,  1, 10);
-                    pb3.shots.enter(0, this.x+12, this.y- 8,  3, 10);
-                }
-            }
+            this.mouseON = true;
+        } else {
+            this.mouseON = false;
         }
 
+        //機体ロール
         if (this.bx > this.x) {
-            this.rollcount-=2;
+            this.rollcount-=3;
             if (this.rollcount < 0) this.rollcount = 0;
         }
         if (this.bx < this.x) {
-            this.rollcount+=2;
+            this.rollcount+=3;
             if (this.rollcount > 80) this.rollcount = 80;
         }
         if (this.bx == this.x) {
-            if (this.rollcount < 50) this.rollcount+=2;
-            else this.rollcount-=2;
+            if (this.rollcount < 50) this.rollcount+=3;
+            else this.rollcount-=3;
             if (this.rollcount < 0) this.rollcount = 0;
             if (this.rollcount > 80) this.rollcount = 80;
         }
-
-        //移動範囲の制限
-        this.x = Math.clamp(this.x, 16, SC_W-16);
-        this.y = Math.clamp(this.y, 16, SC_H-16);
-        
         //機体ロール
         if (this.time % 2 == 0) {
             var i = ~~(this.rollcount/10);
@@ -157,64 +111,189 @@ Player = tm.createClass({
             if (i > 8) i = 8;
             this.setFrameIndex(i,32,32);
         }
-        
-        //バックファイア
-        var p = pb3.Particle(20, 1.0, 0.95, null, 128, 128, 255).addChildTo(app.currentScene);
-        p.x = this.x;
-        p.y = this.y+16;
-        p.vy = 1;
-        var p = pb3.Particle(20, 1.0, 0.95, null, 128, 128, 255).addChildTo(app.currentScene);
-        p.x = this.x;
-        p.y = this.y+16;
-        p.vy = 1;
+
+        //移動範囲の制限
+        if (this.control) {
+            this.x = Math.clamp(this.x, 16, GS_W-16);
+            this.y = Math.clamp(this.y, 16, GS_H-16);
+        }
+
+        //タッチorクリック中
+        if (this.mouseON && this.control) {
+            //ショット
+            if (this.shotON && this.time % this.shotInterval == 0) {
+                this.enterShot();
+            }
+        }
 
         this.bx = this.x;
         this.by = this.y;
         this.time++;
+        this.timeMuteki--;
+    },
+
+    //被弾処理
+    damage: function() {
+        if (this.timeMuteki>0 || MUTEKI) return;
+
+        pb3.burnParticlePlayer(this.x, this.y).addChildTo(this.parentScene);
+        app.playSE("explodePlayer");
+
+        this.parentScene.stageMiss++;
+        this.parentScene.life--;
+        this.parentScene.dispLife.dec();
+        if (this.parentScene.life > -1) {
+            this.startup();
+            this.parentScene.eraseBullet();
+            this.parentScene.eraseBulletTime = 60;
+        } else {
+            this.setPosition(GS_W*0.5, GS_H*3);
+            this.control = false;
+        }
+    },
+
+    //ショット発射
+    enterShot: function() {
+        var shotPower = 1;
+        //自機から
+        pb3.ShotBullet(0, shotPower, 0).addChildTo(this.parentScene).setPosition(this.x   , this.y-16);
+        pb3.ShotBullet(0, shotPower, 0).addChildTo(this.parentScene).setPosition(this.x+24, this.y-16);
+        pb3.ShotBullet(0, shotPower, 0).addChildTo(this.parentScene).setPosition(this.x-24, this.y-16);
+
+        //ビットから
+        var x = this.x + this.bits[0].x;
+        var y = this.y + this.bits[0].y;
+        pb3.ShotBullet(this.bits[0].rotation, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
+
+        var x = this.x + this.bits[1].x;
+        var y = this.y + this.bits[1].y;
+        pb3.ShotBullet(this.bits[1].rotation, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
+
+        var x = this.x + this.bits[2].x;
+        var y = this.y + this.bits[2].y;
+        pb3.ShotBullet(this.bits[2].rotation, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
+
+        var x = this.x + this.bits[3].x;
+        var y = this.y + this.bits[3].y;
+        pb3.ShotBullet(this.bits[3].rotation, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
+    },
+
+    //ビット展開
+    openBit: function() {
+        this.bits[0].tweener.clear().to({ x: 24, y:  8, rotation:  5, alpha:1}, 300);
+        this.bits[1].tweener.clear().to({ x:-24, y:  8, rotation: -5,  alpha:1}, 300);
+        this.bits[2].tweener.clear().to({ x: 40, y: 16, rotation: 10, alpha:1}, 300);
+        this.bits[3].tweener.clear().to({ x:-40, y: 16, rotation:-10, alpha:1}, 300);
+    },
+
+    //ビット収納
+    closeBit: function() {
+        if (this.bits.status == 0) return;
+        this.bits.status = 0;
+        this.bits[0].tweener.clear().to({ x:0, y: 0, alpha:0}, 300);
+        this.bits[1].tweener.clear().to({ x:0, y: 0, alpha:0}, 300);
+        this.bits[2].tweener.clear().to({ x:0, y: 0, alpha:0}, 300);
+        this.bits[3].tweener.clear().to({ x:0, y: 0, alpha:0}, 300);
+    },
+
+    //プレイヤー投入時演出
+    startup: function() {
+        this.x = GS_W/2;
+        this.y = GS_H+128;
+        this.tweener.clear()
+            .wait(2000)
+            .to({x: GS_W/2, y: GS_H-128}, 2000, "easeOutQuint")
+            .call(function(){
+                this.shotON = true;
+                this.control = true;
+                this.isCollision = true;
+                this.timeMuteki = 180;
+            }.bind(this));
+        this.shotON = false;
+        this.control = false;
+        this.isCollision = false;
+        this.parentScene.timeVanish = 300;
+    },
+
+    //ステージ開始時演出
+    stageStartup: function() {
+        this.x = GS_W/2;
+        this.y = GS_H+128;
+        this.tweener.clear()
+            .to({x: GS_W/2, y: GS_H/2+32}, 1000, "easeOutCubic")
+            .to({x: GS_W/2, y: GS_H-64  }, 1000)
+            .call(function(){
+                this.shotON = true;
+                this.control = true;
+                this.isCollision = true;
+                this.timeMuteki = 180;
+            }.bind(this));
+        this.shotON = false;
+        this.control = false;
+        this.isCollision = false;
     },
 });
 
-var PlayerBit = tm.createClass({
-    superClass: tm.app.Sprite,
+//ビット
+tm.define("pb3.PlayerBit", {
+    superClass: "tm.display.Sprite",
 
-    init: function(parent) {
-        this.superInit("bit1", 32, 32);
-        this.setFrameIndex(0,32,32);
-        this.scaleX = this.scaleY = 0.5;
-        this.offset_x = this.offset_y = 0;
-        this.reverse = false;
-        this.shotON = true;
-        this.parent = parent;
-        this.time = 1;
+    active: false,
+
+    init: function() {
+        this.superInit("bit", 32, 32);
+        this.setScale(0.5);
+        this.parentScene = app.currentScene;
+        this.index = 0;
+
+        this.alpha = 1;
+
+        this.beforeX = 0;
+        this.beforeY = 0;
+
+        this.time = 0;
     },
+
     update: function() {
-        //回転
         if (this.time % 2 == 0) {
-            var c = this.time/2%9;
-            if (this.reverse) c = 8-c;
-            this.setFrameIndex(c, 32, 32);
+            this.index = (this.index+1)%9;
+            this.setFrameIndex(this.index, 32, 32);
         }
-        //グローバル座標取得
-        var g = this.parent.localToGlobal(this);
-
-        //ショット
-        if (this.time % 4 == 0 && this.parent.shotON && this.shotON) {
-            pb3.shots.enter(1, g.x + this.offset_x, g.y + this.offset_y, this.rotation, 15);
-        }
-
-        //バックファイア
-        var p = pb3.Particle(20, 1.0, 0.95, null, 128, 128, 255).addChildTo(app.currentScene);
-        p.x = g.x;
-        p.y = g.y+5;
-        p.vy = 1;
         this.time++;
     },
-    setDirection: function(dir) {
-        this.rotation = dir;
-        this.offset_x = Math.sin(dir*toRad)*5;
-        this.offset_y = -Math.cos(dir*toRad)*15;
+});
+
+//プレイヤー操作用ポインタ
+tm.define("pb3.PlayerPointer", {
+    superClass: "tm.display.Shape",
+    layer: LAYER_OBJECT_LOWER,
+
+    init: function() {
+        this.superInit(32, 32);
+        this.canvas.lineWidth = 3;
+        this.canvas.globalCompositeOperation = "lighter";
+        this.canvas.strokeStyle = "rgb(255, 255, 255)";
+        this.canvas.strokeArc(16, 16, 8, Math.PI*2, 0, true);
+    },
+
+    update: function() {
+        var p = app.pointing;
+        if (app.player.control && p.getPointing()) {
+            if (~~(this.x) == ~~(app.player.x) && ~~(this.y) == ~~(app.player.y)) {
+                this.alpha = 0;
+            } else {
+                this.alpha = 0.5;
+            }
+            this.x += (p.position.x - p.prevPosition.x)*2;
+            this.y += (p.position.y - p.prevPosition.y)*2;
+            this.x = Math.clamp(this.x, 0, GS_W);
+            this.y = Math.clamp(this.y, 0, GS_H);
+        } else {
+            this.x = app.player.x;
+            this.y = app.player.y;
+            this.alpha = 0;
+        }
     },
 });
 
-
-
+})();

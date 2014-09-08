@@ -1,186 +1,271 @@
 /*
- *  PlanetBuster3
  *  Effect.js
- *  エフェクト管理
- *  2013/07/01
- *  @auther minimo
+ *  2014/07/10
+ *  @auther minimo  
  *  This Program is MIT license.
  */
+pb3.Effect = [];
 
-//////////////////////////////////////////////////////////////////////////////
-//エフェクトデータ
-//添字      名称
-//file      画像名
-//w,h       画像サイズ
-//start     アニメーション開始フレーム番号
-//frame     アニメーションフレーム数
-//wait      アニメーション更新間隔
-//blend     アルファブレンド処理(default:'source-over')
-//brake	    慣性移動ブレーキ係数(default:1.0)
-//under	    下位レイヤへの追加(default:false)
-//sound	    再生サウンド(default:無し)
-//loop      フレーム再生ループフラグ(delault: false)
-//////////////////////////////////////////////////////////////////////////////
-var effectData = {
-//自機系
-'shotburn':     { file: 'shotburn', w:16, h:16, start: 0, frame: 8, wait: 3, blend: 'lighter', brake: 1 },
+(function() {
 
-//敵特殊効果
-'roter1':       { file: 'roter1', w:32, h:32, start: 0, frame: 4, wait: 1, blend: 'source-over', loop: true},
+//汎用パーティクル
+tm.define("pb3.Effect.Particle", {
+    superClass: "tm.display.Shape",
+    layer: LAYER_EFFECT_UPPER,
 
-//弾消
-'vanish1':  	{ file: 'vanish1', w:16, h:16, start: 0, frame: 8, wait: 3, blend: 'lighter', brake: 0.95 },
+    alpha: 1.0,
+    alphaDecayRate: 0.85,
+    size: 0,
 
-//爆発
-'explode1':     { file: 'explode1', w:32, h:32, start: 0, frame: 8, wait: 3, blend: 'lighter', brake: 0.9, sound:'bomb1' },
+    image: null,
+    isEffect: true,
+    isUpper: true,
 
-//破片
-'chip1':     { file: 'chip2', w: 8, h: 8, start:  0, frame: 8, wait: 3, blend: 'source-over', brake: 0.9 },
-'chip2':     { file: 'chip2', w: 8, h: 8, start:  8, frame: 8, wait: 3, blend: 'source-over', brake: 0.9 },
-'chip3':     { file: 'chip2', w: 8, h: 8, start: 16, frame: 4, wait: 3, blend: 'source-over', brake: 0.9 },
-'chip4':     { file: 'chip1', w:16, h:16, start:  0, frame: 8, wait: 3, blend: 'source-over', brake: 0.9 },
-'chip5':     { file: 'chip1', w:16, h:16, start:  8, frame: 8, wait: 3, blend: 'source-over', brake: 0.9 },
-'chip6':     { file: 'chip1', w:16, h:16, start: 16, frame: 8, wait: 3, blend: 'source-over', brake: 0.9 },
-}
+    init: function(size, initialAlpha, alphaDecayRate, color) {
+        size = size || 32;
+        color = color || 0;
+        this.superInit(size, size);
 
-//管理用
-MAX_EFFECTS = 200;
-pb3.effects = [];
+        if (initialAlpha === undefined) initialAlpha = 1;
+        if (alphaDecayRate === undefined) alphaDecayRate = 0.9;
 
-pb3.Effect = tm.createClass({
-    superClass: tm.app.Sprite,
+        this.size = size;
+        this.alpha = initialAlpha;
+        this.alphaDecayRate = alphaDecayRate;
+        this.blendMode = "lighter";
 
-    init: function() {
-        this.superInit("vanish1", 32, 32);
-        this.startFrame = 0;    //開始フレーム
-        this.numFrame = 0;      //フレーム数
-        this.nowFrame = 0;      //現在フレーム
-        this.wait = 1;          //更新間隔
-        this.brake = 1.0;       //慣性移動ブレーキ係数
-        this.vx = 0;            //移動量
-        this.vy = 0;            //移動量
-        this.blendMode = "souece-over";
-        this.time = 0;
+        var c = this.canvas;
+        c.setFillStyle(
+            tm.graphics.RadialGradient(size/2, size/2, 0, size/2, size/2, size/2)
+                .addColorStopList([
+                    {offset:0.0, color: "hsla({0}, 60%, 50%, 1.0)".format(color)},
+                    {offset:0.5, color: "hsla({0}, 60%, 50%, 0.5)".format(color)},
+                    {offset:1.0, color: "hsla({0}, 60%, 50%, 0.0)".format(color)},
+                ]).toStyle()
+            ).fillRect(0, 0, size, size);
 
-        this.addEventListener("removed", function() {
-            this.using = false;
-        });
-//        tm.app.CircleShape(32, 32).setPosition(0, 0).addChildTo(this);
-    },
-    update: function() {
-        if (this.time < 0) {
-            this.time++;
-            return;
-        }
-        if (this.time == 0) this.visible = true;
-
-        this.x += this.vx;
-        this.y += this.vy;
-        this.vx *= this.brake;
-        this.vy *= this.brake;
-        if (this.time != 0 && this.time % this.wait == 0) {
-            this.nowFrame++;
-            if (this.nowFrame > this.numFrame+this.startFrame-1) {
-                if (this.loop) {
-                    this.nowFrame = this.startFrame;
-                } else {
-                    this.remove();
-                    return;
-                }
+        this.on("enterframe", function() {
+            this.alpha *= this.alphaDecayRate;
+            if (this.alpha < 0.01) {
+                this.remove();
+                return;
+            } else if (1.0 < this.alpha) {
+                this.alpha = 1.0;
             }
-            this.setFrameIndex(this.nowFrame, this.width, this.height);
-        }
-        this.time++;
+        }.bind(this));
     },
 });
 
-pb3.effects.init = function() {
-    for (var i = 0; i < MAX_EFFECTS; i++ ){
-        var e = new pb3.Effect();
-        this.push(e);
-    }
+//オーラ用パーティクル
+tm.define("pb3.Effect.Aura", {
+    superClass: "tm.display.Shape",
+    layer: LAYER_EFFECT_UPPER,
 
-    pb3.effects.numUsing = function() {
-        var n = 0;
-        for (var i = 0,len = this.length; i < len; i++ ){
-            var b = this[i]; 
-            if (b.using) n++;
+    init: function(target, size, alphaDecayRate) {
+        size = size || 100;
+        this.superInit();
+        if (alphaDecayRate === undefined) alphaDecayRate = 0.9;
+
+        this.width = this.height = this.size = size;
+        this.alpha = 0.02;
+        this.alphaDecayRate = alphaDecayRate;
+        this.blendMode = "lighter";
+        this.tweener.clear().to({alpha:1},200).to({alpha:0},2000);
+
+        this.target = target;
+        this.vanish = false;
+
+        this.setScale(size*0.01);
+
+        var c = this.canvas;
+        c.setFillStyle(
+            tm.graphics.RadialGradient(25, 25, 0, 25, 25, 25)
+                .addColorStopList([
+                    {offset:0.0, color: "hsla({0}, 60%, 50%, 0.4)".format(200)},
+                    {offset:0.5, color: "hsla({0}, 60%, 50%, 0.2)".format(240)},
+                    {offset:1.0, color: "hsla({0}, 60%, 50%, 0.0)".format(240)},
+                ]).toStyle()
+            )
+            .fillRect(0, 0, 50, 50);
+    },
+
+    update: function() {
+        if (this.alpha < 0.01) {
+            this.remove();
+            return;
+        } else if (1.0 < this.alpha) {
+            this.alpha = 1.0;
         }
-        return n;
-    }
-    pb3.effects.numNotUsing = function() {
-        var n = 0;
-        for (var i = 0,len = this.length; i < len; i++ ){
-            var b = this[i];
-            if (!b.using) n++;
+        if (this.target.mouseON && !this.vanish) {
+             this.x += this.vx;
+             this.y += this.vy;
+        } else {
+             this.vanish = true;
+             this.x -= this.vx*3;
+             this.y -= this.vy*3;
         }
-        return n;
-    }
+        var x = this.target.x;
+        var y = this.target.y;
+        if (this.x-2 < x && x < this.x+2 && this.y-2 < y && y < this.y+2) {
+            this.remove();
+            return;
+        }
+        this.scaleX *= 0.98;
+        this.scaleY *= 0.98;
+    },
+});
 
-    pb3.effects.enter = function(name, x, y, vx, vy, delay) {
-        var data = effectData[name] || null;
-        x = x || 160;
-        y = y || 160;
-        vx = vx || 0;
-        vy = vy || 0;
-        delay = delay || 0;
+//爆発用パーティクル
+tm.define("pb3.Effect.BurnParticle", {
+    superClass: "tm.display.Shape",
+    layer: LAYER_EFFECT_UPPER,
 
-        var e;
-        for (var i = 0,len = this.length; i < len; i++) {
-            e = this[i];
-            if (!e.using){
-                //情報の初期化とコピー
-                e.image = tm.asset.AssetManager.get(data.file);
-                e.x = x;
-                e.y = y;
-                e.vx = vx;
-                e.vy = vy;
-                e.width = data.w;
-                e.height = data.h;
-                e.startFrame = data.start || 0;
-                e.numFrame = data.frame || 1;
-                e.nowFrame = data.start || 0;
-                e.wait = data.wait || 3;
-                e.blendMode = data.blend || 'source-over';
-                e.brake = data.brake || 1;
-                e.under = data.under || false;
-                e.loop = data.loop || false;
-                e.time = delay;
-                if (e.time > 0)e.time *= -1;
-                e.visible = false;
-                e.particle = false;
-                e.alpha = 1.0;
-                e.using = true;
-                if (data.sound)tm.asset.AssetManager.get(data.sound).clone().play();
+    alpha: 1.0,
+    alphaDecayRate: 0.85,
+    size: 0,
 
-                e.setFrameIndex(e.startFrame, e.width, e.height);
+    image: null,
+    isEffect: true,
+    isUpper: true,
 
-                var layer = LAYER_EFFECT_UPPER;
-                if (data.under) layer = LAYER_EFFECT_UNDER;
-                app.currentScene.addChildToLayer(layer, e);
-                return e;
+    init: function(size, initialAlpha, alphaDecayRate, color) {
+        size = size || 32;
+        color = color || 0;
+        this.superInit(size, size);
+
+        if (initialAlpha === undefined) initialAlpha = 1;
+        if (alphaDecayRate === undefined) alphaDecayRate = 0.9;
+
+        this.size = size;
+        this.alpha = initialAlpha;
+        this.alphaDecayRate = alphaDecayRate;
+        this.blendMode = "lighter";
+
+        var c = this.canvas;
+        c.setFillStyle(
+            tm.graphics.RadialGradient(size/2, size/2, 0, size/2, size/2, size/2)
+                .addColorStopList([
+                    {offset:0.0, color: "hsla({0}, 50%, 30%, 1.0)".format(color)},
+                    {offset:0.5, color: "hsla({0}, 50%, 30%, 0.5)".format(color)},
+                    {offset:1.0, color: "hsla({0}, 60%, 50%, 0.0)".format(color)},
+                ]).toStyle()
+            )
+            .fillRect(0, 0, size, size);
+
+        this.on("enterframe", function() {
+            this.alpha *= this.alphaDecayRate;
+            if (this.alpha < 0.01) {
+                this.remove();
+                return;
+            } else if (1.0 < this.alpha) {
+                this.alpha = 1.0;
             }
-        }
-        return null;
-    }
+        }.bind(this));
+    },
+});
 
-    //爆発エフェクト投入
-    pb3.effects.enterExplode = function(level, x, y, vx, vy) {
-        switch(level) {
-            case 0:
-                pb3.effects.enter("explode1", x, y, vx, vy);
-                var num = rand(5)+3;
-                for (var i = 0; i < num; i++) {
-                    var rad = rand(360)*toRad;
-                    var spd = rand(3)+2;
-                    var vx2 = Math.sin(rad)*spd+vx;
-                    var vy2 = Math.cos(rad)*spd+vy;
-                    var ptn = "chip"+(rand(3)+1);
-                    pb3.effects.enter(ptn, x, y, vx2, vy2);
-                }
+//敵弾消滅パーティクル
+tm.define("pb3.Effect.BulletVanish", {
+    superClass: "tm.display.Shape",
+    layer: LAYER_EFFECT_UPPER,
+
+    alpha: 1.0,
+    alphaDecayRate: 0.9,
+    size: 0,
+
+    image: null,
+    isEffect: true,
+    isUpper: true,
+
+    deltaX: 0.0,    //水平方向速度
+    deltaY: 0.0,    //垂直方向速度
+    deltaA: 1.0,    //速度減衰率
+
+    init: function(bullet) {
+        var size = bullet.size || 16;
+        var type = bullet.param.type || "RL";
+        this.superInit(size, size);
+
+        this.size = size;
+        this.blendMode = "lighter";
+        this.deltaX = bullet.runner.deltaX;
+        this.deltaY = bullet.runner.deltaY;
+        this.deltaA = 0.9;
+        this.setPosition(bullet.x, bullet.y);
+
+        var color = 0;
+        switch (type) {
+            case "RS":
+            case "RL":
+            case "RE":
+                color = 320;
                 break;
-            case 1:
+            case "BS":
+            case "BL":
+            case "BE":
+                color = 240;
                 break;
         }
-    }
-};
+
+        var c = this.canvas;
+        c.setFillStyle(
+            tm.graphics.RadialGradient(size/2, size/2, 0, size/2, size/2, size/2)
+                .addColorStopList([
+                    {offset:0.0, color: "hsla({0}, 60%, 50%, 0.0)".format(color)},
+                    {offset:0.9, color: "hsla({0}, 60%, 50%, 1.0)".format(color)},
+                    {offset:1.0, color: "hsla({0}, 60%, 50%, 0.0)".format(color)},
+                ]).toStyle()
+            ).fillRect(0, 0, size, size);
+
+        this.on("enterframe", function() {
+            this.x += this.deltaX;
+            this.y += this.deltaY;
+            this.deltaX *= this.deltaA;
+            this.deltaY *= this.deltaA;
+        }.bind(this));
+
+        this.tweener.clear()
+            .to({scaleX: 3, scaleY: 3, alpha: 0.0}, 800, "easeOutQuad")
+            .call(function() {
+                this.remove();
+            }.bind(this));
+    },
+});
+
+//衝撃波
+tm.define("pb3.Effect.ShockWave", {
+    superClass: "tm.display.Shape",
+    layer: LAYER_EFFECT_UPPER,
+
+    init: function(size, alphaDecayRate) {
+        size = size || 64;
+        this.superInit(size, size);
+
+        if (alphaDecayRate === undefined) alphaDecayRate = 0.9;
+
+        this.width = this.height = this.size = size;
+        this.alphaDecayRate = alphaDecayRate;
+        this.blendMode = "lighter";
+
+        var c = this.canvas;
+        c.setFillStyle(
+            tm.graphics.RadialGradient(size/2, size/2, 0, size/2, size/2, size/2)
+                .addColorStopList([
+                    {offset:0.0, color: "hsla(0, 100%, 100%, 0.0)"},
+                    {offset:0.8, color: "hsla(0, 100%, 100%, 1.0)"},
+                    {offset:1.0, color: "hsla(0, 100%, 100%, 0.0)"},
+                ]).toStyle()
+            ).fillRect(0, 0, size, size);
+    },
+
+    update: function() {
+        if (this.alpha < 0.01) {
+            this.remove();
+            return;
+        } else if (1.0 < this.alpha) {
+            this.alpha = 1.0;
+        }
+    },
+});
+
+})();

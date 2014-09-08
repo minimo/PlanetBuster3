@@ -1,157 +1,246 @@
 /*
- *  PlanetBuster3
  *  Enemy.js
- *  敵オブジェクト管理
- *  2013/06/21
- *  @auther minimo
+ *  2014/08/10
+ *  @auther minimo  
  *  This Program is MIT license.
  */
+(function() {
 
-//管理用
-MAX_ENEMIES = 200;
-pb3.enemies = [];
+tm.define("pb3.Enemy", {
+    superClass: "tm.display.CanvasElement",
+    layer: LAYER_OBJECT,    //所属レイヤー
+    parentScene: null,      //親シーン
+    player: null,           //プレイヤー参照用
 
-//敵オブジェクト本体
-pb3.Enemy = tm.createClass({
-    superClass: tm.app.Sprite,
-    using: false,
-    spec: null,
-    time: 0,
-    phase: 0,
+    parentEnemy: null,      //親となる敵キャラ
+
+    //各種フラグ
+    isCollision: true,  //当り判定
+    isDead: false,      //死亡
+    isSelfCrash: false, //自爆
+    isMuteki: false,    //無敵
+    isBoss: false,      //ボス
+    isOnScreen: false,  //画面内に入った
+    isGround: false,    //地上フラグ
+
+    //キャラクタ情報
+    name: null,
     def: 0,
-    point: 0,
+    defMax: 0,
+    bulletPattern: null,
+    nowBulletPattern: null,
+    id: -1,
+    param: null,
+
+    data: null,
+
     beforeX: 0,
     beforeY: 0,
-    init: function() {
-        this.superInit("SkyFish", 32, 32);
 
-        this.collision = tm.app.CanvasElement().addChildTo(this);
+    init: function(name, x, y, id, param) {
+        this.superInit();
+        this.setPosition(x, y);
+        this.id = id || -1;
+        this.param = param;
 
-        this.addEventListener("removed", function() {
-            this.using = false;
-            this.release();
-        });
-//        tm.app.CircleShape(32, 32).setPosition(0, 0).addChildTo(this);
+        this.name = name;
+        var d = this.data = pb3.enemyData[name];
+        if (!d) return false;
 
-        //攻撃ルーチン管理
-        this.gunner = tm.app.CanvasElement().addChildTo(this);
-        this.gunner.parent = this;
+        this.def = d.def;
+        this.defMax = d.def;
+
+        this.width = d.width || 32;
+        this.height = d.height || 32;
+        this.layer = d.layer || LAYER_OBJECT;
+        this.point = d.point || 0;
+
+        if (d.setup) this.setup = d.setup;
+        if (d.algorithm) this.algorithm = d.algorithm;
+        if (d.dead) this.dead = d.dead;
+
+        this.bulletPattern = d.bulletPattern;
+        if (this.bulletPattern instanceof Array) {
+            this.nowBulletPattern = this.bulletPattern[0];
+        } else {
+            this.nowBulletPattern = this.bulletPattern;
+        }
+
+        this.parentScene = app.currentScene;
+        this.setup(param);
+
+        var bulletMLparams = {
+            target: app.player,
+            createNewBullet: function(runner, attr) {
+                pb3.Bullet(runner, attr, this.id).addChildTo(this.parentScene);
+            }.bind(this)
+        };
+        this.startDanmaku(pb3.bulletPattern[this.nowBulletPattern], bulletMLparams);
+
+        //当り判定設定
+        this.boundingType = "rect";
+
+        this.time = 0;
     },
-    setup: function() {},
-    algorithm: function() {},
-    algorithmGunner: function() {},
-    attack: function() {},
-    dead: function() {},
-    release: function() {},
-    deadDefault: function() {
-        var vx = this.x-this.beforeX, vy = this.y-this.beforeY;
-        pb3.effects.enterExplode(this.burn, this.x, this.y, vx, vy);
+
+    setup: function(name) {
+        var param = {
+            strokeStyle:"hsla(0, 100%, 100%, 1.0)",
+            fillStyle:  "hsla(0, 100%, 100%, 1.0)",
+            lineWidth: 2,
+        };
+        var sh = tm.display.Shape(32, 32).addChildTo(this).renderRectangle(param);
     },
+
     update: function() {
-        if (this.time < 0){
-            this.time++;
-            return;
-        }
-        if (this.time == 0)this.setup();
-
+        if (this.isDead) return;
         this.algorithm();
-        this.attack();
 
-        if (this.def < 1) {
-            this.dead();
-            this.remove();
+        //スクリーン内入った判定
+        if (this.isOnScreen) {
+            if (this.x < -100 || this.x > SC_W+100 || this.y < -100 || this.y > SC_H+100) {
+                this.remove();
+                this.isCollision = false;
+            }
+        } else {
+            if (0 < this.x && this.x < SC_W && 0 < this.y && this.y < SC_H) this.isOnScreen = true;
         }
-        if (this.x < -128 || this.y < -128 || this.x > SC_W+128 || this.y > SC_H+128) {
-            this.remove();
+
+        //自機との当り判定チェック
+        var player = app.player;
+        player.radius = 2;
+        if (this.isCollision && player.isCollision && this.isHitElement(player)) {
+            player.damage();
         }
+
+        //親機が破壊された場合、自分も破壊
+        if (this.parentEnemy && this.parentEnemy.isDead) this.dead();
+
         this.beforeX = this.x;
         this.beforeY = this.y;
         this.time++;
     },
+
+    algorithm: function() {
+    },
+
+    damage: function(power) {
+        if (this.isMuteki || this.isDead) return;
+        this.def -= power;
+        if (this.def < 1) {
+            //破壊パターン投入
+            if (this.data.type == ENEMY_BOSS) {
+                this.deadBoss();
+                //ボスの場合はステージクリアを親シーンに通知
+                this.parentScene.stageClear = true;
+            } else {
+                this.dead();
+            }
+            this.parentScene.enemyKill++;
+
+            //弾消し
+            if (this.data.type == ENEMY_MIDDLE) {
+                this.parentScene.eraseBullet(this);
+            } else if (this.data.type == ENEMY_LARGE) {
+                this.parentScene.eraseBullet();
+                this.parentScene.timeVanish = 60;
+            }
+
+            //親機に破壊を通知
+            if (this.parentEnemy) this.parentEnemy.deadChild(this);
+
+            //スコア加算
+            app.score += this.data.point;
+
+            //得点表示
+            var sc = tm.display.OutlineLabel(this.data.point, 30).addChildTo(this.parentScene).setPosition(this.x, this.y);
+            sc.fontFamily = "'UbuntuMono'"; sc.align = "center"; sc.baseline  = "middle"; sc.fontWeight = 300; sc.outlineWidth = 2;
+            sc.tweener.to({x: this.x, y: this.y-50, alpha:0}, 1000).call(function(){this.remove()}.bind(sc));
+        }
+    },
+
+    //通常破壊パターン
+    dead: function() {
+        this.isCollision = false;
+        this.isDead = true;
+        this.tweener.clear();
+        this.stopDanmaku();
+
+        this.on("enterframe", function() {
+            this.alpha *= 0.9;
+            if (this.alpha < 0.02) this.remove();
+        }.bind(this));
+
+        var area = this.width*this.height;
+        if (area < 1025) {
+            pb3.burnParticleSmall(this.x, this.y).addChildTo(this.parentScene);
+            app.playSE("explodeSmall");
+        } else {
+            pb3.burnParticleLarge(this.x, this.y).addChildTo(this.parentScene);
+            app.playSE("explodeLarge");
+        }
+    },
+
+    deadBoss: function() {
+        this.isCollision = false;
+        this.isDead = true;
+        this.tweener.clear();
+        this.stopDanmaku();
+
+        this.on("enterframe", function() {
+            this.alpha *= 0.9;
+            if (this.alpha < 0.02) this.remove();
+        }.bind(this));
+
+        for (var i = 0; i < 10; i++) {
+            var x = rand(0, this.width)-this.width/2;
+            var y = rand(0, this.height)-this.height/2;
+            pb3.burnParticleLarge(this.x+x, this.y+y).addChildTo(this.parentScene);
+        }
+        app.playSE("explodeLarge");
+
+        this.parentScene.eraseBullet();
+    },
+
+    //親機のセット
+    setParentEnemy: function(parent) {
+        this.parentEnemy = parent;
+    },
+
+    //子機が破壊された場合に呼ばれるコールバック
+    deadChild: function(child) {
+    },
+
+    //指定ターゲットの方向を向く
+    lookAt: function(target) {
+        target = target || app.player;
+
+        //ターゲットの方向を向く
+        var ax = this.x - target.x;
+        var ay = this.y - target.y;
+        var rad = Math.atan2(ay, ax);
+        var deg = ~~(rad * toDeg);
+        this.rotation = deg + 90;
+    },
+
+    //指定ターゲットの方向に進む
+    moveTo: function(target, speed, look) {
+        target = target || app.player;
+        speed = speed || 5;
+
+        //ターゲットの方向を計算
+        var ax = this.x - target.x;
+        var ay = this.y - target.y;
+        var rad = Math.atan2(ay, ax);
+        var deg = ~~(rad * toDeg);
+
+        if (look || look === undefined) this.rotation = deg + 90;
+
+        this.vx = Math.cos(rad+Math.PI)*speed;
+        this.vy = Math.sin(rad+Math.PI)*speed;
+        this.x += this.vx;
+        this.y += this.vy;
+    },
 });
 
-//敵管理クラス初期化
-pb3.enemies.init = function(){
-    for (var i = 0; i < MAX_ENEMIES; i++ ){
-        var e = new pb3.Enemy();
-        this.push(e);
-    }
-
-    //配列使用量
-    pb3.enemies.numUsing = function() {
-        var n = 0;
-        for (var i = 0,len = this.length; i < len; i++ ){
-            var e = this[i];
-            if (e.using) n++;
-        }
-        return n;
-    }
-
-    //配列未使用量
-    pb3.enemies.numNotUsing = function() {
-        var n = 0;
-        for (var i = 0,len = this.length; i < len; i++ ){
-            var e = this[i];
-            if (!e.using) n++;
-        }
-        return n;
-    }
-    
-    //敵投入
-    pb3.enemies.enter = function(name, x, y, delay) {
-        name = name || '';
-        x = x || 0;
-        y = y || 0;
-        delay = delay || 0;
-        for (var i = 0,len = this.length; i < len; i++) {
-            var e = this[i];
-            if (!e.using){
-                var p = this.spec = pb3.EnemySpec[name];
-                if (!p) return null;
-
-                e.x = x;
-                e.y = y;
-                e.using = true;
-
-                //性能諸元情報のコピー
-                e.image = p.image;
-                e.width = p.width;
-                e.height = p.height;
-
-                e.collision.x = p.colx;
-                e.collision.y = p.coly;
-                e.collision.width = p.colw;
-                e.collision.height = p.colh;
-
-                e.rotation = 0;
-                e.phase = 0;
-                e.scaleX = e.scaleY = 1;
-
-                e.def = p.def;
-                e.point = p.point;
-                e.burn = p.burn;
-
-                var emptyFunc = function(){};
-                e.setup = p.setup || emptyFunc;
-                e.algorithm = p.algorithm || emptyFunc;
-                e.attack = p.attack || emptyFunc;
-                e.dead = p.dead || e.deadDefault;
-                e.release = p.release || emptyFunc;
-
-                e.time = -delay;
-                if (e.time > 0) e.time*=-1;
-
-                app.currentScene.addChildToLayer(LAYER_OBJECT, e);
-                return e;
-            }
-        }
-        return null;
-    }
-
-    //スペックリスト初期化
-    for (var i in pb3.EnemySpec) {
-        var obj = pb3.EnemySpec[i];
-        obj.image = tm.asset.AssetManager.get(obj.imagename);
-    }
-};
-
+})();

@@ -1,266 +1,245 @@
 /*
- *  PlanetBuster3
  *  Bullet.js
- *  enemy bullets & myship shot
- *  2013/06/21
+ *  2014/07/16
  *  @auther minimo  
  *  This Program is MIT license.
  */
+(function() {
 
-/*
- * 敵弾管理
- */
-MAX_BULLETS = 200;
-pb3.bullets = [];
-pb3.Bullet = tm.createClass({
-    superClass: tm.app.Sprite,
-    using: false,
-    parent: null,
-    type: 0,
-    time: 0,
-    init: function() {
-        this.superInit("bullet1", 24, 24);
-        this.setFrameIndex(0, 24, 24);
+tm.define("pb3.Bullet", {
+    superClass: "tm.bulletml.Bullet",
+    layer: LAYER_BULLET,
+    parentScene: null,
+    player: null,
 
+    param: null,
+    id: -1,
+
+    isVanish: false,
+    isVanishEffect: true,
+
+    speedRoll: 10,
+
+    init: function(runner, param, id) {
+        this.superInit(runner);
+
+        //当り判定設定
+        this.boundingType = "circle";
+        this.radius = 2;
+
+        this.param = param;
+        this.id = id || -1;
+
+        //弾種別グラフィック
+//        this.removeChildren();
+        switch (param.type) {
+            case "RS":
+                tm.display.Shape(20, 20).addChildTo(this).canvas = pb3.bulletGraphic["NormalR-1"];
+                tm.display.Shape(10, 10).addChildTo(this).setPosition(-2,-2).canvas = pb3.bulletGraphic["NormalR-2"];
+                tm.display.Shape(10, 10).addChildTo(this).setPosition( 2, 2).canvas = pb3.bulletGraphic["NormalR-2"];
+                break;
+            case "BS":
+                tm.display.Shape(20, 20).addChildTo(this).canvas = pb3.bulletGraphic["NormalB-1"];
+                tm.display.Shape(10, 10).addChildTo(this).setPosition(-2,-2).canvas = pb3.bulletGraphic["NormalB-2"];
+                tm.display.Shape(10, 10).addChildTo(this).setPosition( 2, 2).canvas = pb3.bulletGraphic["NormalB-2"];
+                break;
+            case "RL":
+                tm.display.Shape(32, 32).addChildTo(this).canvas = pb3.bulletGraphic["NormalR-1"];
+                tm.display.Shape(16, 16).addChildTo(this).setPosition(-3,-3).canvas = pb3.bulletGraphic["NormalR-2"];
+                tm.display.Shape(16, 16).addChildTo(this).setPosition( 3, 3).canvas = pb3.bulletGraphic["NormalR-2"];
+                break;
+            case "BL":
+                tm.display.Shape(32, 32).addChildTo(this).canvas = pb3.bulletGraphic["NormalB-1"];
+                tm.display.Shape(16, 16).addChildTo(this).setPosition(-3,-3).canvas = pb3.bulletGraphic["NormalB-2"];
+                tm.display.Shape(16, 16).addChildTo(this).setPosition( 3, 3).canvas = pb3.bulletGraphic["NormalB-2"];
+                break;
+            case "RE":
+                tm.display.Shape(32, 32).addChildTo(this).canvas = pb3.bulletGraphic["NormalR-1"];
+                tm.display.Shape(16, 16).addChildTo(this).setPosition(-3,-3).canvas = pb3.bulletGraphic["NormalR-2"];
+                tm.display.Shape(16, 16).addChildTo(this).setPosition( 3, 3).canvas = pb3.bulletGraphic["NormalR-2"];
+                this.scaleY = 0.8;
+                break;
+            case "BE":
+                tm.display.Shape(32, 32).addChildTo(this).canvas = pb3.bulletGraphic["NormalB-1"];
+                tm.display.Shape(16, 16).addChildTo(this).setPosition(-3,-3).canvas = pb3.bulletGraphic["NormalB-2"];
+                tm.display.Shape(16, 16).addChildTo(this).setPosition( 3, 3).canvas = pb3.bulletGraphic["NormalB-2"];
+                this.scaleY = 0.8;
+                break;
+            default:
+                this.body = tm.display.Shape(32, 32).addChildTo(this);
+                this.body.canvas = pb3.bulletGraphic["NormalR-1"];
+                break;
+        }
+
+        this.on("enterframe", function(){
+            this.rotation += this.speedRoll;
+
+            //自機との当り判定チェック
+            if (app.player.isCollision) {
+                if (this.isHitElement(app.player) ) {
+                    app.player.damage();
+                    this.isVanish = true;
+                }
+            }
+
+            //画面範囲外
+            if (this.x<-32 || this.x>SC_W+32 || this.y<-32 || this.y>SC_H+323) {
+                this.isVanish = true;
+                this.isVanishEffect = false;
+            }
+
+            if (this.isVanish) this.remove();
+        }.bind(this) );
+
+        //リムーブ時
+        this.on("removed", function(){
+            if (this.isVanishEffect) pb3.Effect.BulletVanish(this).addChildTo(app.currentScene);
+        }.bind(this));
+
+        this.beforeX = this.x;
+        this.beforeY = this.y;
+    },
+});
+
+tm.define("pb3.ShotBullet", {
+    superClass: "tm.display.Sprite",
+    layer: LAYER_SHOT,
+    parentScene: null,
+    player: null,
+
+    speed: 15,
+    power: 1,
+    defaultSpeed: 15,
+    defaultPower: 1,
+
+    init: function(rotation, power, type) {
+        if (type == 0) {
+            this.superInit("shot1", 16, 16);
+            this.setScale(3);
+        } else {
+            this.superInit("shot2", 16, 32);
+            this.setScale(2);
+        }
+
+        this.rotation = rotation || 0;
+        this.speed = this.defaultSpeed;
+        this.power = power || this.defaultPower;
+
+        this.alpha = 0.8;
         this.blendMode = "lighter";
 
-        this.collision = tm.app.CanvasElement().addChildTo(this);
+        rotation-=90;
+        this.vx = Math.cos(rotation*toRad) * this.speed;
+        this.vy = Math.sin(rotation*toRad) * this.speed;
 
-        this.addEventListener("removed", function() {
-            this.using = false;
-        });
-    },
-    update: function() {
-        if (this.time % 3 == 0) {
-            this.setFrameIndex(~~(this.time/3)%8, 24, 24);
-        }
-        this.rotation+=5;
-        this.time++;
-    },
-    //消失時エフェクト投入
-    vanish: function() {
-        var r = this.rotation * toRad;
-        var s = this.speed;
-        var vx =  Math.sin(r)*s;
-        var vy = -Math.cos(r)*s;
-        pb3.effects.enterEffect("vanish1", this.x, this.y, vx, vy);
-        return this;
-    },
-});
-
-//敵弾初期化
-pb3.bullets.init = function(){
-    for (var i = 0; i < MAX_BULLETS; i++ ){
-        var b = new pb3.Bullet();
-        this.push(b);
-    }
-
-   pb3.bullets.numUsing = function() {
-        var n = 0;
-        for (var i = 0,len = this.length; i < len; i++ ){
-            var b = this[i];
-            if (b.using) n++;
-        }
-        return n;
-    }
-   pb3.bullets.numNotUsing = function() {
-        var n = 0;
-        for (var i = 0,len = this.length; i < len; i++ ){
-            var b = this[i];
-            if (!b.using) n++;
-        }
-        return n;
-    }
-
-    //弾投入（通常）
-    pb3.bullets.enter = function(parent, type, size, color) {
-        type = type || 0;
-        size = size || 16;
-        color = color || 0;
-        var b;
-        for (var i = 0,len = this.length; i < len; i++) {
-            b = this[i];
-            if (!b.using){
-                b.type = type;
-                b.width = size;
-                b.height = size;
-                b.size = size;
-                b.color = "hsl({0}, 50%, 50%)".format(color);
-                b.using = true;
-                b.parent = parent;
-                app.currentScene.addChildToLayer(LAYER_BULLET, b);
-                return b;
-            }
-        }
-        return null;
-    }
-
-    //弾投入(BulletML用）
-    pb3.bullets.enterToBulletML = function(parent, type, size, color) {
-        type = type || 0;
-        size = size || 16;
-        color = color || 0;
-        var b;
-        for (var i = 0,len = this.length; i < len; i++) {
-            b = this[i];
-            if (!b.using){
-                b.type = type;
-                b.width = size;
-                b.height = size;
-                b.size = size;
-                b.color = "hsl({0}, 50%, 50%)".format(color);
-                b.using = true;
-                b.parent = parent;
-                return b;
-            }
-        }
-        return null;
-    }
-
-    //Nway弾
-    pb3.bullets.enterNWay = function(parent, type, size, color, target, speed) {
-        var b = this.enter(type, size, color);
-        if (b) {
-        }
-        return b;
-    }
-
-    //弾消去
-    pb3.bullets.erace = function(parent) {
-        parent = parent || null;
-        for (var i = 0,len = this.length; i < len; i++) {
-            var b = this[i];
-            if (b.using) {
-                if (b.parent == parent || parent == null){
-                    b.vanish().remove();
-                }
-            }
-        }
-    }
-    
-    //リセット
-    pb3.bullets.reset = function() {
-        for (var i = 0,len = this.length; i < len; i++) {
-            this[i].remove();
-        }
-    }
-};
-
-/*
- * 自機ショット管理
- */
-MAX_SHOTS = 200;
-pb3.shots = [];
-pb3.Shot = tm.createClass({
-    superClass: tm.app.Sprite,
-    rad: 0,
-    vx: 0,
-    vy: 1,
-    speed: 10,
-    power: 10,
-    using: false,
-    init: function() {
-        this.superInit("shot1", 16, 16);
-
-        this.scaleX = 1.0;
-        this.scaleY = 1.5;
-
-        this.collision = tm.app.CanvasElement().addChildTo(this);
-
-        this.addEventListener("removed", function() {
-            this.using = false;
-        });
-    },
-    update: function() {
-        this.x+=this.vx*this.speed;
-        this.y-=this.vy*this.speed;
-        if (-10<this.x && this.x<SC_W+10 && -10<this.y && this.y<SC_H+10) {
+        //当り判定設定
+        this.boundingType = "circle";
+        if (type == 0) {
+            this.radius = 6;
         } else {
-            this.using = false;
+            this.radius = 12;
+        }
+
+        this.beforeX = this.x;
+        this.beforeY = this.y;
+    },
+    update: function() {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x<-20 || this.x>SC_W+20 || this.y<-20 || this.y>SC_H+20) {
             this.remove();
         }
+
+        //敵との当り判定チェック
+        var s = [LAYER_OBJECT_UPPER, LAYER_OBJECT, LAYER_OBJECT_LOWER];
+        for (var i = 0; i < 3; i++) {
+            var layer = this.parentScene.layers[s[i]];
+            layer.children.each(function(a) {
+                if (a === app.player) return;
+                if (this.parent && a.isCollision && a.isHitElement(this)) {
+                    a.damage(this.power);
+                    this.vanish();
+                    this.remove();
+                    return;
+                }
+            }.bind(this));
+        }
     },
+
     vanish: function() {
-        pb3.effects.enter('shotburn', this.x, this.y, 0, 0);
-        this.remove();
-    }
+        for (var i = 0; i < 5; i++) {
+            var p = pb3.Effect.Particle(32, 1, 0.95).addChildTo(this.parentScene).setPosition(this.x, this.y);
+            var x = rand(0, 30)-15;
+            var y = rand(0, 50)*-1;
+            p.tweener.moveBy(x, y, 1000, "easeOutCubic");
+        }
+    },
 });
 
-//自機ショット初期化
-pb3.shots.init = function(){
-    for (var i = 0; i < 200; i++ ){
-        var s = new pb3.Shot();
-        this.push(s);
-    }
 
-    //使用数
-    pb3.shots.numUsing = function() {
-        var n = 0;
-        for (var i = 0,len = this.length; i < len; i++ ){
-            var s = this[i];
-            if (s.using) n++;
-        }
-        return n;
-    }
-    
-    //未使用数
-    pb3.shots.numNotUsing = function() {
-        var n = 0;
-        for (var i = 0,len = this.length; i < len; i++ ){
-            var s = this[i];
-            if (!s.using) n++;
-        }
-        return n;
-    }
+//弾の画像準備
+pb3.setupBullets = function() {
+    pb3.bulletGraphic = [];
 
-    //弾投入
-    pb3.shots.enter = function(type, x, y, rot, power) {
-        power = power || 1;
-        var s;
-        for (var i = 0,len = this.length; i < len; i++) {
-            s = this[i];
-            if (!s.using) {
-                if (type == 0) {
-                    s.image = tm.asset.AssetManager.get('shot1');
-                    s.width = 16;
-                    s.height = 16;
-                    s.scaleX = 1.0;
-                    s.scaleY = 1.5;
-                    s.collision.x = -2;
-                    s.collision.y = -2;
-                    s.collision.width = 4;
-                    s.collision.height = 4;
-                } else {
-                    s.image = tm.asset.AssetManager.get('shot2');
-                    s.width = 16;
-                    s.height = 32;
-                    s.scaleX = 1.5;
-                    s.scaleY = 1.0;
-                    s.collision.x = -3;
-                    s.collision.y = -2;
-                    s.collision.width = 6;
-                    s.collision.height = 4;
-                }
-                s.x = x;
-                s.y = y;
-                s.rad = rot*toRad;
-                s.vx = Math.sin(s.rad);
-                s.vy = Math.cos(s.rad);
-                s.rotation = rot;
-                s.using = true;
-                s.power = power;
-                s.blendMode = "lighter";
-                app.currentScene.addChild(s);
-                return s;
-            }
-        }
-        return null;
+    var c = 320;
+    var color1 = tm.graphics.RadialGradient(16, 16, 0, 16, 16, 16)
+        .addColorStopList([
+            {offset:0.0, color: "hsla({0}, 50%, 50%, 0.0)".format(c)},
+            {offset:0.9, color: "hsla({0}, 50%, 50%, 1.0)".format(c)},
+            {offset:1.0, color: "hsla({0}, 50%, 50%, 0.0)".format(c)},
+        ]).toStyle();
+
+    var color2 = tm.graphics.RadialGradient(8, 8, 0, 8, 8, 8)
+        .addColorStopList([
+            {offset:0.0, color: "hsla({0}, 70%, 70%, 1.0)".format(c)},
+            {offset:0.9, color: "hsla({0}, 50%, 50%, 0.5)".format(c)},
+            {offset:1.0, color: "hsla({0}, 50%, 50%, 0.0)".format(c)},
+        ]).toStyle();
+
+    pb3.bulletGraphic["NormalR-1"] = tm.graphics.Canvas()
+        .resize(32, 32).setFillStyle(color1).fillRect(0, 0, 32, 32);
+    pb3.bulletGraphic["NormalR-2"] = tm.graphics.Canvas()
+        .resize(16, 16).setFillStyle(color2).fillRect(0, 0, 16, 16);
+
+    var c = 240;
+    var color1 = tm.graphics.RadialGradient(16, 16, 0, 16, 16, 16)
+        .addColorStopList([
+            {offset:0.0, color: "hsla({0}, 50%, 50%, 0.0)".format(c)},
+            {offset:0.9, color: "hsla({0}, 50%, 50%, 1.0)".format(c)},
+            {offset:1.0, color: "hsla({0}, 50%, 50%, 0.0)".format(c)},
+        ]).toStyle();
+
+    var color2 = tm.graphics.RadialGradient(8, 8, 0, 8, 8, 8)
+        .addColorStopList([
+            {offset:0.0, color: "hsla({0}, 70%, 70%, 1.0)".format(c)},
+            {offset:0.9, color: "hsla({0}, 50%, 50%, 0.5)".format(c)},
+            {offset:1.0, color: "hsla({0}, 50%, 50%, 0.0)".format(c)},
+        ]).toStyle();
+
+    pb3.bulletGraphic["NormalB-1"] = tm.graphics.Canvas()
+        .resize(32, 32).setFillStyle(color1).fillRect(0, 0, 32, 32);
+    pb3.bulletGraphic["NormalB-2"] = tm.graphics.Canvas()
+        .resize(16, 16).setFillStyle(color2).fillRect(0, 0, 16, 16);
+
+    //ショット
+    var shotPath = [
+        [16,0], [32,24], [16,32], [0,24],
+    ];
+    pb3.bulletGraphic["shot"] = tm.graphics.Canvas()
+        .resize(32, 32)
+        .setColorStyle("hsla(250, 50%, 50%, 1.0)", "hsla(250, 50%, 50%, 1.0)")
+        .setLineStyle(2)
+        .beginPath()
+        .moveTo(shotPath[0][0], shotPath[0][1]);
+    for (var i = 1; i < shotPath.length; i++) {
+        pb3.bulletGraphic["shot"].lineTo(shotPath[i][0], shotPath[i][1]);
     }
-    
-    //リセット
-    pb3.shots.reset = function() {
-        for (var i = 0,len = this.length; i < len; i++) {
-            this[i].remove();
-        }
-    }
-};
+    pb3.bulletGraphic["shot"]
+        .lineTo(shotPath[0][0], shotPath[0][1])
+        .stroke()
+        .fill()
+        .closePath();
+}
+
+})();

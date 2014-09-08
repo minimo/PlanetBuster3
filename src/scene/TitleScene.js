@@ -1,85 +1,70 @@
 /*
- *  PlanetBuster3
- *  title.js
- *  2013/06/21
+ *  TitleScene.js
+ *  2014/08/11
  *  @auther minimo  
  *  This Program is MIT license.
  */
-
+ 
 //タイトルシーン
-pb3.TitleScene = tm.createClass({
-    superClass: tm.app.TitleScene,
+tm.define("pb3.TitleScene", {
+    superClass: tm.app.Scene,
 
     init: function() {
-        this.superInit({
-            title: "PlanetBuster",
-            width: SC_W,
-            height: SC_H
-        });
+        this.superInit();
+        app.background = "rgba(0, 0, 0, 1.0)";
+
+        this.mask = tm.display.Shape(SC_W, SC_H).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
+        this.mask.renderRectangle({fillStyle: "rgba(0,0,0,0.5)", strokeStyle: "rgba(0,0,0,0.1)"});
+
+        //タイトルロゴ
+        var t1 = this.title1 = tm.display.OutlineLabel("2D DANMAKU Shooting", 25).addChildTo(this);
+        t1.x = SC_W*0.5; t1.y = SC_H*0.4;
+        t1.fontFamily = "'UbuntuMono'"; t1.align = "center"; t1.baseline  = "middle"; t1.fontWeight = 300; t1.outlineWidth = 2;
+
+        var t2 = this.title2 = tm.display.OutlineLabel("Planet Buster", 40).addChildTo(this);
+        t2.x = SC_W*0.5; t2.y = SC_H*0.5;
+        t2.fontFamily = "'Orbitron'"; t2.align = "center"; t2.baseline  = "middle"; t2.fontWeight = 800; t2.outlineWidth = 2;
+        t2.fillStyle = tm.graphics.LinearGradient(-SC_W*0.5, 0, SC_W*0.5, 64)
+            .addColorStopList([
+                { offset: 0.1, color: "hsla(230, 90%, 50%, 0.5)"},
+                { offset: 0.5, color: "hsla(230, 80%, 90%, 0.9)"},
+                { offset: 0.9, color: "hsla(230, 90%, 50%, 0.5)"},
+            ]).toStyle();
+        t2.shadowColor = "blue";
+        t2.shadowBlur = 10;
+        var ct = this.clickortouch = tm.display.OutlineLabel("Click or Touch", 20).addChildTo(this);
+        ct.x = SC_W*0.5; ct.y = SC_H*0.8;
+        ct.fontFamily = "'UbuntuMono'"; ct.align = "center"; ct.baseline  = "middle"; ct.fontWeight = 500; ct.outlineWidth = 2;
+
+        //スコア表示ラベル
+        var sc = this.scoreLabel = tm.display.OutlineLabel("HIGHSCORE:"+app.highScore, 20).addChildTo(this);
+        sc.fontFamily = "'Orbitron'"; sc.align = "left"; sc.baseline  = "top"; sc.fontWeight = 700; sc.outlineWidth = 2;
+
         this.time = 0;
-        app.background = "rgba(0,0,0,0.2)";
     },
+
     update: function() {
-        if (this.time % 20 == 0 ){
-            var x = rand(320);
-            var y = 400;
-            var sc = (rand(10)+5)/10;
-            var rot = rand(10)-5;
-            if (rot == 0)rot = 1;
-            var sp = rand(3)+2;
-            var color = rand(360);
-            var vertex = rand(3)+2;
-            for (var i = 0; i < rand(4)+2; i++ ){
-                var s = tm.app.Shape(64, 64);
-                s.color = "hsl({0}, 50%, 50%)".format(color+i*10*(rand(1)-1));
-                if (vertex == 2) {
-                    s.canvas.setColorStyle(s.color,s.color).strokeStar(32, 32, 32, 5);
-                } else {
-                    s.canvas.setColorStyle(s.color,s.color).strokePolygon(32, 32, 32, vertex);
-                }
-                s.x = x;
-                s.y = y;
-                s.rot = rot;
-                s.rotation+=i*2;
-                s.speed =sp;
-                s.scaleX = s.scaleY = sc-i*0.2;
-                s.time = 0;
-                s.update = function() {
-                    if (this.y < 160){
-                        this.alpha-=0.02;
-                        if (this.alpha < 0)this.remove();
-                    }
-                    this.y-=this.speed;
-                    this.rotation+=this.rot;
-                    if (this.y < -40) this.remove();
-                    this.time++;
-                }
-                this.addChild(s);
-            }
-        }
         this.time++;
     },
-    onnextscene: function() {
-        app.background = "rgba(0, 0, 16, 0.8)";
+
+    ontouchend: function() {
+        app.background = "rgba(0, 0, 0, 0.8)";
+        app.score = 0;
         app.replaceScene(pb3.MainScene());
-    }
+    },
 });
 
-//ゲーム結果シーン
-pb3.ResultScene = tm.createClass({
-    superClass: tm.app.ResultScene,
+tm.define("pb3.WaitScene", {
+    superClass: tm.app.Scene,
 
     init: function() {
-        this.superInit({
-            score: gamescore,
-            msg: "Game Over",
-        	width: SC_W,
-            height: SC_H
-        });
-        // 9leap に投稿したときだけ反応します
-        tm.social.Nineleap.postRanking(gamescore,"SCORE:"+gamescore);
+        this.superInit();
     },
-    onnextscene: function() {
-        app.replaceScene(pb3.TitleScene);
-    }
+    update: function() {
+        if (fontLoadEnd) {
+            app.replaceScene(pb3.TitleScene());
+        }
+    },
 });
+
+

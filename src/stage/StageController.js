@@ -1,49 +1,44 @@
 /*
- *  PlanetBuster3
  *  StageController.js
- *  ステージ管理
- *  2013/12/25
- *  @auther minimo
+ *  2014/08/06
+ *  @auther minimo  
  *  This Program is MIT license.
  */
+(function() {
 
-//ステージ管理クラス
-//
-//管理対象
-//ＢＧＭ
-//マップ
-//スクロールパターン
-//敵出現パターン
-pb3.StageController = tm.createClass({
-    init: function() {
-        this.vx = 0;
-        this.vy = 0;
-        this.seq = pb3.StageSequencer();
-    },
-    update: function() {
-        var data = this.seq.get(time);
-        if (data) {
-            if (typeof(data) === "function") {
-                data.call(this);
-            }
-        }
-        this.time++;
-    },
-});
+//ステージ制御
+tm.define("pb3.StageController", {
 
-//ステージシーケンサー
-pb3.StageSequencer = tm.createClass({
+    parentScene: null,
+    player: null,
+    time: 0,
+
+    seq: null,
     index: 0,
-    data: null,
-    init: function() {
-        this.data = {};
+
+    init: function(scene, player) {
+        this.parentScene = scene;
+        this.seq = [];
     },
-    add: function(frame, value) {
-        this.data[frame] = value;
+
+    add: function(time, value, flag) {
+        this.index += time;
+        this.seq[this.index] = {
+            value: value,
+            flag: flag,
+        }
     },
-    get: function(frame) {
-        var d = this.data[frame];
-        if (d === undefined)return null;
-        return d;
+
+    get: function(time) {
+        var data = this.seq[time];
+        if (data === undefined) return null;
+        return data;
+    },
+
+    clear: function() {
+        this.seq = [];
+        this.index = 0;
     },
 });
+
+})();

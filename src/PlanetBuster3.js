@@ -1,85 +1,131 @@
 /*
  *  PlanetBuster3
- *  2013/06/21
+ *  2014/09/04
  *  @auther minimo  
  *  This Program is MIT license.
  */
-
-//アセット登録
-var ASSETS = {
-    //images
-    //自機系
-    "gunship1":     "assets/gunship1.png",
-    "bit1":         "assets/bit1.png",
-    "shot1":        "assets/shot1.png",
-    "shot2":        "assets/shot2.png",
-    "shotburn":     "assets/shotburn.png",
-    
-    //敵機
-    "SkyFish":      "assets/enemy_skyfish.png",
-    "roter1":       "assets/enemy_roter.png",
-
-    //ボス
-//    "boss":         "assets/boss1b.png", 
-
-    //敵弾
-    "bullet1":      "assets/bullet1.png",
-    "vanish1":      "assets/vanish1.png",
-
-    //特殊効果
-    "explode1":     "assets/explode1.png",
-    "chip1":        "assets/chip1.png",
-    "chip2":        "assets/chip2.png",
-    "mask":         "assets/mask.png",
-    "mask_w":       "assets/mask_w.png",
-
-    //sounds
-    "bomb1":        "assets/se_bomb1.mp3",
-    "bomb2":        "assets/se_bomb2.mp3",
-    "bomb3":        "assets/se_bomb3.mp3",
-    "bomb4":        "assets/se_bomb4.mp3",
-    "bomb5":        "assets/se_bomb5.mp3",
-    "bomb6":        "assets/se_bomb6.mp3",
-}
+(function() {
 
 //namespace PlanetBuster3
 pb3 = {
     core: null,
 };
 
-pb3.PlanetBuster3 = tm.createClass({
+pb3.TouchShooter = tm.createClass({
     superClass: tm.app.CanvasApp,
+
     score: 0,
     highScore: 0,       //ハイスコア
     highScoreStage: 0,  //ハイスコア時ステージ
     difficulty: 0,      //難易度(0-3)
+
     mainScene: null,
+
+    highScore: 0,
+    score: 0,
+    extendNumber: 0,
+    extendScore: null,
+
+    bgm: null,
+    bgmIsPlay: false,
+    volumeBGM: 1.0,
+    volumeSE: 1.0,
+
     init: function(id) {
         this.superInit(id);
+
+        this.extendScore = [];
+        this.extendScore.push(1000000);
+        this.extendScore.push(2000000);
+        this.extendScore.push(2500000);
 
         pb3.core = this;
         this.resize(SC_W, SC_H).fitWindow();
         this.fps = 60;
-        this.background = "rgba(0, 0, 0, 0)";
-
-        //DSL関数をロード
-        BulletML.dsl(); 
+        this.background = "rgba(0, 0, 0, 1.0)";
 
         this.keyboard = tm.input.Keyboard(window);
 
-        //ローディングシーンを投入
-        this.replaceScene(tm.app.LoadingScene({
-            assets:ASSETS,
+        var loadingScene = tm.ui.LoadingScene({
+            assets: pb3.assets,
+            width: SC_W,
+            height: SC_H,
+            bgColor: "black",
             nextScene: function() {
                 this._onLoadAssets();
-                return pb3.TitleScene();    //次シーンはタイトル
+                return pb3.WaitScene();
             }.bind(this),
-        }));
+        });
+
+        //弾セットアップ
+        pb3.setupBullets();
+
+        this.replaceScene(loadingScene);
     },
+
     _onLoadAssets: function() {
     },
+
     exitApp: function() {
         this.stop();
         tm.social.Nineleap.postRanking(this.highScore, "");
-    }
+    },
+
+    playBGM: function(asset, loop) {
+        if (this.bgm) {
+            if (this.bgmIsPlay) {
+                this.bgm.stop();
+                this.bgmIsPlay = false;
+            }
+        }
+        this.bgm = tm.asset.AssetManager.get(asset).clone();
+        if (this.bgm) {
+            this.bgm.loop = loop;
+            this.bgm.volume = this.volumeBGM*0.34;
+            this.bgm.play();
+            this.bgmIsPlay = true;
+        }
+        return this.bgm;
+    },
+
+    stopBGM: function() {
+        if (this.bgm) {
+            if (this.bgmIsPlay) {
+                this.bgm.stop();
+                this.bgmIsPlay = false;
+            }
+            this.bgm = null;
+        }
+    },
+
+    pauseBGM: function() {
+        if (this.bgm) {
+            if (this.bgmIsPlay) {
+                this.bgm.pause();
+                this.bgmIsPlay = false;
+            }
+        }
+    },
+
+    resumeBGM: function() {
+        if (this.bgm) {
+            if (!this.bgmIsPlay) {
+                this.bgm.resume();
+                this.bgm.volume = this.volumeBGM*0.34;
+                this.bgmIsPlay = true;
+            }
+        }
+    },
+
+    playSE: function(asset) {
+        var se = tm.asset.AssetManager.get(asset).clone();
+        if (se) {
+            se.loop = false;
+            se.volume = this.volumeSE*0.34;
+            se.play();
+        }
+        return se;
+    },
 });
+
+})();
