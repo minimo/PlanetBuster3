@@ -59,7 +59,7 @@ var rand = function(min, max) { return mt.nextInt(min, max); };    //乱数発�
 //距離計算
 var distance = function(from, to) {
     var x = from.x-to.x;
-    var y = from.y - to.y;
+    var y = from.y-to.y;
     return Math.sqrt(x*x+y*y);
 }
 //距離計算（ルート無し版）

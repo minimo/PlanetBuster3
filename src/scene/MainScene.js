@@ -66,6 +66,10 @@ tm.define("pb3.MainScene", {
         this.player.stageStartup();
         app.player = this.player;
 
+        //操作用ポインタ
+        this.pointer = pb3.PlayerPointer().addChildTo(this);
+        app.pointer = this.pointer;
+
         //システム表示ベース
         this.systemBase = tm.app.Object2D().addChildTo(this).setPosition(0, 0);
 

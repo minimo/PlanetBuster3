@@ -10,28 +10,22 @@ tm.define("pb3.Player", {
     superClass: "tm.display.Sprite",
     layer: LAYER_OBJECT,
 
+    //当り判定サイズ
     width: 2,
     height: 2,
 
     control: true,  //操作可能フラグ
     shotON: true,   //ショットフラグ
     mouseON: false, //マウス操作中フラグ
-    shieldON: false,//シールド有効フラグ
 
     isCollision: false, //当り判定有効フラグ
-    isDemo: false,      //デモンストレーションフラグ
 
     timeMuteki: 0, //無敵フレーム残り時間
 
-    speed: 7,       //移動速度
+    speed: 20,      //移動係数
     type: 0,        //自機タイプ(0:赤 1:緑 2:青)
 
-    power: 0,           //パワーチャージ
-    powerMax: 120,      //パワーチャージ最大
-    level: 0,           //ショットレベル
-    levelMax: 5,        //ショットレベル
-    shotPower: 1,       //ショット威力
-    shotLimit: 0,       //ショットレベル上限
+    shotPower: 10,      //ショット威力
     shotInterval: 6,    //ショット間隔
 
     rollcount: 50,
@@ -55,6 +49,7 @@ tm.define("pb3.Player", {
         return this;
     },
 
+    //機体準備
     setupBody: function() {
         //コア
         core = tm.display.Shape(16, 16).addChildTo(this);
@@ -83,17 +78,15 @@ tm.define("pb3.Player", {
 
     update: function() {
         //操作系
-        if (this.control && !this.isDemo) {
-            var p = app.pointing;
-            var dx = p.position.x - p.prevPosition.x;
-            var dy = p.position.y - p.prevPosition.y;
-            if (p.getPointing()) {
-                this.x += Math.clamp(dx*1.3, -40, 40);
-                this.y += Math.clamp(dy*1.3, -40, 40);
-                this.mouseON = true;
-            }else{
-                this.mouseON = false;
-            }
+        var p = app.pointing;
+        if (p.getPointing()) {
+            var pt = this.parentScene.pointer;
+            this.x += (pt.x - this.x)/this.speed;
+            this.y += (pt.y - this.y)/this.speed;
+
+            this.mouseON = true;
+        } else {
+            this.mouseON = false;
         }
 
         //機体ロール
@@ -139,16 +132,12 @@ tm.define("pb3.Player", {
         this.timeMuteki--;
     },
 
+    //被弾処理
     damage: function() {
-        if (this.timeMuteki>0 || MUTEKI || this.isDemo) return;
+        if (this.timeMuteki>0 || MUTEKI) return;
 
         pb3.burnParticlePlayer(this.x, this.y).addChildTo(this.parentScene);
         app.playSE("explodePlayer");
-
-        this.power = 0;
-        this.level = 0;
-        this.shotInterval = 10;
-        this.bits.status = 0;
 
         this.parentScene.stageMiss++;
         this.parentScene.life--;
@@ -163,12 +152,15 @@ tm.define("pb3.Player", {
         }
     },
 
+    //ショット発射
     enterShot: function() {
         var shotPower = 1;
+        //自機から
         pb3.ShotBullet(0, shotPower, 0).addChildTo(this.parentScene).setPosition(this.x   , this.y-16);
         pb3.ShotBullet(0, shotPower, 0).addChildTo(this.parentScene).setPosition(this.x+24, this.y-16);
         pb3.ShotBullet(0, shotPower, 0).addChildTo(this.parentScene).setPosition(this.x-24, this.y-16);
 
+        //ビットから
         var x = this.x + this.bits[0].x;
         var y = this.y + this.bits[0].y;
         pb3.ShotBullet(this.bits[0].rotation, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
@@ -194,6 +186,7 @@ tm.define("pb3.Player", {
         this.bits[3].tweener.clear().to({ x:-40, y: 16, rotation:-10, alpha:1}, 300);
     },
 
+    //ビット収納
     closeBit: function() {
         if (this.bits.status == 0) return;
         this.bits.status = 0;
@@ -219,7 +212,6 @@ tm.define("pb3.Player", {
         this.shotON = false;
         this.control = false;
         this.isCollision = false;
-        this.shieldON = true;
         this.parentScene.timeVanish = 300;
     },
 
@@ -239,7 +231,6 @@ tm.define("pb3.Player", {
         this.shotON = false;
         this.control = false;
         this.isCollision = false;
-        this.shieldON = true;
     },
 });
 
@@ -272,46 +263,6 @@ tm.define("pb3.PlayerBit", {
     },
 });
 
-//パワーゲージ
-tm.define("pb3.PowerGauge", {
-    superClass:  tm.display.CanvasElement,
-
-    min: 0,
-    max: 600,
-    _value: 0,
-
-    init: function() {
-        this.superInit();
-        this.alpha = 0;
-        this.rotation = -90;
-
-        this.toRad = (Math.PI*2)/this.max;
-    },
-
-    update: function() {
-    },
-
-    draw: function(canvas) {
-        canvas.lineWidth = 15;
-        canvas.globalCompositeOperation = "lighter";
-
-        var rad = this._value*this.toRad;
-        var color1 = "hsla({0}, 60%, 50%, 0.5)".format(240);
-        var color2 = "hsla({0}, 60%, 50%, 0.5)".format(120);
-
-        canvas.strokeStyle = color1
-        canvas.shadowBlur = 15;
-        canvas.strokeArc(0, 0, 80, Math.PI*2, rad, true);
-        canvas.strokeStyle = color2;
-        canvas.strokeArc(0, 0, 80, rad, 0, true);
-    },
-});
-
-pb3.PowerGauge.prototype.accessor("value", {
-    "get": function()   { return this._value; },
-    "set": function(v)  { this._value = Math.clamp(v, this.min, this.max); }
-});
-
 //残機表示用
 tm.define("pb3.PlayerDisp", {
     superClass: "tm.display.Sprite",
@@ -333,6 +284,35 @@ tm.define("pb3.PlayerDisp", {
             ).fillRect(0, 0, 16, 16);
         core.tweener.clear();
         core.tweener.scale(1.0, 100, "easeInOutQuad").scale(0.5, 150, "easeInOutQuad").setLoop(true);
+    },
+});
+
+//プレイヤー操作用ポインタ
+tm.define("pb3.PlayerPointer", {
+    superClass: "tm.display.Shape",
+    layer: LAYER_OBJECT_LOWER,
+
+    init: function() {
+        this.superInit(32, 32);
+        this.canvas.lineWidth = 6;
+        this.canvas.globalCompositeOperation = "lighter";
+        this.canvas.strokeStyle = "rgb(255, 255, 255)";
+        this.canvas.strokeArc(16, 16, 8, Math.PI*2, 0, true);
+    },
+
+    update: function() {
+        if (this.player.control) {
+            var p = app.pointing;
+            if (p.getPointing()) {
+                this.alpha = 0.5;
+                this.x += p.position.x - p.prevPosition.x;
+                this.y += p.position.y - p.prevPosition.y;
+            } else {
+                this.x = app.player.x;
+                this.y = app.player.y;
+                this.alpha = 0;
+            }
+        }
     },
 });
 
