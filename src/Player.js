@@ -98,7 +98,8 @@ tm.define("pb3.Player", {
             this.rollcount+=3;
             if (this.rollcount > 80) this.rollcount = 80;
         }
-        if (this.bx == this.x) {
+        var vx = Math.abs(this.bx - this.x);
+        if (vx < 2) {
             if (this.rollcount < 50) this.rollcount+=3;
             else this.rollcount-=3;
             if (this.rollcount < 0) this.rollcount = 0;
