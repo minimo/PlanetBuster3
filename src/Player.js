@@ -109,7 +109,7 @@ tm.define("pb3.Player", {
             var i = ~~(this.rollcount/10);
             if (i < 0) i = 0;
             if (i > 8) i = 8;
-            this.setFrameIndex(i,32,32);
+            this.setFrameIndex(i, 32, 32);
         }
 
         //移動範囲の制限
@@ -284,10 +284,10 @@ tm.define("pb3.PlayerPointer", {
             } else {
                 this.alpha = 0.5;
             }
-            this.x += (p.position.x - p.prevPosition.x)*2;
-            this.y += (p.position.y - p.prevPosition.y)*2;
-            this.x = Math.clamp(this.x, 0, GS_W);
-            this.y = Math.clamp(this.y, 0, GS_H);
+            this.x += (p.position.x - p.prevPosition.x);
+            this.y += (p.position.y - p.prevPosition.y);
+            this.x = Math.clamp(this.x, 16, GS_W-16);
+            this.y = Math.clamp(this.y, 16, GS_H-16);
         } else {
             this.x = app.player.x;
             this.y = app.player.y;
