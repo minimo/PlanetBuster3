@@ -12,9 +12,9 @@ tm.define("pb3.PlayerDisp", {
     superClass: "tm.display.Sprite",
 
     init: function() {
-        this.superInit("gunship", 32, 32);
+        this.superInit("gunship", 48, 48);
         this.setFrameIndex(4);
-        this.setScale(1);
+        this.setScale(0.5);
 
         //コア
         core = tm.display.Shape(16, 16).addChildTo(this);
