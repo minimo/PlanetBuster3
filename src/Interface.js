@@ -7,6 +7,30 @@
 
 (function() {
 
+//残機表示用
+tm.define("pb3.PlayerDisp", {
+    superClass: "tm.display.Sprite",
+
+    init: function() {
+        this.superInit("gunship", 32, 32);
+        this.setFrameIndex(4);
+        this.setScale(1);
+
+        //コア
+        core = tm.display.Shape(16, 16).addChildTo(this);
+        core.canvas.setFillStyle(
+            tm.graphics.RadialGradient(8, 8, 0, 8, 8, 8)
+                .addColorStopList([
+                    {offset:0.0, color: "hsla(200, 60%, 70%, 1.0)"},
+                    {offset:0.5, color: "hsla(240, 60%, 70%, 1.0)"},
+                    {offset:1.0, color: "hsla(240, 60%, 50%, 0.0)"},
+                ]).toStyle()
+            ).fillRect(0, 0, 16, 16);
+        core.tweener.clear();
+        core.tweener.scale(1.0, 100, "easeInOutQuad").scale(0.5, 150, "easeInOutQuad").setLoop(true);
+    },
+});
+
 //ステージリザルト表示
 tm.define("pb3.Result", {
     superClass: "tm.app.Object2D",
