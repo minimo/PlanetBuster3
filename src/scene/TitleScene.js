@@ -13,28 +13,15 @@ tm.define("pb3.TitleScene", {
         this.superInit();
         app.background = "rgba(0, 0, 0, 1.0)";
 
-        //レイヤー作成
-        this.layers = [];
-        for (var i = 0; i < LAYER_SYSTEM+1; i++) {
-            this.layers[i] = tm.app.Object2D().addChildTo(this);
-        }
-        this.player = pb3.Player().addChildTo(this);
-        this.player.setPosition(SC_W*0.5, SC_H*0.8);
-        this.player.isDemo = true;
-        app.player = this.player;
-
         this.mask = tm.display.Shape(SC_W, SC_H).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
         this.mask.renderRectangle({fillStyle: "rgba(0,0,0,0.5)", strokeStyle: "rgba(0,0,0,0.1)"});
 
-        //デモ用ステージデータ
-        this.stage = pb3.Stage0();
-
         //タイトルロゴ
-        var t1 = this.title1 = tm.display.OutlineLabel("BulletSimulator", 30).addChildTo(this);
+        var t1 = this.title1 = tm.display.OutlineLabel("2D DANMAKU Shooting", 25).addChildTo(this);
         t1.x = SC_W*0.5; t1.y = SC_H*0.4;
         t1.fontFamily = "'UbuntuMono'"; t1.align = "center"; t1.baseline  = "middle"; t1.fontWeight = 300; t1.outlineWidth = 2;
 
-        var t2 = this.title2 = tm.display.OutlineLabel("Planet Buster", 60).addChildTo(this);
+        var t2 = this.title2 = tm.display.OutlineLabel("Planet Buster", 40).addChildTo(this);
         t2.x = SC_W*0.5; t2.y = SC_H*0.5;
         t2.fontFamily = "'Orbitron'"; t2.align = "center"; t2.baseline  = "middle"; t2.fontWeight = 800; t2.outlineWidth = 2;
         t2.fillStyle = tm.graphics.LinearGradient(-SC_W*0.5, 0, SC_W*0.5, 64)
@@ -45,56 +32,25 @@ tm.define("pb3.TitleScene", {
             ]).toStyle();
         t2.shadowColor = "blue";
         t2.shadowBlur = 10;
-        var ct = this.clickortouch = tm.display.OutlineLabel("Click or Touch", 30).addChildTo(this);
+        var ct = this.clickortouch = tm.display.OutlineLabel("Click or Touch", 20).addChildTo(this);
         ct.x = SC_W*0.5; ct.y = SC_H*0.8;
         ct.fontFamily = "'UbuntuMono'"; ct.align = "center"; ct.baseline  = "middle"; ct.fontWeight = 500; ct.outlineWidth = 2;
 
         //スコア表示ラベル
-        var sc = this.scoreLabel = tm.display.OutlineLabel("HIGHSCORE:"+app.highScore, 30).addChildTo(this);
+        var sc = this.scoreLabel = tm.display.OutlineLabel("HIGHSCORE:"+app.highScore, 20).addChildTo(this);
         sc.fontFamily = "'Orbitron'"; sc.align = "left"; sc.baseline  = "top"; sc.fontWeight = 700; sc.outlineWidth = 2;
 
         this.time = 0;
     },
 
     update: function() {
-        //ステージ進行
-        var event = this.stage.get(this.time);
-        if (event) {
-            if (typeof(event.value) === 'function') {
-                event.value.call(this);
-            } else {
-                this.enterEnemyUnit(event.value);
-            }
-        }
         this.time++;
-    },
-
-    //敵ユニット単位の投入
-    enterEnemyUnit: function(name) {
-        var unit = pb3.enemyUnit[name];
-        if (unit === undefined)return;
-
-        var len = unit.length;
-        for (var i = 0; i < len; i++) {
-            var e = unit[i];
-            pb3.Enemy(e.name,e.x, e.y).addChildTo(this);
-        }
     },
 
     ontouchend: function() {
         app.background = "rgba(0, 0, 0, 0.8)";
         app.score = 0;
         app.replaceScene(pb3.MainScene());
-    },
-
-    //addChildオーバーライド
-    addChild: function(child) {
-        if (child.layer === undefined) {
-            return this.superClass.prototype.addChild.apply(this, arguments);
-        }
-        child.parentScene = this;
-        child.player = this.player;
-        return this.layers[child.layer].addChild(child);
     },
 });
 
