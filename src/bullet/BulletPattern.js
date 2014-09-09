@@ -44,7 +44,7 @@ pb3.bulletPattern["basic-aim1"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
         $.repeat(999, [
-            $fireRS(6),
+            $fireRS(3),
             $.wait("$rand * 60"),
         ]),
     ]),
@@ -54,7 +54,7 @@ pb3.bulletPattern["basic-aim2"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
         $.repeat(999, [
-            $fireRS(6),
+            $fireRS(3),
             $.wait("$rand * 60"),
         ]),
     ]),
@@ -113,7 +113,7 @@ pb3.bulletPattern["cube1"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
         $.repeat(999, [
-            $fireRS(6),
+            $fireRS(3),
             $.wait("$rand * 60"),
         ]),
     ]),
@@ -124,7 +124,7 @@ pb3.bulletPattern["cube2"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
         $.repeat(3, [
-            $fireRS(6),
+            $fireRS(3),
             $.wait("$rand * 60"),
         ]),
     ]),

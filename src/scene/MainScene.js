@@ -129,7 +129,7 @@ tm.define("pb3.MainScene", {
         }
 
         //敵弾強制消去
-        if (this.timeVanish > 0 && this.time % 6 == 0) {
+        if (this.timeVanish > 0) {
             this.eraseBullet();
         }
 
@@ -189,6 +189,7 @@ tm.define("pb3.MainScene", {
 
     //弾の消去
     eraseBullet: function(target) {
+        if (this.layers[LAYER_BULLET].length == 0)return;
         if (target) {
             //個別弾消し
             this.layers[LAYER_BULLET].children.each(function(a) {
