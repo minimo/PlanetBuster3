@@ -14,13 +14,13 @@ pb3.Effect.enterExplodeSmall = function(parentScene, x, y, vx, vy) {
     for (var i = 0; i < 100; i++) {
         var rad = rand(0, 359)*toRad;
         var v = rand(10, 20);
-        var vx = Math.cos(rad)*50;
-        var vy = Math.sin(rad)*50;
+        var vx2 = Math.cos(rad)*v;
+        var vy2 = Math.sin(rad)*v;
         var n = rand(0, 3);
         if (n == 3) {
-            pb3.Effect.ChipSmall().addChildTo(parentScene).setPosition(x, y).setVelocity(vx, vy, 0.9);
+            pb3.Effect.ChipSmall().addChildTo(parentScene).setPosition(x, y).setVelocity(vx2, vy2, 1);
         } else {
-            pb3.Effect.Chip(n).addChildTo(parentScene).setPosition(x, y).setVelocity(vx, vy, 0.9);
+            pb3.Effect.Chip(n).addChildTo(parentScene).setPosition(x, y).setVelocity(vx2, vy2, 1);
         }
     }
 }
