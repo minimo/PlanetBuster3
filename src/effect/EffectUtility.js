@@ -7,15 +7,56 @@
 
 (function() {
 
+
+pb3.Effect.enterExplodeSmall = function(parentScene, x, y, vx, vy) {
+//    pb3.Effect.ExplodeSmall().addChildTo(parentScene).setPosition(x, y).setVelocity(vx, vy, 0.9);
+    //破片をばら撒く
+    for (var i = 0; i < 100; i++) {
+        var rad = rand(0, 359)*toRad;
+        var v = rand(10, 20);
+        var vx = Math.cos(rad)*50;
+        var vy = Math.sin(rad)*50;
+        var n = rand(0, 3);
+        if (n == 3) {
+            pb3.Effect.ChipSmall().addChildTo(parentScene).setPosition(x, y).setVelocity(vx, vy, 0.9);
+        } else {
+            pb3.Effect.Chip(n).addChildTo(parentScene).setPosition(x, y).setVelocity(vx, vy, 0.9);
+        }
+    }
+}
+
 //爆発エフェクト（小）
 tm.define("pb3.Effect.ExplodeSmall", {
     superClass: "pb3.Effect.EffectBase",
     layer: LAYER_EFFECT_UPPER,
 
     init: function() {
-        this.superInit("explode1", 64, 64, 2, 18);
+        this.superInit("explode1", 64, 64, 2, 0, 17);
     },
 });
+
+//破片
+tm.define("pb3.Effect.Chip", {
+    superClass: "pb3.Effect.EffectBase",
+    layer: LAYER_EFFECT_UPPER,
+
+    init: function(num) {
+        num = num || 0;
+        num = Math.clamp(num, 0, 2);
+        this.superInit("chip1", 16, 16, 10, num*8, (num+1)*8-1);
+    },
+});
+
+//破片
+tm.define("pb3.Effect.ChipSmall", {
+    superClass: "pb3.Effect.EffectBase",
+    layer: LAYER_EFFECT_UPPER,
+
+    init: function() {
+        this.superInit("chip2", 8, 8, 10, 0, 23);
+    },
+});
+
 
 //自機爆発パーティクル
 pb3.burnParticlePlayer = function(x, y) {

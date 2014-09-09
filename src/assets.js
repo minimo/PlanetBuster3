@@ -14,10 +14,13 @@ pb3.assets = {
     "shot1":   "assets/images/shot1.png",
     "shot2":   "assets/images/shot2.png",
 
+    //敵機
     "enemy5":  "assets/images/enemy5.png",
 
     //エフェクト
-    "explode1":"assets/images/explode1.png",
+    "explode1": "assets/images/explode1.png",
+    "chip1":    "assets/images/chip1.png",
+    "chip2":    "assets/images/chip2.png",
 
     //マップ
     "map1":    "assets/images/map1.tmx",

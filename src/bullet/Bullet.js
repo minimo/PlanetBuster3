@@ -118,7 +118,7 @@ tm.define("pb3.ShotBullet", {
             this.setScale(2);
         } else {
             this.superInit("shot2", 16, 32);
-//            this.setScale(2);
+            this.scaleX = 1.5;
         }
 
         this.rotation = rotation || 0;

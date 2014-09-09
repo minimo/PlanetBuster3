@@ -181,10 +181,10 @@ tm.define("pb3.Enemy", {
         var vx = this.x-this.beforeX;
         var vy = this.y-this.beforeY;
         if (area < 1025) {
-            pb3.Effect.ExplodeSmall().addChildTo(this.parentScene).setPosition(this.x, this.y).setVelocity(vx, vy, 0.9);
+            pb3.Effect.enterExplodeSmall(this.parentScene, this.x, this.y, vx, vy);
             app.playSE("explodeSmall");
         } else {
-            pb3.Effect.ExplodeSmall().addChildTo(this.parentScene).setPosition(this.x, this.y).setVelocity(vx, vy, 0.9);
+            pb3.Effect.enterExplodeSmall(this.parentScene, this.x, this.y, vx, vy);
             app.playSE("explodeLarge");
         }
         this.remove();
