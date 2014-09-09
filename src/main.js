@@ -75,7 +75,7 @@ app = {};
 
 //アプリケーションメイン
 tm.main(function() {
-    app = pb3.TouchShooter("#world");
+    app = pb3.PlanetBuster3("#world");
 //    app.enableStats();
     detectFontLoading("Orbitron");
     app.run();

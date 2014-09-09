@@ -11,7 +11,7 @@ pb3 = {
     core: null,
 };
 
-pb3.TouchShooter = tm.createClass({
+pb3.PlanetBuster3 = tm.createClass({
     superClass: tm.app.CanvasApp,
 
     score: 0,
@@ -64,6 +64,26 @@ pb3.TouchShooter = tm.createClass({
     },
 
     _onLoadAssets: function() {
+        [
+            "enemy5",
+        ].forEach(function(name) {
+            //被ダメージ用の赤ビットマップ作成
+            var tex = tm.asset.AssetManager.get(name);
+            var canvas = tm.graphics.Canvas();
+            canvas.resize(tex.width, tex.height);
+            canvas.drawTexture(tex, 0, 0);
+
+            var bmRed = canvas.getBitmap();
+            bmRed.filter({
+                calc: function(pixel, index, x, y, bitmap) {
+                    bitmap.setPixelIndex(index, pixel[0], 0, 0);
+                }
+            });
+            var cvRed = tm.graphics.Canvas();
+            cvRed.resize(tex.width, tex.height);
+            cvRed.drawBitmap(bmRed, 0, 0);
+            tm.asset.AssetManager.set(name + "Red", cvRed);
+        });
     },
 
     exitApp: function() {
