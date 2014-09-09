@@ -17,7 +17,7 @@ pb3.enemyData['cube1'] = {
     height: 16,
 
     //耐久力
-    def: 3,
+    def: 30,
 
     //得点
     point: 300,
@@ -28,30 +28,25 @@ pb3.enemyData['cube1'] = {
     //敵タイプ
     type: ENEMY_SMALL,
 
-    setup: function() {
-        var colorparam = {
-            strokeStyle:"hsla(100, 50%, 70%, 1.0)",
-            fillStyle:  "hsla(100, 50%, 50%, 0.3)",
-            lineWidth: 1,
-        };
-        tm.display.Shape(16, 40).addChildTo(this).renderRectangle(colorparam);
+    //機体用テクスチャ情報
+    texName: "enemy5",
+    texWidth: 32,
+    texHeight: 32,
 
-        var sh = tm.display.Shape(60, 10).addChildTo(this);
-        sh.renderRectangle(colorparam);
-        sh.update = function() {
-            this.rotation += 30;
-        }
+    setup: function() {
+        this.roter = tm.display.Sprite("enemy5", 32, 32).addChildTo(this);
+        this.roter.setFrameIndex(8);
+        this.roter.index = 8;
 
         this.tweener.moveBy(0, 300, 1000, "easeOutQuart").wait(1000).moveBy(0, -300, 3000).call(function(){this.remove();}.bind(this));
     },
 
     algorithm: function() {
-        //自機の方向を向く
-        var ax = this.x - app.player.x;
-        var ay = this.y - app.player.y;
-        var rad = Math.atan2(ay, ax);
-        var deg = ~~(rad * toDeg);
-        this.rotation = deg + 90;
+        this.lookAt();
+        if (this.time % 2 == 0) {
+            this.roter.index = (this.roter.index+1)%4+8;
+            this.roter.setFrameIndex(this.roter.index);
+        }
     },
 };
 
@@ -65,7 +60,7 @@ pb3.enemyData['cube2'] = {
     height: 16,
 
     //耐久力
-    def: 3,
+    def: 30,
 
     //得点
     point: 300,
@@ -76,7 +71,10 @@ pb3.enemyData['cube2'] = {
     //敵タイプ
     type: ENEMY_SMALL,
 
-    isNear: false,
+    //機体用テクスチャ情報
+    texName: "enemy5",
+    texWidth: 32,
+    texHeight: 32,
 
     setup: function() {
         var colorparam = {
@@ -110,7 +108,7 @@ pb3.enemyData['square1'] = {
     height: 64,
 
     //耐久力
-    def: 150,
+    def: 1500,
 
     //得点
     point: 5000,
@@ -168,7 +166,7 @@ pb3.enemyData['triangle1'] = {
     height: 8,
 
     //耐久力
-    def: 10,
+    def: 100,
 
     //得点
     point: 500,
@@ -210,7 +208,7 @@ pb3.enemyData['triangle2'] = {
     height: 64,
 
     //耐久力
-    def: 50,
+    def: 500,
 
     //得点
     point: 2000,
@@ -249,7 +247,7 @@ pb3.enemyData['mboss1'] = {
     height: 110,
 
     //耐久力
-    def: 500,
+    def: 5000,
 
     //得点
     point: 100000,
@@ -323,7 +321,7 @@ pb3.enemyData['yojouhan-a'] = {
     height: 64,
 
     //耐久力
-    def: 300,
+    def: 3000,
 
     //得点
     point: 50000,
@@ -377,7 +375,7 @@ pb3.enemyData['yojouhan-b'] = {
     height: 64,
 
     //耐久力
-    def: 100,
+    def: 1000,
 
     //得点
     point: 10000,

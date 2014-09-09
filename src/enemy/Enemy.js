@@ -10,8 +10,6 @@ tm.define("pb3.Enemy", {
     superClass: "tm.display.CanvasElement",
     layer: LAYER_OBJECT,    //所属レイヤー
     parentScene: null,      //親シーン
-    player: null,           //プレイヤー参照用
-
     parentEnemy: null,      //親となる敵キャラ
 
     //各種フラグ
@@ -31,6 +29,9 @@ tm.define("pb3.Enemy", {
     nowBulletPattern: null,
     id: -1,
     param: null,
+
+    body: null,     //機体描画用スプライト
+    texName: null,  //機体描画用テクスチャ
 
     data: null,
 
@@ -55,9 +56,16 @@ tm.define("pb3.Enemy", {
         this.layer = d.layer || LAYER_OBJECT;
         this.point = d.point || 0;
 
-        if (d.setup) this.setup = d.setup;
-        if (d.algorithm) this.algorithm = d.algorithm;
-        if (d.dead) this.dead = d.dead;
+        this.setup = d.setup || this.setup;
+        this.algorithm = d.algorithm || this.algorithm;
+        this.dead = d.dead || this.dead;
+
+        //機体用スプライト
+        if (d.texName) {
+            this.texName = d.texName;
+            this.body = tm.display.Sprite(d.texName, d.texWidth, d.texHeight).addChildTo(this);
+            this.body.setFrameIndex(0);
+        }
 
         this.bulletPattern = d.bulletPattern;
         if (this.bulletPattern instanceof Array) {
@@ -79,6 +87,9 @@ tm.define("pb3.Enemy", {
 
         //当り判定設定
         this.boundingType = "rect";
+
+        //remove時
+        this.on('removed', this.release);
 
         this.time = 0;
     },
@@ -166,11 +177,6 @@ tm.define("pb3.Enemy", {
         this.tweener.clear();
         this.stopDanmaku();
 
-        this.on("enterframe", function() {
-            this.alpha *= 0.9;
-            if (this.alpha < 0.02) this.remove();
-        }.bind(this));
-
         var area = this.width*this.height;
         if (area < 1025) {
             pb3.burnParticleSmall(this.x, this.y).addChildTo(this.parentScene);
@@ -179,6 +185,7 @@ tm.define("pb3.Enemy", {
             pb3.burnParticleLarge(this.x, this.y).addChildTo(this.parentScene);
             app.playSE("explodeLarge");
         }
+        this.remove();
     },
 
     deadBoss: function() {
@@ -240,6 +247,10 @@ tm.define("pb3.Enemy", {
         this.vy = Math.sin(rad+Math.PI)*speed;
         this.x += this.vx;
         this.y += this.vy;
+    },
+
+    release: function() {
+        this.removeChild();
     },
 });
 
