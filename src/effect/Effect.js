@@ -8,6 +8,50 @@ pb3.Effect = [];
 
 (function() {
 
+//汎用エフェクト
+tm.define("pb3.Effect.EffectBase", {
+    superClass: "tm.display.Sprite",
+    layer: LAYER_EFFECT_UPPER,
+
+    interval: 2,
+    maxIndex: 8,
+    index: 0,
+
+    velocity:{x:0, y:0, decay:0.9},
+
+    time: 0,
+
+    init: function(tex, width, height, interval, maxIndex, startIndex) {
+        this.superInit(tex, width, height);
+        this.interval = interval || 4;
+        this.maxIndex = maxIndex || 8;
+        this.startIndex = startIndex || 0;
+
+        this.index = this.startIndex;
+        this.setFrameIndex(this.startIndex);
+    },
+
+    update: function() {
+        this.time++;
+        if (this.time % this.interval == 0) {
+            this.index++;
+            if (this.index == this.maxIndex) this.remove();
+            this.setFrameIndex(this.index);
+        }
+        this.x += this.velocity.x;
+        this.y += this.velocity.y;
+        this.velocity.x *= this.velocity.decay;
+        this.velocity.y *= this.velocity.decay;
+    },
+
+    setVelocity: function(x, y, decay) {
+        this.velocity.x = x;
+        this.velocity.y = y;
+        this.velocity.decay = decay;
+        return this;
+    },
+});
+
 //汎用パーティクル
 tm.define("pb3.Effect.Particle", {
     superClass: "tm.display.Shape",
@@ -56,115 +100,7 @@ tm.define("pb3.Effect.Particle", {
     },
 });
 
-//オーラ用パーティクル
-tm.define("pb3.Effect.Aura", {
-    superClass: "tm.display.Shape",
-    layer: LAYER_EFFECT_UPPER,
-
-    init: function(target, size, alphaDecayRate) {
-        size = size || 100;
-        this.superInit();
-        if (alphaDecayRate === undefined) alphaDecayRate = 0.9;
-
-        this.width = this.height = this.size = size;
-        this.alpha = 0.02;
-        this.alphaDecayRate = alphaDecayRate;
-        this.blendMode = "lighter";
-        this.tweener.clear().to({alpha:1},200).to({alpha:0},2000);
-
-        this.target = target;
-        this.vanish = false;
-
-        this.setScale(size*0.01);
-
-        var c = this.canvas;
-        c.setFillStyle(
-            tm.graphics.RadialGradient(25, 25, 0, 25, 25, 25)
-                .addColorStopList([
-                    {offset:0.0, color: "hsla({0}, 60%, 50%, 0.4)".format(200)},
-                    {offset:0.5, color: "hsla({0}, 60%, 50%, 0.2)".format(240)},
-                    {offset:1.0, color: "hsla({0}, 60%, 50%, 0.0)".format(240)},
-                ]).toStyle()
-            )
-            .fillRect(0, 0, 50, 50);
-    },
-
-    update: function() {
-        if (this.alpha < 0.01) {
-            this.remove();
-            return;
-        } else if (1.0 < this.alpha) {
-            this.alpha = 1.0;
-        }
-        if (this.target.mouseON && !this.vanish) {
-             this.x += this.vx;
-             this.y += this.vy;
-        } else {
-             this.vanish = true;
-             this.x -= this.vx*3;
-             this.y -= this.vy*3;
-        }
-        var x = this.target.x;
-        var y = this.target.y;
-        if (this.x-2 < x && x < this.x+2 && this.y-2 < y && y < this.y+2) {
-            this.remove();
-            return;
-        }
-        this.scaleX *= 0.98;
-        this.scaleY *= 0.98;
-    },
-});
-
-//爆発用パーティクル
-tm.define("pb3.Effect.BurnParticle", {
-    superClass: "tm.display.Shape",
-    layer: LAYER_EFFECT_UPPER,
-
-    alpha: 1.0,
-    alphaDecayRate: 0.85,
-    size: 0,
-
-    image: null,
-    isEffect: true,
-    isUpper: true,
-
-    init: function(size, initialAlpha, alphaDecayRate, color) {
-        size = size || 32;
-        color = color || 0;
-        this.superInit(size, size);
-
-        if (initialAlpha === undefined) initialAlpha = 1;
-        if (alphaDecayRate === undefined) alphaDecayRate = 0.9;
-
-        this.size = size;
-        this.alpha = initialAlpha;
-        this.alphaDecayRate = alphaDecayRate;
-        this.blendMode = "lighter";
-
-        var c = this.canvas;
-        c.setFillStyle(
-            tm.graphics.RadialGradient(size/2, size/2, 0, size/2, size/2, size/2)
-                .addColorStopList([
-                    {offset:0.0, color: "hsla({0}, 50%, 30%, 1.0)".format(color)},
-                    {offset:0.5, color: "hsla({0}, 50%, 30%, 0.5)".format(color)},
-                    {offset:1.0, color: "hsla({0}, 60%, 50%, 0.0)".format(color)},
-                ]).toStyle()
-            )
-            .fillRect(0, 0, size, size);
-
-        this.on("enterframe", function() {
-            this.alpha *= this.alphaDecayRate;
-            if (this.alpha < 0.01) {
-                this.remove();
-                return;
-            } else if (1.0 < this.alpha) {
-                this.alpha = 1.0;
-            }
-        }.bind(this));
-    },
-});
-
-//敵弾消滅パーティクル
+//敵弾消滅エフェクト
 tm.define("pb3.Effect.BulletVanish", {
     superClass: "tm.display.Shape",
     layer: LAYER_EFFECT_UPPER,

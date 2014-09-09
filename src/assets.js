@@ -16,9 +16,12 @@ pb3.assets = {
 
     "enemy5":  "assets/images/enemy5.png",
 
+    //エフェクト
+    "explode1":"assets/images/explode1.png",
+
     //マップ
     "map1":    "assets/images/map1.tmx",
-    "map1g":    "assets/images/map1.png",
+    "map1g":   "assets/images/map1.png",
 
     //SE
     "explodeSmall":  "assets/sounds/sen_ge_taihou03.mp3", 

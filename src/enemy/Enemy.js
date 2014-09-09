@@ -178,11 +178,13 @@ tm.define("pb3.Enemy", {
         this.stopDanmaku();
 
         var area = this.width*this.height;
+        var vx = this.x-this.beforeX;
+        var vy = this.y-this.beforeY;
         if (area < 1025) {
-            pb3.burnParticleSmall(this.x, this.y).addChildTo(this.parentScene);
+            pb3.Effect.ExplodeSmall().addChildTo(this.parentScene).setPosition(this.x, this.y).setVelocity(vx, vy, 0.9);
             app.playSE("explodeSmall");
         } else {
-            pb3.burnParticleLarge(this.x, this.y).addChildTo(this.parentScene);
+            pb3.Effect.ExplodeSmall().addChildTo(this.parentScene).setPosition(this.x, this.y).setVelocity(vx, vy, 0.9);
             app.playSE("explodeLarge");
         }
         this.remove();
@@ -202,7 +204,7 @@ tm.define("pb3.Enemy", {
         for (var i = 0; i < 10; i++) {
             var x = rand(0, this.width)-this.width/2;
             var y = rand(0, this.height)-this.height/2;
-            pb3.burnParticleLarge(this.x+x, this.y+y).addChildTo(this.parentScene);
+//            pb3.burnParticleLarge(this.x+x, this.y+y).addChildTo(this.parentScene);
         }
         app.playSE("explodeLarge");
 
