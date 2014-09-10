@@ -70,6 +70,33 @@ tm.define("pb3.Effect.EffectBase", {
     },
 });
 
+//爆発エフェクト（小）
+tm.define("pb3.Effect.ExplodeSmall", {
+    superClass: "pb3.Effect.EffectBase",
+    layer: LAYER_EFFECT_UPPER,
+
+    init: function(delay) {
+        this.superInit("explode1", 64, 64, 2, 0, 17, delay);
+    },
+});
+
+//破片
+tm.define("pb3.Effect.Chip", {
+    superClass: "pb3.Effect.EffectBase",
+    layer: LAYER_EFFECT_UPPER,
+
+    init: function(num, delay) {
+        num = num || 0;
+        num = Math.clamp(num, 0, 3);
+        if (num == 0) {
+            this.superInit("chip2", 8, 8, 2, 0, 16, delay);
+        } else {
+            num--;
+            this.superInit("chip1", 16, 16, 4, num*8, (num+1)*8-1, delay);
+        }
+    },
+});
+
 //汎用パーティクル
 tm.define("pb3.Effect.Particle", {
     superClass: "tm.display.Shape",

@@ -19,42 +19,11 @@ pb3.Effect.enterExplodeSmall = function(parentScene, x, y, vx, vy) {
         var vx2 = Math.cos(rad) * v;
         var vy2 = Math.sin(rad) * v;
         var delay2 = delay+rand(0, 10);
-        pb3.Effect.Chip(0, delay2).addChildTo(parentScene).setPosition(x, y).setVelocity(vx2, vy2, 0.9);
+        var pattern = 0;
+        if (i > val-2) pattern = rand(1, 3)
+        pb3.Effect.Chip(pattern, delay2).addChildTo(parentScene).setPosition(x, y).setVelocity(vx2, vy2, 0.9);
     }
-    var rad = rand(0, 359) * toRad;
-    var v = rand(5, 10);
-    var vx2 = Math.cos(rad) * v;
-    var vy2 = Math.sin(rad) * v;
-    var delay2 = delay+rand(0, 10);
-    pb3.Effect.Chip(rand(1,3), delay2).addChildTo(parentScene).setPosition(x, y).setVelocity(vx2, vy2, 0.9);
 }
-
-//爆発エフェクト（小）
-tm.define("pb3.Effect.ExplodeSmall", {
-    superClass: "pb3.Effect.EffectBase",
-    layer: LAYER_EFFECT_UPPER,
-
-    init: function(delay) {
-        this.superInit("explode1", 64, 64, 2, 0, 17, delay);
-    },
-});
-
-//破片
-tm.define("pb3.Effect.Chip", {
-    superClass: "pb3.Effect.EffectBase",
-    layer: LAYER_EFFECT_UPPER,
-
-    init: function(num, delay) {
-        num = num || 0;
-        num = Math.clamp(num, 0, 3);
-        if (num == 0) {
-            this.superInit("chip2", 8, 8, 2, 0, 16, delay);
-        } else {
-            num--;
-            this.superInit("chip1", 16, 16, 4, num*8, (num+1)*8-1, delay);
-        }
-    },
-});
 
 //自機爆発パーティクル
 pb3.burnParticlePlayer = function(x, y) {
