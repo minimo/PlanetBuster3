@@ -158,16 +158,16 @@ tm.define("pb3.Player", {
         var shotPower = this.shotPower;
         //自機から
         pb3.ShotBullet(0, shotPower, 0).addChildTo(this.parentScene).setPosition(this.x   , this.y-16);
-        pb3.ShotBullet(0, shotPower, 0).addChildTo(this.parentScene).setPosition(this.x+24, this.y-16);
-        pb3.ShotBullet(0, shotPower, 0).addChildTo(this.parentScene).setPosition(this.x-24, this.y-16);
+        pb3.ShotBullet(0, shotPower, 0).addChildTo(this.parentScene).setPosition(this.x+16, this.y-8);
+        pb3.ShotBullet(0, shotPower, 0).addChildTo(this.parentScene).setPosition(this.x-16, this.y-8);
     },
 
     //ビット展開
     openBit: function() {
-        this.bits[0].tweener.clear().to({ x: 36, y:  8, rotation:  5, alpha:1}, 300);
-        this.bits[1].tweener.clear().to({ x:-36, y:  8, rotation: -5,  alpha:1}, 300);
-        this.bits[2].tweener.clear().to({ x: 60, y: 16, rotation: 10, alpha:1}, 300);
-        this.bits[3].tweener.clear().to({ x:-60, y: 16, rotation:-10, alpha:1}, 300);
+        this.bits[0].tweener.clear().to({ x: 36, y: 16, rotation:  5, alpha:1}, 300);
+        this.bits[1].tweener.clear().to({ x:-36, y: 16, rotation: -5, alpha:1}, 300);
+        this.bits[2].tweener.clear().to({ x: 60, y: 24, rotation: 10, alpha:1}, 300);
+        this.bits[3].tweener.clear().to({ x:-60, y: 24, rotation:-10, alpha:1}, 300);
     },
 
     //ビット収納
