@@ -48,7 +48,7 @@ tm.define("pb3.Effect.Chip", {
         num = num || 0;
         num = Math.clamp(num, 0, 3);
         if (num == 0) {
-            this.superInit("chip2", 8, 8, 2, 0, 20, delay);
+            this.superInit("chip2", 8, 8, 2, 0, 16, delay);
         } else {
             num--;
             this.superInit("chip1", 16, 16, 4, num*8, (num+1)*8-1, delay);
