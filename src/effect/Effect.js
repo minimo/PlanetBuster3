@@ -18,7 +18,9 @@ tm.define("pb3.Effect.EffectBase", {
     index: 0,
     delay: 0,
 
-    velocity:{x:0, y:0, decay:0.9},
+    velocityX: 0,
+    velocityY: 0,
+    velocityD: 0,
 
     time: 0,
 
@@ -27,7 +29,9 @@ tm.define("pb3.Effect.EffectBase", {
         this.interval = interval || 4;
         this.startIndex = startIndex || 0;
         this.maxIndex = maxIndex || 8;
-        this.deley = delay || 0;
+        this.delay = delay || 0;
+        if (this.delay < 0) this.delay *= -1;
+        this.time = -this.delay;
 
         this.index = this.startIndex;
         this.setFrameIndex(this.index);
@@ -35,6 +39,7 @@ tm.define("pb3.Effect.EffectBase", {
 
     update: function() {
         if (this.time < 0) {
+            this.visible = false;
             this.time++;
             return;
         }
@@ -50,25 +55,18 @@ tm.define("pb3.Effect.EffectBase", {
 
     //現在の座標に加速度を加算
     addVelocity: function() {
-        this.x += this.velocity.x;
-        this.y += this.velocity.y;
-        this.velocity.x *= this.velocity.decay;
-        this.velocity.y *= this.velocity.decay;
+        this.x += this.velocityX;
+        this.y += this.velocityY;
+        this.velocityX *= this.velocityD;
+        this.velocityY *= this.velocityD;
     },
 
     //加速度の設定
     setVelocity: function(x, y, decay) {
-        this.velocity.x = x;
-        this.velocity.y = y;
-        this.velocity.decay = decay;
+        this.velocityX = x;
+        this.velocityY = y;
+        this.velocityD = decay;
         return this;
-    },
-
-    //遅延設定
-    setDelay: function(time) {
-        if (time <= 0) return;
-        this.visible = false;
-        this.time = -time;
     },
 });
 
