@@ -108,8 +108,8 @@ var $whip = function(baseSpeed, delta, count, actionFunc) {
     ]);
 };
 
-//cube1
-pb3.bulletPattern["cube1"] = new bulletml.Root({
+//SkyFish1
+pb3.bulletPattern["SkyFish1"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
         $.repeat(999, [
@@ -119,8 +119,8 @@ pb3.bulletPattern["cube1"] = new bulletml.Root({
     ]),
 });
 
-//cube2
-pb3.bulletPattern["cube2"] = new bulletml.Root({
+//SkyFish2
+pb3.bulletPattern["SkyFish2"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
         $.repeat(3, [

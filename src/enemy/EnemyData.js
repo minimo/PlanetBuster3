@@ -7,10 +7,10 @@
 (function() {
 pb3.enemyData = [];
 
-//攻撃ヘリタイプ（通常）
-pb3.enemyData['cube1'] = {
+//攻撃ヘリ（通常）
+pb3.enemyData['SkyFish1'] = {
     //使用弾幕パターン
-    bulletPattern: "cube1",
+    bulletPattern: "SkyFish1",
 
     //当り判定サイズ
     width:  16,
@@ -51,9 +51,9 @@ pb3.enemyData['cube1'] = {
 };
 
 //攻撃ヘリタイプ（突撃）
-pb3.enemyData['cube2'] = {
+pb3.enemyData['SkyFish2'] = {
     //使用弾幕パターン
-    bulletPattern: "cube2",
+    bulletPattern: "SkyFish2",
 
     //当り判定サイズ
     width:  16,
