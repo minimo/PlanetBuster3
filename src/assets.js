@@ -13,6 +13,7 @@ pb3.assets = {
     "gunship": "assets/images/gunship1.png",
     "shot1":   "assets/images/shot1.png",
     "shot2":   "assets/images/shot2.png",
+    "shotimpact": "assets/images/shotimpact.png",
 
     //敵機
     "tex1":    "assets/images/tex1.png",

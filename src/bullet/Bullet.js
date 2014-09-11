@@ -168,12 +168,7 @@ tm.define("pb3.ShotBullet", {
     },
 
     vanish: function() {
-        for (var i = 0; i < 5; i++) {
-            var p = pb3.Effect.Particle(32, 1, 0.95).addChildTo(this.parentScene).setPosition(this.x, this.y);
-            var x = rand(0, 30)-15;
-            var y = rand(0, 50)*-1;
-            p.tweener.moveBy(x, y, 1000, "easeOutCubic");
-        }
+        pb3.Effect.EffectBase("shotimpact", 16, 16, 2, 0, 7).addChildTo(this.parentScene).setPosition(this.x, this.y);
     },
 });
 
