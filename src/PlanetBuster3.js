@@ -65,7 +65,7 @@ pb3.PlanetBuster3 = tm.createClass({
 
     _onLoadAssets: function() {
         [
-            "enemy5",
+            "tex1",
         ].forEach(function(name) {
             //被ダメージ用の赤ビットマップ作成
             var tex = tm.asset.AssetManager.get(name);

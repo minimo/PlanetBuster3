@@ -9,6 +9,9 @@
 //敵小隊単位定義
 pb3.enemyUnit = {
 
+/*
+ * 突撃ヘリ
+ */
 "SkyFish1-left": [
     { "name": "SkyFish1", "x":GS_W*0.1, "y":-150 },
     { "name": "SkyFish1", "x":GS_W*0.2, "y":-120 },
@@ -32,6 +35,9 @@ pb3.enemyUnit = {
     { "name": "SkyFish1", "x":GS_W*0.85, "y":-120 },
 ],
 
+/*
+ * 突撃ヘリ２
+ */
 "SkyFish2-left": [
     { "name": "SkyFish2", "x":GS_W*0.1, "y":-100 },
     { "name": "SkyFish2", "x":GS_W*0.2, "y":-120 },
@@ -46,6 +52,21 @@ pb3.enemyUnit = {
     { "name": "SkyFish2", "x":GS_W*0.9, "y":-120 },
 ],
 
+/*
+ * 突撃ヘリ２
+ */
+"BigWing-left": [
+    { "name": "square1", "x":GS_W*0.2, "y":-100 },
+],
+
+"BigWing-right": [
+    { "name": "square1", "x":GS_W*0.8, "y":-100 },
+],
+
+
+/*
+ * 突撃ヘリ２
+ */
 "square1-left": [
     { "name": "square1", "x":GS_W*0.2, "y":-100 },
 ],

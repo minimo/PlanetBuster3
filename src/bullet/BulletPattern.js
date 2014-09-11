@@ -130,6 +130,22 @@ pb3.bulletPattern["SkyFish2"] = new bulletml.Root({
     ]),
 });
 
+//BigWing
+pb3.bulletPattern["BigWing"] = new bulletml.Root({
+    top0: $.action([
+        $.wait(90),
+        $.repeat(999, [
+            $.repeat(5, [
+                $absoluteNway(3, 210, 150, $spd(3), RL),
+                $.interval(2),
+            ]),
+            $.interval(120),
+        ]),
+    ]),
+    top1: $.action([
+    ]),
+});
+
 //square
 pb3.bulletPattern["square1"] = new bulletml.Root({
     top1: $.action([

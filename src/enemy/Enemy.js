@@ -80,6 +80,7 @@ tm.define("pb3.Enemy", {
         var bulletMLparams = {
             target: app.player,
             createNewBullet: function(runner, attr) {
+                if (this.isGround && distanceSq(this, app.player) < 4096 ) return;  //地上敵で自機に近い場合は弾を撃たない
                 pb3.Bullet(runner, attr, this.id).addChildTo(this.parentScene);
             }.bind(this)
         };
@@ -100,7 +101,7 @@ tm.define("pb3.Enemy", {
             fillStyle:  "hsla(0, 100%, 100%, 1.0)",
             lineWidth: 2,
         };
-        var sh = tm.display.Shape(32, 32).addChildTo(this).renderRectangle(param);
+        var sh = tm.display.Shape(this.width, this.height).addChildTo(this).renderRectangle(param);
     },
 
     update: function() {
@@ -119,8 +120,7 @@ tm.define("pb3.Enemy", {
 
         //自機との当り判定チェック
         var player = app.player;
-        player.radius = 2;
-        if (this.isCollision && player.isCollision && this.isHitElement(player)) {
+        if (this.isCollision && !this.isGround && player.isCollision && this.isHitElement(player)) {
             player.damage();
         }
 

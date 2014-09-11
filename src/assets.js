@@ -15,7 +15,7 @@ pb3.assets = {
     "shot2":   "assets/images/shot2.png",
 
     //敵機
-    "enemy5":  "assets/images/enemy5.png",
+    "tex1":    "assets/images/tex1.png",
 
     //エフェクト
     "explode1": "assets/images/explode1.png",

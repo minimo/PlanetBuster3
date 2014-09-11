@@ -29,14 +29,14 @@ pb3.enemyData['SkyFish1'] = {
     type: ENEMY_SMALL,
 
     //機体用テクスチャ情報
-    texName: "enemy5",
+    texName: "tex1",
     texWidth: 32,
     texHeight: 32,
 
     setup: function() {
-        this.roter = tm.display.Sprite("enemy5", 32, 32).addChildTo(this);
-        this.roter.setFrameIndex(8);
-        this.roter.index = 8;
+        this.roter = tm.display.Sprite("tex1", 32, 32).addChildTo(this);
+        this.roter.setFrameIndex(32);
+        this.roter.index = 32;
 
         this.tweener.moveBy(0, 300, 1000, "easeOutQuart").wait(1000).moveBy(0, -300, 3000).call(function(){this.remove();}.bind(this));
     },
@@ -44,7 +44,7 @@ pb3.enemyData['SkyFish1'] = {
     algorithm: function() {
         this.lookAt();
         if (this.time % 2 == 0) {
-            this.roter.index = (this.roter.index+1)%4+8;
+            this.roter.index = (this.roter.index+1)%4+32;
             this.roter.setFrameIndex(this.roter.index);
         }
     },
@@ -69,10 +69,10 @@ pb3.enemyData['SkyFish2'] = {
     layer: LAYER_OBJECT,
 
     //敵タイプ
-    type: ENEMY_SMALL,
+    type: ENEMY_MIDDLE,
 
     //機体用テクスチャ情報
-    texName: "enemy5",
+    texName: "tex1",
     texWidth: 32,
     texHeight: 32,
 
@@ -95,6 +95,40 @@ pb3.enemyData['SkyFish2'] = {
     algorithm: function() {
         this.x += this.vx;
         this.y += this.vy;
+    },
+};
+
+//中型機
+pb3.enemyData['BigWing'] = {
+    //使用弾幕パターン
+    bulletPattern: "BigWing",
+
+    //当り判定サイズ
+    width:  128,
+    height: 20,
+
+    //耐久力
+    def: 30,
+
+    //得点
+    point: 300,
+
+    //表示レイヤー番号
+    layer: LAYER_OBJECT,
+
+    //敵タイプ
+    type: ENEMY_SMALL,
+
+    //機体用テクスチャ情報
+    texName: "tex1",
+    texWidth: 128,
+    texHeight: 48,
+
+    setup: function() {
+    },
+
+    algorithm: function() {
+        if (this.time % 2 == 0) this.y++;
     },
 };
 
