@@ -18,9 +18,10 @@ tm.define("pb3.Effect.EffectBase", {
     index: 0,
     delay: 0,
 
-    velocityX: 0,
-    velocityY: 0,
-    velocityD: 0,
+    //加速度
+    velocityX: 0,   //Ｘ座標方向
+    velocityY: 0,   //Ｙ座標方向
+    velocityD: 0,   //減衰率
 
     time: 0,
 
