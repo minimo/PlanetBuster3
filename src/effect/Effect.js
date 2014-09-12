@@ -13,10 +13,23 @@ tm.define("pb3.Effect.EffectBase", {
     superClass: "tm.display.Sprite",
     layer: LAYER_EFFECT_UPPER,
 
+    //インデックス更新間隔
     interval: 2,
+
+    //開始インデックス
+    startIndex: 0,
+
+    //最大インデックス
     maxIndex: 8,
+
+    //現在インデックス
     index: 0,
+
+    //遅延表示フレーム数
     delay: 0,
+
+    //ループフラグ
+    loop: false,
 
     //加速度
     velocityX: 0,   //Ｘ座標方向
@@ -36,9 +49,11 @@ tm.define("pb3.Effect.EffectBase", {
 
         this.index = this.startIndex;
         this.setFrameIndex(this.index);
+
+        this.on("enterframe", this.defaultEnterFrame);
     },
 
-    update: function() {
+    defaultEnterFrame: function() {
         if (this.time < 0) {
             this.visible = false;
             this.time++;
@@ -48,7 +63,13 @@ tm.define("pb3.Effect.EffectBase", {
         if (this.time % this.interval == 0) {
             this.setFrameIndex(this.index);
             this.index++;
-            if (this.index > this.maxIndex) this.remove();
+            if (this.index > this.maxIndex) {
+                if (this.loop) {
+                    this.index = this.startIndex;
+                } else {
+                    this.remove();
+                }
+            }
         }
         this.addVelocity();
         this.time++;
@@ -69,6 +90,12 @@ tm.define("pb3.Effect.EffectBase", {
         this.velocityD = decay;
         return this;
     },
+
+    //ループ設定
+    setLoop: function(b) {
+        this.loop = b;
+        return this;
+    }
 });
 
 //爆発エフェクト（小）
