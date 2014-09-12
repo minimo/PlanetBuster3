@@ -38,7 +38,7 @@ pb3.enemyData['SkyFish1'] = {
         this.roter.setFrameIndex(32);
         this.roter.index = 32;
 
-        this.tweener.moveBy(0, 300, 1000, "easeOutQuart").wait(1000).moveBy(0, -300, 3000).call(function(){this.remove();}.bind(this));
+        this.tweener.moveBy(0, 300, 2000, "easeOutQuart").wait(1000).moveBy(0, -300, 2000).call(function(){this.remove();}.bind(this));
     },
 
     algorithm: function() {
@@ -77,22 +77,19 @@ pb3.enemyData['SkyFish2'] = {
     texHeight: 32,
 
     setup: function() {
-        var colorparam = {
-            strokeStyle:"hsla(100, 50%, 70%, 1.0)",
-            fillStyle:  "hsla(100, 50%, 50%, 0.3)",
-            lineWidth: 1,
-        };
-        tm.display.Shape(16, 40).addChildTo(this).renderRectangle(colorparam);
+        this.roter = tm.display.Sprite("tex1", 32, 32).addChildTo(this);
+        this.roter.setFrameIndex(32);
+        this.roter.index = 32;
 
-        var sh = tm.display.Shape(60, 10).addChildTo(this);
-        sh.renderRectangle(colorparam);
-        sh.update = function() {
-            this.rotation += 30;
-        }
         this.moveTo(app.player, 5, true);
     },
 
     algorithm: function() {
+        if (this.time % 2 == 0) {
+            this.roter.index = (this.roter.index+1)%4+32;
+            this.roter.setFrameIndex(this.roter.index);
+        }
+
         this.x += this.vx;
         this.y += this.vy;
     },

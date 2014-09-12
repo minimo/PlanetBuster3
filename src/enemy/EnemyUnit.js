@@ -53,19 +53,19 @@ pb3.enemyUnit = {
 ],
 
 /*
- * 突撃ヘリ２
+ * 中型機
  */
 "BigWing-left": [
-    { "name": "square1", "x":GS_W*0.2, "y":-100 },
+    { "name": "BigWing", "x":GS_W*0.2, "y":-100 },
 ],
 
 "BigWing-right": [
-    { "name": "square1", "x":GS_W*0.8, "y":-100 },
+    { "name": "BigWing", "x":GS_W*0.8, "y":-100 },
 ],
 
 
 /*
- * 突撃ヘリ２
+ * 大型機
  */
 "square1-left": [
     { "name": "square1", "x":GS_W*0.2, "y":-100 },

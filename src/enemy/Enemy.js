@@ -78,6 +78,7 @@ tm.define("pb3.Enemy", {
         this.setup(param);
 
         var bulletMLparams = {
+            rank: 0,
             target: app.player,
             createNewBullet: function(runner, attr) {
                 if (this.isGround && distanceSq(this, app.player) < 4096 ) return;  //地上敵で自機に近い場合は弾を撃たない
@@ -110,12 +111,12 @@ tm.define("pb3.Enemy", {
 
         //スクリーン内入った判定
         if (this.isOnScreen) {
-            if (this.x < -100 || this.x > SC_W+100 || this.y < -100 || this.y > SC_H+100) {
+            if (this.x < -100 || this.x > GS_W+100 || this.y < -100 || this.y > GS_H+100) {
                 this.remove();
                 this.isCollision = false;
             }
         } else {
-            if (0 < this.x && this.x < SC_W && 0 < this.y && this.y < SC_H) this.isOnScreen = true;
+            if (0 < this.x && this.x < GS_W && 0 < this.y && this.y < GS_H) this.isOnScreen = true;
         }
 
         //自機との当り判定チェック
@@ -135,9 +136,10 @@ tm.define("pb3.Enemy", {
     algorithm: function() {
     },
 
-    damage: function(power) {
+    damage: function(power, force) {
         if (this.isMuteki || this.isDead) return;
         this.def -= power;
+        if (force) this.def = -1;
         if (this.def < 1) {
             //破壊パターン投入
             if (this.data.type == ENEMY_BOSS) {
@@ -148,14 +150,6 @@ tm.define("pb3.Enemy", {
                 this.dead();
             }
             this.parentScene.enemyKill++;
-
-            //弾消し
-            if (this.data.type == ENEMY_MIDDLE) {
-                this.parentScene.eraseBullet(this);
-            } else if (this.data.type == ENEMY_LARGE) {
-                this.parentScene.eraseBullet();
-                this.parentScene.timeVanish = 60;
-            }
 
             //親機に破壊を通知
             if (this.parentEnemy) this.parentEnemy.deadChild(this);
@@ -187,6 +181,14 @@ tm.define("pb3.Enemy", {
             pb3.Effect.enterExplodeSmall(this.parentScene, this.x, this.y, vx, vy);
             app.playSE("explodeLarge");
         }
+
+        //弾消し
+        if (this.data.type == ENEMY_MIDDLE) {
+            this.parentScene.eraseBullet(this);
+        } else if (this.data.type == ENEMY_LARGE) {
+            this.parentScene.eraseBullet();
+            this.parentScene.timeVanish = 60;
+        }
         this.remove();
     },
 
@@ -204,11 +206,14 @@ tm.define("pb3.Enemy", {
         for (var i = 0; i < 10; i++) {
             var x = rand(0, this.width)-this.width/2;
             var y = rand(0, this.height)-this.height/2;
-//            pb3.burnParticleLarge(this.x+x, this.y+y).addChildTo(this.parentScene);
+            pb3.Effect.enterExplodeSmall(this.parentScene, x, y, vx, vy);
         }
         app.playSE("explodeLarge");
 
+        //弾消し
         this.parentScene.eraseBullet();
+
+        this.remove();
     },
 
     //親機のセット
