@@ -105,7 +105,7 @@ pb3.enemyData['BigWing'] = {
     height: 20,
 
     //耐久力
-    def: 30,
+    def: 200,
 
     //得点
     point: 300,
@@ -173,10 +173,10 @@ pb3.enemyData['square1'] = {
 
         this.tweener.moveBy(0, 300, 4000, "easeOutQuart")
             .call(function(){
-                if (this.x < SC_W*0.5) {
-                    this.tweener.clear().moveBy(SC_W*0.5, 10, 3000, "easeInOutCubic").moveBy(-SC_W*0.5, 10, 3000, "easeInOutCubic").setLoop(true);
+                if (this.x < GS_W*0.5) {
+                    this.tweener.clear().moveBy(GS_W*0.5, 10, 3000, "easeInOutCubic").moveBy(-GS_W*0.5, 10, 3000, "easeInOutCubic").setLoop(true);
                 } else {
-                    this.tweener.clear().moveBy(-SC_W*0.5, 10, 3000, "easeInOutCubic").moveBy(SC_W*0.5, 10, 3000, "easeInOutCubic").setLoop(true);
+                    this.tweener.clear().moveBy(-GS_W*0.5, 10, 3000, "easeInOutCubic").moveBy(GS_W*0.5, 10, 3000, "easeInOutCubic").setLoop(true);
                 }
                 this.phase++;
             }.bind(this));
@@ -220,7 +220,7 @@ pb3.enemyData['triangle1'] = {
         };
         tm.display.Shape(32, 32).addChildTo(this).renderTriangle(colorparam);
 
-        if (this.x > SC_W*0.5)this.bulletPattern = "triangle1-b";
+        if (this.x > GS_W*0.5)this.bulletPattern = "triangle1-b";
     },
 
     algorithm: function() {
@@ -374,14 +374,14 @@ pb3.enemyData['yojouhan-a'] = {
         tm.display.Shape(64, 64).addChildTo(this).renderRectangle(colorparam);
 
         this.tweener
-            .moveBy(0, SC_H*0.5, 3000, "easeOutQuart")
+            .moveBy(0, GS_H*0.5, 3000, "easeOutQuart")
             .call(function(){this.phase++}.bind(this))
             .wait(1000)
-            .moveBy(SC_W*0.3, 0, 3000, "easeInOutCubic")
+            .moveBy(GS_W*0.3, 0, 3000, "easeInOutCubic")
             .call(function(){
                 this.tweener.clear()
-                .moveBy(-SC_W*0.6, 0, 6000, "easeInOutCubic")
-                .moveBy( SC_W*0.6, 0, 6000, "easeInOutCubic").setLoop(true);
+                .moveBy(-GS_W*0.6, 0, 6000, "easeInOutCubic")
+                .moveBy( GS_W*0.6, 0, 6000, "easeInOutCubic").setLoop(true);
             }.bind(this));
 
         //子機の投入（右上から時計回り）
@@ -432,14 +432,14 @@ pb3.enemyData['yojouhan-b'] = {
         tm.display.Shape(64, 128).addChildTo(this).renderRectangle(colorparam);
 
         var x = 0, y = 0;
-        if (param.num == 1) {x = SC_W*0.4; y = SC_H*0.2}
-        if (param.num == 2) {x = SC_W*0.6; y = SC_H*0.2}
-        if (param.num == 3) {x = SC_W*0.3; y = SC_H*0.3}
-        if (param.num == 4) {x = SC_W*0.7; y = SC_H*0.3}
-        this.relativeX = x-SC_W*0.5;
-        this.relativeY = y-SC_W*0.3;
+        if (param.num == 1) {x = GS_W*0.4; y = GS_H*0.2}
+        if (param.num == 2) {x = GS_W*0.6; y = GS_H*0.2}
+        if (param.num == 3) {x = GS_W*0.3; y = GS_H*0.3}
+        if (param.num == 4) {x = GS_W*0.7; y = GS_H*0.3}
+        this.relativeX = x-GS_W*0.5;
+        this.relativeY = y-GS_W*0.3;
         this.tweener
-            .moveBy(0, SC_H*0.5, 3000, "easeOutQuart")
+            .moveBy(0, GS_H*0.5, 3000, "easeOutQuart")
             .call(function(){this.phase++}.bind(this))
             .wait(500)
             .to({rotation:0, x:x, y:y},1000,"easeInOutCubic")
@@ -461,8 +461,8 @@ pb3.enemyData['yojouhan-b'] = {
         }
 
         if (this.phase == 11) {
-            var x = rand(SC_W*0.1, SC_W*0.9);
-            var y = rand(SC_H*0.1, SC_H*0.4);
+            var x = rand(GS_W*0.1, GS_W*0.9);
+            var y = rand(GS_H*0.1, GS_H*0.4);
             this.tweener.clear()
                 .to({rotation:0, x:x, y:y},1000,"easeInOutCubic")
                 .call(function(){this.phase++}.bind(this));
@@ -471,7 +471,7 @@ pb3.enemyData['yojouhan-b'] = {
         if (this.phase > 12) this.lookAt();
         if (this.phase == 13) {
             this.tweener.clear()
-                .to({x:rand(SC_W*0.1, SC_W*0.9), y:rand(SC_H*0.1, SC_H*0.4)},1000,"easeInOutCubic")
+                .to({x:rand(GS_W*0.1, GS_W*0.9), y:rand(GS_H*0.1, GS_H*0.4)},1000,"easeInOutCubic")
                 .wait(1000)
                 .call(function(){this.phase = 3}.bind(this));
             this.phase++;
