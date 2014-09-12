@@ -31,6 +31,9 @@ tm.define("pb3.Effect.EffectBase", {
     //ループフラグ
     loop: false,
 
+    //シーンから削除フラグ
+    isRemove: false,
+
     //加速度
     velocityX: 0,   //Ｘ座標方向
     velocityY: 0,   //Ｙ座標方向
@@ -67,17 +70,18 @@ tm.define("pb3.Effect.EffectBase", {
                 if (this.loop) {
                     this.index = this.startIndex;
                 } else {
-                    this.remove();
+                    this.isRemove = true;
                 }
             }
         }
         //画面範囲外
         if (this.x<-32 || this.x>GS_W+32 || this.y<-32 || this.y>GS_H+32) {
-            this.remove();
+            this.isRemove = true;
         }
 
         this.addVelocity();
         this.time++;
+        if (this.isRemove) this.remove();
     },
 
     //現在の座標に加速度を加算

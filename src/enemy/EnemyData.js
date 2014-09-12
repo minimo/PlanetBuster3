@@ -116,7 +116,7 @@ pb3.enemyData['BigWing'] = {
     layer: LAYER_OBJECT,
 
     //敵タイプ
-    type: ENEMY_SMALL,
+    type: ENEMY_MIDDLE,
 
     //機体用テクスチャ情報
     texName: "tex1",
