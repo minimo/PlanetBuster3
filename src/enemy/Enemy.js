@@ -64,7 +64,7 @@ tm.define("pb3.Enemy", {
         if (d.texName) {
             this.texName = d.texName;
             this.body = tm.display.Sprite(d.texName, d.texWidth, d.texHeight).addChildTo(this);
-            this.body.setFrameIndex(2);
+            this.body.setFrameIndex(d.texIndex);
         }
 
         this.bulletPattern = d.bulletPattern;
@@ -257,7 +257,7 @@ tm.define("pb3.Enemy", {
     },
 
     release: function() {
-        this.removeChild();
+        this.removeChildren();
     },
 });
 

@@ -32,6 +32,7 @@ pb3.enemyData['SkyFish1'] = {
     texName: "tex1",
     texWidth: 32,
     texHeight: 32,
+    texIndex: 0,
 
     setup: function() {
         this.roter = tm.display.Sprite("tex1", 32, 32).addChildTo(this);
@@ -75,6 +76,7 @@ pb3.enemyData['SkyFish2'] = {
     texName: "tex1",
     texWidth: 32,
     texHeight: 32,
+    texIndex: 0,
 
     setup: function() {
         this.roter = tm.display.Sprite("tex1", 32, 32).addChildTo(this);
@@ -108,7 +110,7 @@ pb3.enemyData['BigWing'] = {
     def: 200,
 
     //得点
-    point: 300,
+    point: 1000,
 
     //表示レイヤー番号
     layer: LAYER_OBJECT,
@@ -120,12 +122,18 @@ pb3.enemyData['BigWing'] = {
     texName: "tex1",
     texWidth: 128,
     texHeight: 48,
+    texIndex: 2,
 
     setup: function() {
+        this.index = 0;
     },
 
     algorithm: function() {
         if (this.time % 2 == 0) this.y++;
+        if (this.time % 10 == 0) {
+            this.index = (this.index+1)%2+2;
+            this.body.setFrameIndex(this.index);
+        }
     },
 };
 
