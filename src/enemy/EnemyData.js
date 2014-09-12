@@ -7,17 +7,17 @@
 (function() {
 pb3.enemyData = [];
 
-//攻撃ヘリタイプ（通常）
-pb3.enemyData['cube1'] = {
+//攻撃ヘリ（通常）
+pb3.enemyData['SkyFish1'] = {
     //使用弾幕パターン
-    bulletPattern: "cube1",
+    bulletPattern: "SkyFish1",
 
     //当り判定サイズ
     width:  16,
     height: 16,
 
     //耐久力
-    def: 3,
+    def: 30,
 
     //得点
     point: 300,
@@ -28,44 +28,40 @@ pb3.enemyData['cube1'] = {
     //敵タイプ
     type: ENEMY_SMALL,
 
+    //機体用テクスチャ情報
+    texName: "tex1",
+    texWidth: 32,
+    texHeight: 32,
+    texIndex: 0,
+
     setup: function() {
-        var colorparam = {
-            strokeStyle:"hsla(100, 50%, 70%, 1.0)",
-            fillStyle:  "hsla(100, 50%, 50%, 0.3)",
-            lineWidth: 1,
-        };
-        tm.display.Shape(16, 40).addChildTo(this).renderRectangle(colorparam);
+        this.roter = tm.display.Sprite("tex1", 32, 32).addChildTo(this);
+        this.roter.setFrameIndex(32);
+        this.roter.index = 32;
 
-        var sh = tm.display.Shape(60, 10).addChildTo(this);
-        sh.renderRectangle(colorparam);
-        sh.update = function() {
-            this.rotation += 30;
-        }
-
-        this.tweener.moveBy(0, 300, 1000, "easeOutQuart").wait(1000).moveBy(0, -300, 3000).call(function(){this.remove();}.bind(this));
+        this.tweener.moveBy(0, 300, 2000, "easeOutQuart").wait(1000).moveBy(0, -300, 2000).call(function(){this.remove();}.bind(this));
     },
 
     algorithm: function() {
-        //自機の方向を向く
-        var ax = this.x - app.player.x;
-        var ay = this.y - app.player.y;
-        var rad = Math.atan2(ay, ax);
-        var deg = ~~(rad * toDeg);
-        this.rotation = deg + 90;
+        this.lookAt();
+        if (this.time % 2 == 0) {
+            this.roter.index = (this.roter.index+1)%4+32;
+            this.roter.setFrameIndex(this.roter.index);
+        }
     },
 };
 
 //攻撃ヘリタイプ（突撃）
-pb3.enemyData['cube2'] = {
+pb3.enemyData['SkyFish2'] = {
     //使用弾幕パターン
-    bulletPattern: "cube2",
+    bulletPattern: "SkyFish2",
 
     //当り判定サイズ
     width:  16,
     height: 16,
 
     //耐久力
-    def: 3,
+    def: 30,
 
     //得点
     point: 300,
@@ -74,29 +70,70 @@ pb3.enemyData['cube2'] = {
     layer: LAYER_OBJECT,
 
     //敵タイプ
-    type: ENEMY_SMALL,
+    type: ENEMY_MIDDLE,
 
-    isNear: false,
+    //機体用テクスチャ情報
+    texName: "tex1",
+    texWidth: 32,
+    texHeight: 32,
+    texIndex: 0,
 
     setup: function() {
-        var colorparam = {
-            strokeStyle:"hsla(100, 50%, 70%, 1.0)",
-            fillStyle:  "hsla(100, 50%, 50%, 0.3)",
-            lineWidth: 1,
-        };
-        tm.display.Shape(16, 40).addChildTo(this).renderRectangle(colorparam);
+        this.roter = tm.display.Sprite("tex1", 32, 32).addChildTo(this);
+        this.roter.setFrameIndex(32);
+        this.roter.index = 32;
 
-        var sh = tm.display.Shape(60, 10).addChildTo(this);
-        sh.renderRectangle(colorparam);
-        sh.update = function() {
-            this.rotation += 30;
-        }
         this.moveTo(app.player, 5, true);
     },
 
     algorithm: function() {
+        if (this.time % 2 == 0) {
+            this.roter.index = (this.roter.index+1)%4+32;
+            this.roter.setFrameIndex(this.roter.index);
+        }
+
         this.x += this.vx;
         this.y += this.vy;
+    },
+};
+
+//中型機
+pb3.enemyData['BigWing'] = {
+    //使用弾幕パターン
+    bulletPattern: "BigWing",
+
+    //当り判定サイズ
+    width:  128,
+    height: 20,
+
+    //耐久力
+    def: 200,
+
+    //得点
+    point: 1000,
+
+    //表示レイヤー番号
+    layer: LAYER_OBJECT,
+
+    //敵タイプ
+    type: ENEMY_SMALL,
+
+    //機体用テクスチャ情報
+    texName: "tex1",
+    texWidth: 128,
+    texHeight: 48,
+    texIndex: 2,
+
+    setup: function() {
+        this.index = 0;
+    },
+
+    algorithm: function() {
+        if (this.time % 2 == 0) this.y++;
+        if (this.time % 10 == 0) {
+            this.index = (this.index+1)%2+2;
+            this.body.setFrameIndex(this.index);
+        }
     },
 };
 
@@ -110,7 +147,7 @@ pb3.enemyData['square1'] = {
     height: 64,
 
     //耐久力
-    def: 150,
+    def: 1500,
 
     //得点
     point: 5000,
@@ -144,10 +181,10 @@ pb3.enemyData['square1'] = {
 
         this.tweener.moveBy(0, 300, 4000, "easeOutQuart")
             .call(function(){
-                if (this.x < SC_W*0.5) {
-                    this.tweener.clear().moveBy(SC_W*0.5, 10, 3000, "easeInOutCubic").moveBy(-SC_W*0.5, 10, 3000, "easeInOutCubic").setLoop(true);
+                if (this.x < GS_W*0.5) {
+                    this.tweener.clear().moveBy(GS_W*0.5, 10, 3000, "easeInOutCubic").moveBy(-GS_W*0.5, 10, 3000, "easeInOutCubic").setLoop(true);
                 } else {
-                    this.tweener.clear().moveBy(-SC_W*0.5, 10, 3000, "easeInOutCubic").moveBy(SC_W*0.5, 10, 3000, "easeInOutCubic").setLoop(true);
+                    this.tweener.clear().moveBy(-GS_W*0.5, 10, 3000, "easeInOutCubic").moveBy(GS_W*0.5, 10, 3000, "easeInOutCubic").setLoop(true);
                 }
                 this.phase++;
             }.bind(this));
@@ -168,7 +205,7 @@ pb3.enemyData['triangle1'] = {
     height: 8,
 
     //耐久力
-    def: 10,
+    def: 100,
 
     //得点
     point: 500,
@@ -191,7 +228,7 @@ pb3.enemyData['triangle1'] = {
         };
         tm.display.Shape(32, 32).addChildTo(this).renderTriangle(colorparam);
 
-        if (this.x > SC_W*0.5)this.bulletPattern = "triangle1-b";
+        if (this.x > GS_W*0.5)this.bulletPattern = "triangle1-b";
     },
 
     algorithm: function() {
@@ -210,7 +247,7 @@ pb3.enemyData['triangle2'] = {
     height: 64,
 
     //耐久力
-    def: 50,
+    def: 500,
 
     //得点
     point: 2000,
@@ -249,7 +286,7 @@ pb3.enemyData['mboss1'] = {
     height: 110,
 
     //耐久力
-    def: 500,
+    def: 5000,
 
     //得点
     point: 100000,
@@ -323,7 +360,7 @@ pb3.enemyData['yojouhan-a'] = {
     height: 64,
 
     //耐久力
-    def: 300,
+    def: 3000,
 
     //得点
     point: 50000,
@@ -345,14 +382,14 @@ pb3.enemyData['yojouhan-a'] = {
         tm.display.Shape(64, 64).addChildTo(this).renderRectangle(colorparam);
 
         this.tweener
-            .moveBy(0, SC_H*0.5, 3000, "easeOutQuart")
+            .moveBy(0, GS_H*0.5, 3000, "easeOutQuart")
             .call(function(){this.phase++}.bind(this))
             .wait(1000)
-            .moveBy(SC_W*0.3, 0, 3000, "easeInOutCubic")
+            .moveBy(GS_W*0.3, 0, 3000, "easeInOutCubic")
             .call(function(){
                 this.tweener.clear()
-                .moveBy(-SC_W*0.6, 0, 6000, "easeInOutCubic")
-                .moveBy( SC_W*0.6, 0, 6000, "easeInOutCubic").setLoop(true);
+                .moveBy(-GS_W*0.6, 0, 6000, "easeInOutCubic")
+                .moveBy( GS_W*0.6, 0, 6000, "easeInOutCubic").setLoop(true);
             }.bind(this));
 
         //子機の投入（右上から時計回り）
@@ -377,7 +414,7 @@ pb3.enemyData['yojouhan-b'] = {
     height: 64,
 
     //耐久力
-    def: 100,
+    def: 1000,
 
     //得点
     point: 10000,
@@ -403,14 +440,14 @@ pb3.enemyData['yojouhan-b'] = {
         tm.display.Shape(64, 128).addChildTo(this).renderRectangle(colorparam);
 
         var x = 0, y = 0;
-        if (param.num == 1) {x = SC_W*0.4; y = SC_H*0.2}
-        if (param.num == 2) {x = SC_W*0.6; y = SC_H*0.2}
-        if (param.num == 3) {x = SC_W*0.3; y = SC_H*0.3}
-        if (param.num == 4) {x = SC_W*0.7; y = SC_H*0.3}
-        this.relativeX = x-SC_W*0.5;
-        this.relativeY = y-SC_W*0.3;
+        if (param.num == 1) {x = GS_W*0.4; y = GS_H*0.2}
+        if (param.num == 2) {x = GS_W*0.6; y = GS_H*0.2}
+        if (param.num == 3) {x = GS_W*0.3; y = GS_H*0.3}
+        if (param.num == 4) {x = GS_W*0.7; y = GS_H*0.3}
+        this.relativeX = x-GS_W*0.5;
+        this.relativeY = y-GS_W*0.3;
         this.tweener
-            .moveBy(0, SC_H*0.5, 3000, "easeOutQuart")
+            .moveBy(0, GS_H*0.5, 3000, "easeOutQuart")
             .call(function(){this.phase++}.bind(this))
             .wait(500)
             .to({rotation:0, x:x, y:y},1000,"easeInOutCubic")
@@ -432,8 +469,8 @@ pb3.enemyData['yojouhan-b'] = {
         }
 
         if (this.phase == 11) {
-            var x = rand(SC_W*0.1, SC_W*0.9);
-            var y = rand(SC_H*0.1, SC_H*0.4);
+            var x = rand(GS_W*0.1, GS_W*0.9);
+            var y = rand(GS_H*0.1, GS_H*0.4);
             this.tweener.clear()
                 .to({rotation:0, x:x, y:y},1000,"easeInOutCubic")
                 .call(function(){this.phase++}.bind(this));
@@ -442,7 +479,7 @@ pb3.enemyData['yojouhan-b'] = {
         if (this.phase > 12) this.lookAt();
         if (this.phase == 13) {
             this.tweener.clear()
-                .to({x:rand(SC_W*0.1, SC_W*0.9), y:rand(SC_H*0.1, SC_H*0.4)},1000,"easeInOutCubic")
+                .to({x:rand(GS_W*0.1, GS_W*0.9), y:rand(GS_H*0.1, GS_H*0.4)},1000,"easeInOutCubic")
                 .wait(1000)
                 .call(function(){this.phase = 3}.bind(this));
             this.phase++;

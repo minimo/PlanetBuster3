@@ -44,7 +44,7 @@ pb3.bulletPattern["basic-aim1"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
         $.repeat(999, [
-            $fireRS(6),
+            $fireRS(3),
             $.wait("$rand * 60"),
         ]),
     ]),
@@ -54,7 +54,7 @@ pb3.bulletPattern["basic-aim2"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
         $.repeat(999, [
-            $fireRS(6),
+            $fireRS(3),
             $.wait("$rand * 60"),
         ]),
     ]),
@@ -108,25 +108,41 @@ var $whip = function(baseSpeed, delta, count, actionFunc) {
     ]);
 };
 
-//cube1
-pb3.bulletPattern["cube1"] = new bulletml.Root({
+//SkyFish1
+pb3.bulletPattern["SkyFish1"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
         $.repeat(999, [
-            $fireRS(6),
+            $fireRS(3),
             $.wait("$rand * 60"),
         ]),
     ]),
 });
 
-//cube2
-pb3.bulletPattern["cube2"] = new bulletml.Root({
+//SkyFish2
+pb3.bulletPattern["SkyFish2"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
         $.repeat(3, [
-            $fireRS(6),
+            $fireRS(3),
             $.wait("$rand * 60"),
         ]),
+    ]),
+});
+
+//BigWing
+pb3.bulletPattern["BigWing"] = new bulletml.Root({
+    top0: $.action([
+        $.wait(90),
+        $.repeat(999, [
+            $.repeat(5, [
+                $absoluteNway(3, 210, 150, $spd(3), RL),
+                $interval(6),
+            ]),
+            $interval(120),
+        ]),
+    ]),
+    top1: $.action([
     ]),
 });
 

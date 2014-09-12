@@ -83,7 +83,7 @@ tm.define("pb3.Bullet", {
             }
 
             //画面範囲外
-            if (this.x<-32 || this.x>SC_W+32 || this.y<-32 || this.y>SC_H+323) {
+            if (this.x<-32 || this.x>GS_W+32 || this.y<-32 || this.y>GS_H+32) {
                 this.isVanish = true;
                 this.isVanishEffect = false;
             }
@@ -115,10 +115,10 @@ tm.define("pb3.ShotBullet", {
     init: function(rotation, power, type) {
         if (type == 0) {
             this.superInit("shot1", 16, 16);
-            this.setScale(3);
+            this.setScale(2);
         } else {
             this.superInit("shot2", 16, 32);
-            this.setScale(2);
+            this.scaleX = 1.5;
         }
 
         this.rotation = rotation || 0;
@@ -147,7 +147,7 @@ tm.define("pb3.ShotBullet", {
         this.x += this.vx;
         this.y += this.vy;
 
-        if (this.x<-20 || this.x>SC_W+20 || this.y<-20 || this.y>SC_H+20) {
+        if (this.x<-20 || this.x>GS_W+20 || this.y<-20 || this.y>GS_H+20) {
             this.remove();
         }
 
@@ -168,12 +168,7 @@ tm.define("pb3.ShotBullet", {
     },
 
     vanish: function() {
-        for (var i = 0; i < 5; i++) {
-            var p = pb3.Effect.Particle(32, 1, 0.95).addChildTo(this.parentScene).setPosition(this.x, this.y);
-            var x = rand(0, 30)-15;
-            var y = rand(0, 50)*-1;
-            p.tweener.moveBy(x, y, 1000, "easeOutCubic");
-        }
+        pb3.Effect.EffectBase("shotimpact", 16, 16, 2, 0, 7).addChildTo(this.parentScene).setPosition(this.x, this.y);
     },
 });
 

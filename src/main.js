@@ -23,8 +23,7 @@ SC_H = 480;
 //ゲームスクリーンサイズ
 GS_W = 320;
 GS_H = 480;
-GS_OFFSET_X = 0;
-GS_OFFSET_Y = 0;
+GS_OFFSET = 80;
 
 //難易度
 DIFF_EASY   = 0;
@@ -76,7 +75,7 @@ app = {};
 
 //アプリケーションメイン
 tm.main(function() {
-    app = pb3.TouchShooter("#world");
+    app = pb3.PlanetBuster3("#world");
 //    app.enableStats();
     detectFontLoading("Orbitron");
     app.run();

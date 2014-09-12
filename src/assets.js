@@ -13,12 +13,19 @@ pb3.assets = {
     "gunship": "assets/images/gunship1.png",
     "shot1":   "assets/images/shot1.png",
     "shot2":   "assets/images/shot2.png",
+    "shotimpact": "assets/images/shotimpact.png",
 
-    "enemy5":  "assets/images/enemy5.png",
+    //敵機
+    "tex1":    "assets/images/tex1.png",
+
+    //エフェクト
+    "explode1": "assets/images/explode1.png",
+    "chip1":    "assets/images/chip1.png",
+    "chip2":    "assets/images/chip2.png",
 
     //マップ
     "map1":    "assets/images/map1.tmx",
-    "map1g":    "assets/images/map1.png",
+    "map1g":   "assets/images/map1.png",
 
     //SE
     "explodeSmall":  "assets/sounds/sen_ge_taihou03.mp3", 

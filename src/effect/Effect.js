@@ -8,6 +8,128 @@ pb3.Effect = [];
 
 (function() {
 
+//汎用エフェクト
+tm.define("pb3.Effect.EffectBase", {
+    superClass: "tm.display.Sprite",
+    layer: LAYER_EFFECT_UPPER,
+
+    //インデックス更新間隔
+    interval: 2,
+
+    //開始インデックス
+    startIndex: 0,
+
+    //最大インデックス
+    maxIndex: 8,
+
+    //現在インデックス
+    index: 0,
+
+    //遅延表示フレーム数
+    delay: 0,
+
+    //ループフラグ
+    loop: false,
+
+    //加速度
+    velocityX: 0,   //Ｘ座標方向
+    velocityY: 0,   //Ｙ座標方向
+    velocityD: 0,   //減衰率
+
+    time: 0,
+
+    init: function(tex, width, height, interval, startIndex, maxIndex, delay) {
+        this.superInit(tex, width, height);
+        this.interval = interval || 4;
+        this.startIndex = startIndex || 0;
+        this.maxIndex = maxIndex || 8;
+        this.delay = delay || 0;
+        if (this.delay < 0) this.delay *= -1;
+        this.time = -this.delay;
+
+        this.index = this.startIndex;
+        this.setFrameIndex(this.index);
+
+        this.on("enterframe", this.defaultEnterFrame);
+    },
+
+    defaultEnterFrame: function() {
+        if (this.time < 0) {
+            this.visible = false;
+            this.time++;
+            return;
+        }
+        if (this.time == 0) this.visible = true;
+        if (this.time % this.interval == 0) {
+            this.setFrameIndex(this.index);
+            this.index++;
+            if (this.index > this.maxIndex) {
+                if (this.loop) {
+                    this.index = this.startIndex;
+                } else {
+                    this.remove();
+                }
+            }
+        }
+        //画面範囲外
+        if (this.x<-32 || this.x>GS_W+32 || this.y<-32 || this.y>GS_H+32) {
+            this.remove();
+        }
+
+        this.addVelocity();
+        this.time++;
+    },
+
+    //現在の座標に加速度を加算
+    addVelocity: function() {
+        this.x += this.velocityX;
+        this.y += this.velocityY;
+        this.velocityX *= this.velocityD;
+        this.velocityY *= this.velocityD;
+    },
+
+    //加速度の設定
+    setVelocity: function(x, y, decay) {
+        this.velocityX = x;
+        this.velocityY = y;
+        this.velocityD = decay;
+        return this;
+    },
+
+    //ループ設定
+    setLoop: function(b) {
+        this.loop = b;
+        return this;
+    }
+});
+
+//爆発エフェクト（小）
+tm.define("pb3.Effect.ExplodeSmall", {
+    superClass: "pb3.Effect.EffectBase",
+    layer: LAYER_EFFECT_UPPER,
+
+    init: function(delay) {
+        this.superInit("explode1", 64, 64, 2, 0, 17, delay);
+    },
+});
+
+//破片
+tm.define("pb3.Effect.Chip", {
+    superClass: "pb3.Effect.EffectBase",
+    layer: LAYER_EFFECT_UPPER,
+
+    init: function(num, delay) {
+        num = num || 0;
+        num = Math.clamp(num, 0, 3);
+        if (num == 0) {
+            this.superInit("chip2", 8, 8, 2, 0, 16, delay);
+        } else {
+            num--;
+            this.superInit("chip1", 16, 16, 4, num*8, (num+1)*8-1, delay);
+        }
+    },
+});
+
 //汎用パーティクル
 tm.define("pb3.Effect.Particle", {
     superClass: "tm.display.Shape",
@@ -56,115 +178,7 @@ tm.define("pb3.Effect.Particle", {
     },
 });
 
-//オーラ用パーティクル
-tm.define("pb3.Effect.Aura", {
-    superClass: "tm.display.Shape",
-    layer: LAYER_EFFECT_UPPER,
-
-    init: function(target, size, alphaDecayRate) {
-        size = size || 100;
-        this.superInit();
-        if (alphaDecayRate === undefined) alphaDecayRate = 0.9;
-
-        this.width = this.height = this.size = size;
-        this.alpha = 0.02;
-        this.alphaDecayRate = alphaDecayRate;
-        this.blendMode = "lighter";
-        this.tweener.clear().to({alpha:1},200).to({alpha:0},2000);
-
-        this.target = target;
-        this.vanish = false;
-
-        this.setScale(size*0.01);
-
-        var c = this.canvas;
-        c.setFillStyle(
-            tm.graphics.RadialGradient(25, 25, 0, 25, 25, 25)
-                .addColorStopList([
-                    {offset:0.0, color: "hsla({0}, 60%, 50%, 0.4)".format(200)},
-                    {offset:0.5, color: "hsla({0}, 60%, 50%, 0.2)".format(240)},
-                    {offset:1.0, color: "hsla({0}, 60%, 50%, 0.0)".format(240)},
-                ]).toStyle()
-            )
-            .fillRect(0, 0, 50, 50);
-    },
-
-    update: function() {
-        if (this.alpha < 0.01) {
-            this.remove();
-            return;
-        } else if (1.0 < this.alpha) {
-            this.alpha = 1.0;
-        }
-        if (this.target.mouseON && !this.vanish) {
-             this.x += this.vx;
-             this.y += this.vy;
-        } else {
-             this.vanish = true;
-             this.x -= this.vx*3;
-             this.y -= this.vy*3;
-        }
-        var x = this.target.x;
-        var y = this.target.y;
-        if (this.x-2 < x && x < this.x+2 && this.y-2 < y && y < this.y+2) {
-            this.remove();
-            return;
-        }
-        this.scaleX *= 0.98;
-        this.scaleY *= 0.98;
-    },
-});
-
-//爆発用パーティクル
-tm.define("pb3.Effect.BurnParticle", {
-    superClass: "tm.display.Shape",
-    layer: LAYER_EFFECT_UPPER,
-
-    alpha: 1.0,
-    alphaDecayRate: 0.85,
-    size: 0,
-
-    image: null,
-    isEffect: true,
-    isUpper: true,
-
-    init: function(size, initialAlpha, alphaDecayRate, color) {
-        size = size || 32;
-        color = color || 0;
-        this.superInit(size, size);
-
-        if (initialAlpha === undefined) initialAlpha = 1;
-        if (alphaDecayRate === undefined) alphaDecayRate = 0.9;
-
-        this.size = size;
-        this.alpha = initialAlpha;
-        this.alphaDecayRate = alphaDecayRate;
-        this.blendMode = "lighter";
-
-        var c = this.canvas;
-        c.setFillStyle(
-            tm.graphics.RadialGradient(size/2, size/2, 0, size/2, size/2, size/2)
-                .addColorStopList([
-                    {offset:0.0, color: "hsla({0}, 50%, 30%, 1.0)".format(color)},
-                    {offset:0.5, color: "hsla({0}, 50%, 30%, 0.5)".format(color)},
-                    {offset:1.0, color: "hsla({0}, 60%, 50%, 0.0)".format(color)},
-                ]).toStyle()
-            )
-            .fillRect(0, 0, size, size);
-
-        this.on("enterframe", function() {
-            this.alpha *= this.alphaDecayRate;
-            if (this.alpha < 0.01) {
-                this.remove();
-                return;
-            } else if (1.0 < this.alpha) {
-                this.alpha = 1.0;
-            }
-        }.bind(this));
-    },
-});
-
-//敵弾消滅パーティクル
+//敵弾消滅エフェクト
 tm.define("pb3.Effect.BulletVanish", {
     superClass: "tm.display.Shape",
     layer: LAYER_EFFECT_UPPER,

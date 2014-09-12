@@ -34,7 +34,7 @@ tm.define("pb3.Player", {
     parentScene: null,
 
     init: function() {
-        this.superInit("gunship", 32, 32);
+        this.superInit("gunship", 48, 48);
         this.setFrameIndex(4);
 //        this.setScale(1.5);
 
@@ -98,7 +98,8 @@ tm.define("pb3.Player", {
             this.rollcount+=3;
             if (this.rollcount > 80) this.rollcount = 80;
         }
-        if (this.bx == this.x) {
+        var vx = Math.abs(this.bx - this.x);
+        if (vx < 2) {
             if (this.rollcount < 50) this.rollcount+=3;
             else this.rollcount-=3;
             if (this.rollcount < 0) this.rollcount = 0;
@@ -109,7 +110,7 @@ tm.define("pb3.Player", {
             var i = ~~(this.rollcount/10);
             if (i < 0) i = 0;
             if (i > 8) i = 8;
-            this.setFrameIndex(i,32,32);
+            this.setFrameIndex(i);
         }
 
         //移動範囲の制限
@@ -154,36 +155,19 @@ tm.define("pb3.Player", {
 
     //ショット発射
     enterShot: function() {
-        var shotPower = 1;
+        var shotPower = this.shotPower;
         //自機から
         pb3.ShotBullet(0, shotPower, 0).addChildTo(this.parentScene).setPosition(this.x   , this.y-16);
-        pb3.ShotBullet(0, shotPower, 0).addChildTo(this.parentScene).setPosition(this.x+24, this.y-16);
-        pb3.ShotBullet(0, shotPower, 0).addChildTo(this.parentScene).setPosition(this.x-24, this.y-16);
-
-        //ビットから
-        var x = this.x + this.bits[0].x;
-        var y = this.y + this.bits[0].y;
-        pb3.ShotBullet(this.bits[0].rotation, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
-
-        var x = this.x + this.bits[1].x;
-        var y = this.y + this.bits[1].y;
-        pb3.ShotBullet(this.bits[1].rotation, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
-
-        var x = this.x + this.bits[2].x;
-        var y = this.y + this.bits[2].y;
-        pb3.ShotBullet(this.bits[2].rotation, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
-
-        var x = this.x + this.bits[3].x;
-        var y = this.y + this.bits[3].y;
-        pb3.ShotBullet(this.bits[3].rotation, shotPower).addChildTo(this.parentScene).setPosition(x, y-8);
+        pb3.ShotBullet(0, shotPower, 0).addChildTo(this.parentScene).setPosition(this.x+16, this.y-8);
+        pb3.ShotBullet(0, shotPower, 0).addChildTo(this.parentScene).setPosition(this.x-16, this.y-8);
     },
 
     //ビット展開
     openBit: function() {
-        this.bits[0].tweener.clear().to({ x: 24, y:  8, rotation:  5, alpha:1}, 300);
-        this.bits[1].tweener.clear().to({ x:-24, y:  8, rotation: -5,  alpha:1}, 300);
-        this.bits[2].tweener.clear().to({ x: 40, y: 16, rotation: 10, alpha:1}, 300);
-        this.bits[3].tweener.clear().to({ x:-40, y: 16, rotation:-10, alpha:1}, 300);
+        this.bits[0].tweener.clear().to({ x: 36, y: 16, rotation:  5, alpha:1}, 300);
+        this.bits[1].tweener.clear().to({ x:-36, y: 16, rotation: -5, alpha:1}, 300);
+        this.bits[2].tweener.clear().to({ x: 60, y: 24, rotation: 10, alpha:1}, 300);
+        this.bits[3].tweener.clear().to({ x:-60, y: 24, rotation:-10, alpha:1}, 300);
     },
 
     //ビット収納
@@ -242,7 +226,6 @@ tm.define("pb3.PlayerBit", {
 
     init: function() {
         this.superInit("bit", 32, 32);
-        this.setScale(0.5);
         this.parentScene = app.currentScene;
         this.index = 0;
 
@@ -257,7 +240,15 @@ tm.define("pb3.PlayerBit", {
     update: function() {
         if (this.time % 2 == 0) {
             this.index = (this.index+1)%9;
-            this.setFrameIndex(this.index, 32, 32);
+            this.setFrameIndex(this.index);
+        }
+        var player = app.player;
+        if (player.mouseON && player.control && player.shotON) {
+            if (this.time % player.shotInterval == 0) {
+                var x = this.x + player.x;
+                var y = this.y + player.y;
+                pb3.ShotBullet(this.rotation, player.shotPower).addChildTo(player.parentScene).setPosition(x, y-8);
+            }
         }
         this.time++;
     },
@@ -284,10 +275,10 @@ tm.define("pb3.PlayerPointer", {
             } else {
                 this.alpha = 0.5;
             }
-            this.x += (p.position.x - p.prevPosition.x)*2;
-            this.y += (p.position.y - p.prevPosition.y)*2;
-            this.x = Math.clamp(this.x, 0, GS_W);
-            this.y = Math.clamp(this.y, 0, GS_H);
+            this.x += (p.position.x - p.prevPosition.x);
+            this.y += (p.position.y - p.prevPosition.y);
+            this.x = Math.clamp(this.x, 16, GS_W-16);
+            this.y = Math.clamp(this.y, 16, GS_H-16);
         } else {
             this.x = app.player.x;
             this.y = app.player.y;

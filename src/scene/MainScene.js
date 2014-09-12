@@ -52,15 +52,20 @@ tm.define("pb3.MainScene", {
 
         this.mask = tm.display.Shape(SC_W, SC_H).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
         this.mask.renderRectangle({fillStyle: "rgba(0,0,0,1.0)", strokeStyle: "rgba(0,0,0,1.0)"});
-//        this.map = tm.display.MapSprite("map1").addChildTo(this);
-        this.map = tm.display.Sprite("map1g").addChildTo(this).setPosition(0, -1000).setScale(1);
 
         //レイヤー作成
-        this.base = tm.app.Object2D().addChildTo(this);
+        this.base = tm.app.Object2D().addChildTo(this).setPosition(GS_OFFSET, 0);
         this.layers = [];
         for (var i = 0; i < LAYER_SYSTEM+1; i++) {
             this.layers[i] = tm.app.Object2D().addChildTo(this.base);
         }
+
+        //マップ（テスト用）
+//        this.map = tm.display.MapSprite("map1").addChildTo(this);
+        this.map = tm.display.Sprite("map1g");
+        this.map.layer = LAYER_BACKGROUND;
+        this.map.origin.set(0, 0);
+        this.map.addChildTo(this).setPosition(0, -1000).setScale(1);
 
         //プレイヤー
         this.player = pb3.Player().addChildTo(this);
@@ -100,9 +105,12 @@ tm.define("pb3.MainScene", {
         //ボス耐久力ゲージ
         this.bossGauge = pb3.BossGauge().addChildTo(this.systemBase).setPosition(0, -24);
 
-        this.systemMask = tm.display.Shape(SC_W-GS_W, SC_H).addChildTo(this).setPosition(GS_W, 0);
-        this.systemMask.renderRectangle({fillStyle: "rgba(0,0,0,1.0)", strokeStyle: "rgba(0,0,0,1.0)"});
-        this.systemMask.origin.set(0, 0);
+        this.systemMaskL = tm.display.Shape(80, SC_H).addChildTo(this).setPosition(0, 0);
+        this.systemMaskL.renderRectangle({fillStyle: "rgba(0,0,0,1.0)", strokeStyle: "rgba(0,0,0,1.0)"});
+        this.systemMaskL.origin.set(0, 0);
+        this.systemMaskR = tm.display.Shape(80, SC_H).addChildTo(this).setPosition(GS_W+80, 0);
+        this.systemMaskR.renderRectangle({fillStyle: "rgba(0,0,0,1.0)", strokeStyle: "rgba(0,0,0,1.0)"});
+        this.systemMaskR.origin.set(0, 0);
 
         //ステージ制御
         this.initStage();
@@ -121,7 +129,7 @@ tm.define("pb3.MainScene", {
         }
 
         //敵弾強制消去
-        if (this.timeVanish > 0 && this.time % 6 == 0) {
+        if (this.timeVanish > 0) {
             this.eraseBullet();
         }
 
@@ -181,6 +189,7 @@ tm.define("pb3.MainScene", {
 
     //弾の消去
     eraseBullet: function(target) {
+        if (this.layers[LAYER_BULLET].length == 0)return;
         if (target) {
             //個別弾消し
             this.layers[LAYER_BULLET].children.each(function(a) {

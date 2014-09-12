@@ -10,8 +10,6 @@ tm.define("pb3.Enemy", {
     superClass: "tm.display.CanvasElement",
     layer: LAYER_OBJECT,    //所属レイヤー
     parentScene: null,      //親シーン
-    player: null,           //プレイヤー参照用
-
     parentEnemy: null,      //親となる敵キャラ
 
     //各種フラグ
@@ -31,6 +29,9 @@ tm.define("pb3.Enemy", {
     nowBulletPattern: null,
     id: -1,
     param: null,
+
+    body: null,     //機体描画用スプライト
+    texName: null,  //機体描画用テクスチャ
 
     data: null,
 
@@ -55,9 +56,16 @@ tm.define("pb3.Enemy", {
         this.layer = d.layer || LAYER_OBJECT;
         this.point = d.point || 0;
 
-        if (d.setup) this.setup = d.setup;
-        if (d.algorithm) this.algorithm = d.algorithm;
-        if (d.dead) this.dead = d.dead;
+        this.setup = d.setup || this.setup;
+        this.algorithm = d.algorithm || this.algorithm;
+        this.dead = d.dead || this.dead;
+
+        //機体用スプライト
+        if (d.texName) {
+            this.texName = d.texName;
+            this.body = tm.display.Sprite(d.texName, d.texWidth, d.texHeight).addChildTo(this);
+            this.body.setFrameIndex(d.texIndex);
+        }
 
         this.bulletPattern = d.bulletPattern;
         if (this.bulletPattern instanceof Array) {
@@ -70,8 +78,10 @@ tm.define("pb3.Enemy", {
         this.setup(param);
 
         var bulletMLparams = {
+            rank: 0,
             target: app.player,
             createNewBullet: function(runner, attr) {
+                if (this.isGround && distanceSq(this, app.player) < 4096 ) return;  //地上敵で自機に近い場合は弾を撃たない
                 pb3.Bullet(runner, attr, this.id).addChildTo(this.parentScene);
             }.bind(this)
         };
@@ -79,6 +89,9 @@ tm.define("pb3.Enemy", {
 
         //当り判定設定
         this.boundingType = "rect";
+
+        //remove時
+        this.on('removed', this.release);
 
         this.time = 0;
     },
@@ -89,7 +102,7 @@ tm.define("pb3.Enemy", {
             fillStyle:  "hsla(0, 100%, 100%, 1.0)",
             lineWidth: 2,
         };
-        var sh = tm.display.Shape(32, 32).addChildTo(this).renderRectangle(param);
+        var sh = tm.display.Shape(this.width, this.height).addChildTo(this).renderRectangle(param);
     },
 
     update: function() {
@@ -98,18 +111,17 @@ tm.define("pb3.Enemy", {
 
         //スクリーン内入った判定
         if (this.isOnScreen) {
-            if (this.x < -100 || this.x > SC_W+100 || this.y < -100 || this.y > SC_H+100) {
+            if (this.x < -100 || this.x > GS_W+100 || this.y < -100 || this.y > GS_H+100) {
                 this.remove();
                 this.isCollision = false;
             }
         } else {
-            if (0 < this.x && this.x < SC_W && 0 < this.y && this.y < SC_H) this.isOnScreen = true;
+            if (0 < this.x && this.x < GS_W && 0 < this.y && this.y < GS_H) this.isOnScreen = true;
         }
 
         //自機との当り判定チェック
         var player = app.player;
-        player.radius = 2;
-        if (this.isCollision && player.isCollision && this.isHitElement(player)) {
+        if (this.isCollision && !this.isGround && player.isCollision && this.isHitElement(player)) {
             player.damage();
         }
 
@@ -124,9 +136,10 @@ tm.define("pb3.Enemy", {
     algorithm: function() {
     },
 
-    damage: function(power) {
+    damage: function(power, force) {
         if (this.isMuteki || this.isDead) return;
         this.def -= power;
+        if (force) this.def = -1;
         if (this.def < 1) {
             //破壊パターン投入
             if (this.data.type == ENEMY_BOSS) {
@@ -137,14 +150,6 @@ tm.define("pb3.Enemy", {
                 this.dead();
             }
             this.parentScene.enemyKill++;
-
-            //弾消し
-            if (this.data.type == ENEMY_MIDDLE) {
-                this.parentScene.eraseBullet(this);
-            } else if (this.data.type == ENEMY_LARGE) {
-                this.parentScene.eraseBullet();
-                this.parentScene.timeVanish = 60;
-            }
 
             //親機に破壊を通知
             if (this.parentEnemy) this.parentEnemy.deadChild(this);
@@ -166,19 +171,25 @@ tm.define("pb3.Enemy", {
         this.tweener.clear();
         this.stopDanmaku();
 
-        this.on("enterframe", function() {
-            this.alpha *= 0.9;
-            if (this.alpha < 0.02) this.remove();
-        }.bind(this));
-
         var area = this.width*this.height;
+        var vx = this.x-this.beforeX;
+        var vy = this.y-this.beforeY;
         if (area < 1025) {
-            pb3.burnParticleSmall(this.x, this.y).addChildTo(this.parentScene);
+            pb3.Effect.enterExplodeSmall(this.parentScene, this.x, this.y, vx, vy);
             app.playSE("explodeSmall");
         } else {
-            pb3.burnParticleLarge(this.x, this.y).addChildTo(this.parentScene);
+            pb3.Effect.enterExplodeSmall(this.parentScene, this.x, this.y, vx, vy);
             app.playSE("explodeLarge");
         }
+
+        //弾消し
+        if (this.data.type == ENEMY_MIDDLE) {
+            this.parentScene.eraseBullet(this);
+        } else if (this.data.type == ENEMY_LARGE) {
+            this.parentScene.eraseBullet();
+            this.parentScene.timeVanish = 60;
+        }
+        this.remove();
     },
 
     deadBoss: function() {
@@ -195,11 +206,14 @@ tm.define("pb3.Enemy", {
         for (var i = 0; i < 10; i++) {
             var x = rand(0, this.width)-this.width/2;
             var y = rand(0, this.height)-this.height/2;
-            pb3.burnParticleLarge(this.x+x, this.y+y).addChildTo(this.parentScene);
+            pb3.Effect.enterExplodeSmall(this.parentScene, x, y, vx, vy);
         }
         app.playSE("explodeLarge");
 
+        //弾消し
         this.parentScene.eraseBullet();
+
+        this.remove();
     },
 
     //親機のセット
@@ -240,6 +254,10 @@ tm.define("pb3.Enemy", {
         this.vy = Math.sin(rad+Math.PI)*speed;
         this.x += this.vx;
         this.y += this.vy;
+    },
+
+    release: function() {
+        this.removeChildren();
     },
 });
 
