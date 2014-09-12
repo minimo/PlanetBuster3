@@ -81,7 +81,7 @@ tm.define("pb3.MainScene", {
 
         //スコア表示ラベル
         app.score = 0;
-        var sc = this.scoreLabel = tm.display.OutlineLabel("SCORE:0", 30).addChildTo(this.systemBase);
+        var sc = this.scoreLabel = tm.display.OutlineLabel("SCORE:0", 20).addChildTo(this.systemBase).setPosition(GS_OFFSET, 0);
         sc.fontFamily = "'Orbitron'"; sc.align = "left"; sc.baseline  = "top"; sc.fontWeight = 700; sc.outlineWidth = 2;
         sc.update = function() {
             this.text = "SCORE:"+app.score;
@@ -93,7 +93,7 @@ tm.define("pb3.MainScene", {
         this.dispLife.life = 0;
         this.dispLife.inc = function() {
             this.life++;
-            this.players[this.life] = pb3.PlayerDisp().addChildTo(this).setPosition(this.life*50-20, 64);
+            this.players[this.life] = pb3.PlayerDisp().addChildTo(this).setPosition(GS_OFFSET+this.life*36-20, 40);
         }
         this.dispLife.dec = function() {
             if (this.life == 0) return;
