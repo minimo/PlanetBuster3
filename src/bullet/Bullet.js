@@ -32,44 +32,48 @@ tm.define("pb3.Bullet", {
 
         //弾種別グラフィック
 //        this.removeChildren();
+        var size = 20, pos = 2, gra = "NormalR-1";
         switch (param.type) {
             case "RS":
-                tm.display.Shape(20, 20).addChildTo(this).canvas = pb3.bulletGraphic["NormalR-1"];
-                tm.display.Shape(10, 10).addChildTo(this).setPosition(-2,-2).canvas = pb3.bulletGraphic["NormalR-2"];
-                tm.display.Shape(10, 10).addChildTo(this).setPosition( 2, 2).canvas = pb3.bulletGraphic["NormalR-2"];
+                size = 16; pos = 2; gra = "NormalR"
                 break;
             case "BS":
-                tm.display.Shape(20, 20).addChildTo(this).canvas = pb3.bulletGraphic["NormalB-1"];
-                tm.display.Shape(10, 10).addChildTo(this).setPosition(-2,-2).canvas = pb3.bulletGraphic["NormalB-2"];
-                tm.display.Shape(10, 10).addChildTo(this).setPosition( 2, 2).canvas = pb3.bulletGraphic["NormalB-2"];
+                size = 16; pos = 2; gra = "NormalB"
                 break;
+
+            case "RM":
+                size = 20; pos = 3; gra = "NormalR"
+                break;
+            case "BM":
+                size = 20; pos = 3; gra = "NormalB"
+                break;
+
             case "RL":
-                tm.display.Shape(32, 32).addChildTo(this).canvas = pb3.bulletGraphic["NormalR-1"];
-                tm.display.Shape(16, 16).addChildTo(this).setPosition(-3,-3).canvas = pb3.bulletGraphic["NormalR-2"];
-                tm.display.Shape(16, 16).addChildTo(this).setPosition( 3, 3).canvas = pb3.bulletGraphic["NormalR-2"];
+                size = 32; pos = 3; gra = "NormalR"
                 break;
             case "BL":
-                tm.display.Shape(32, 32).addChildTo(this).canvas = pb3.bulletGraphic["NormalB-1"];
-                tm.display.Shape(16, 16).addChildTo(this).setPosition(-3,-3).canvas = pb3.bulletGraphic["NormalB-2"];
-                tm.display.Shape(16, 16).addChildTo(this).setPosition( 3, 3).canvas = pb3.bulletGraphic["NormalB-2"];
+                size = 32; pos = 3; gra = "NormalB"
                 break;
+
             case "RE":
-                tm.display.Shape(32, 32).addChildTo(this).canvas = pb3.bulletGraphic["NormalR-1"];
-                tm.display.Shape(16, 16).addChildTo(this).setPosition(-3,-3).canvas = pb3.bulletGraphic["NormalR-2"];
-                tm.display.Shape(16, 16).addChildTo(this).setPosition( 3, 3).canvas = pb3.bulletGraphic["NormalR-2"];
+                size = 32; pos = 3; gra = "NormalR"
                 this.scaleY = 0.8;
                 break;
             case "BE":
-                tm.display.Shape(32, 32).addChildTo(this).canvas = pb3.bulletGraphic["NormalB-1"];
-                tm.display.Shape(16, 16).addChildTo(this).setPosition(-3,-3).canvas = pb3.bulletGraphic["NormalB-2"];
-                tm.display.Shape(16, 16).addChildTo(this).setPosition( 3, 3).canvas = pb3.bulletGraphic["NormalB-2"];
+                size = 32; pos = 3; gra = "NormalB"
                 this.scaleY = 0.8;
                 break;
+
             default:
-                this.body = tm.display.Shape(32, 32).addChildTo(this);
-                this.body.canvas = pb3.bulletGraphic["NormalR-1"];
+                size = 6; pos = 1; gra = "NormalR"
+//                this.body = tm.display.Shape(32, 32).addChildTo(this);
+//                this.body.canvas = pb3.bulletGraphic["NormalR-1"];
                 break;
         }
+        var size_h = size/2;
+        tm.display.Shape(size,  size  ).addChildTo(this).canvas = pb3.bulletGraphic[gra+"-1"];
+        tm.display.Shape(size_h,size_h).addChildTo(this).setPosition(-pos,-pos).canvas = pb3.bulletGraphic[gra+"-2"];
+        tm.display.Shape(size_h,size_h).addChildTo(this).setPosition( pos, pos).canvas = pb3.bulletGraphic[gra+"-2"];
 
         this.on("enterframe", function(){
             this.rotation += this.speedRoll;
