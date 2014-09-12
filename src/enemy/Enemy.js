@@ -78,7 +78,7 @@ tm.define("pb3.Enemy", {
         this.setup(param);
 
         var bulletMLparams = {
-            rank: 0,
+            rank: this.parentScene.rank,
             target: app.player,
             createNewBullet: function(runner, attr) {
                 if (this.isGround && distanceSq(this, app.player) < 4096 ) return;  //地上敵で自機に近い場合は弾を撃たない

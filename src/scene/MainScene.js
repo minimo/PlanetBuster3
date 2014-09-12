@@ -35,6 +35,7 @@ tm.define("pb3.MainScene", {
     boss: false,    //ボス戦中フラグ
     stageClear: false,  //ステージクリアフラグ
     stageMiss: 0,   //ステージ内ミス回数
+    rank: 0,        //ゲームランク
 
     //敵投入数と撃破数
     enemyCount: 0,

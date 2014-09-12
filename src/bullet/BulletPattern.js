@@ -31,12 +31,16 @@ var RE = function(action) { return $.bullet(action, {type: "RE"}); };
 var BE = function(action) { return $.bullet(action, {type: "BE"}); };
 
 //ランクを考慮したウェイト
-var $interval = function(v) {return $.wait(v)};
+var $interval = function(v) {
+    v = v===undefined?1:v;
+    return $.wait(~~(v-$rank*0.1))
+};
 
 //速度
 var $spd = function(v) {
     v = v===undefined?1:v;
-    return $.speed($rank*0.1*v+v); };
+    return $.speed($rank*0.1*v+v);
+};
 
 var $fireBS = function(spd) { return $.fire($.direction(0), $.speed(spd) || $spd, BS) };
 var $fireRS = function(spd) { return $.fire($.direction(0), $.speed(spd) || $spd, RS) };
@@ -151,8 +155,8 @@ pb3.bulletPattern["BigWing"] = new bulletml.Root({
         $.wait(90),
         $.repeat(999, [
             $.repeat(3, [
-                $.fire($.direction(180, "absolute"), $spd(2), BM, $.offsetX(-32)),
-                $.fire($.direction(180, "absolute"), $spd(2), BM, $.offsetX( 32)),
+                $.fire($.direction(180, "absolute"), $spd(3), BM, $.offsetX(-32)),
+                $.fire($.direction(180, "absolute"), $spd(3), BM, $.offsetX( 32)),
                 $interval(20),
             ]),
             $interval(60),
