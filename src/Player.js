@@ -226,6 +226,7 @@ tm.define("pb3.PlayerBit", {
 
     init: function() {
         this.superInit("bit", 32, 32);
+        this.setScale(0.8);
         this.parentScene = app.currentScene;
         this.index = 0;
 
