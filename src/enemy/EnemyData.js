@@ -107,7 +107,7 @@ pb3.enemyData['BigWing'] = {
     height: 20,
 
     //耐久力
-    def: 200,
+    def: 800,
 
     //得点
     point: 1000,
