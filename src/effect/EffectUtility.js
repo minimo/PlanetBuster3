@@ -8,8 +8,8 @@
 (function() {
 
 //爆発エフェクト投入
-pb3.Effect.enterExplodeSmall = function(parentScene, x, y, vx, vy) {
-    var delay = rand(0, 20);
+pb3.Effect.enterExplodeSmall = function(parentScene, x, y, vx, vy, delay) {
+    delay = delay || 0;
     pb3.Effect.ExplodeSmall(delay).addChildTo(parentScene).setPosition(x, y).setVelocity(vx, vy, 0);
 
     var val = rand(5, 10);

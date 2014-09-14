@@ -35,10 +35,14 @@ tm.define("pb3.MainScene", {
     boss: false,    //ボス戦中フラグ
     stageClear: false,  //ステージクリアフラグ
     stageMiss: 0,   //ステージ内ミス回数
+    rank: 0,        //ゲームランク
 
     //敵投入数と撃破数
     enemyCount: 0,
     enemyKill: 0,
+
+    //バックグラウンド
+    ground: null,
 
     //プレイヤー情報
     life: 2,
@@ -61,11 +65,7 @@ tm.define("pb3.MainScene", {
         }
 
         //マップ（テスト用）
-//        this.map = tm.display.MapSprite("map1").addChildTo(this);
-        this.map = tm.display.Sprite("map1g");
-        this.map.layer = LAYER_BACKGROUND;
-        this.map.origin.set(0, 0);
-        this.map.addChildTo(this).setPosition(0, -1000).setScale(1);
+        this.ground = pb3.Ground("map1g").setPosition(GS_W*0.5, -700).addChildTo(this);
 
         //プレイヤー
         this.player = pb3.Player().addChildTo(this);
@@ -81,7 +81,7 @@ tm.define("pb3.MainScene", {
 
         //スコア表示ラベル
         app.score = 0;
-        var sc = this.scoreLabel = tm.display.OutlineLabel("SCORE:0", 30).addChildTo(this.systemBase);
+        var sc = this.scoreLabel = tm.display.OutlineLabel("SCORE:0", 20).addChildTo(this.systemBase).setPosition(GS_OFFSET, 0);
         sc.fontFamily = "'Orbitron'"; sc.align = "left"; sc.baseline  = "top"; sc.fontWeight = 700; sc.outlineWidth = 2;
         sc.update = function() {
             this.text = "SCORE:"+app.score;
@@ -93,7 +93,7 @@ tm.define("pb3.MainScene", {
         this.dispLife.life = 0;
         this.dispLife.inc = function() {
             this.life++;
-            this.players[this.life] = pb3.PlayerDisp().addChildTo(this).setPosition(this.life*50-20, 64);
+            this.players[this.life] = pb3.PlayerDisp().addChildTo(this).setPosition(GS_OFFSET+this.life*36-20, 40);
         }
         this.dispLife.dec = function() {
             if (this.life == 0) return;
@@ -117,7 +117,6 @@ tm.define("pb3.MainScene", {
     },
 
     update: function() {
-        this.map.y++;
         //ステージ進行
         var event = this.stage.get(this.time);
         if (event) {

@@ -107,7 +107,7 @@ pb3.enemyData['BigWing'] = {
     height: 20,
 
     //耐久力
-    def: 200,
+    def: 800,
 
     //得点
     point: 1000,
@@ -116,7 +116,7 @@ pb3.enemyData['BigWing'] = {
     layer: LAYER_OBJECT,
 
     //敵タイプ
-    type: ENEMY_SMALL,
+    type: ENEMY_MIDDLE,
 
     //機体用テクスチャ情報
     texName: "tex1",

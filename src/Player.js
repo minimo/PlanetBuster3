@@ -6,6 +6,17 @@
  */
 (function() {
 
+var KEYBOARD_MOVE = {
+      0: { x:  1.0, y:  0.0 },
+     45: { x:  0.7, y: -0.7 },
+     90: { x:  0.0, y: -1.0 },
+    135: { x: -0.7, y: -0.7 },
+    180: { x: -1.0, y:  0.0 },
+    225: { x: -0.7, y:  0.7 },
+    270: { x:  0.0, y:  1.0 },
+    315: { x:  0.7, y:  0.7 },
+};
+
 tm.define("pb3.Player", {
     superClass: "tm.display.Sprite",
     layer: LAYER_OBJECT,
@@ -15,7 +26,7 @@ tm.define("pb3.Player", {
     height: 2,
 
     control: true,  //操作可能フラグ
-    shotON: true,   //ショットフラグ
+    shotON: false,  //ショットフラグ
     mouseON: false, //マウス操作中フラグ
 
     isCollision: false, //当り判定有効フラグ
@@ -32,6 +43,7 @@ tm.define("pb3.Player", {
     pitchcount: 50,
 
     parentScene: null,
+    indecies: [0,1,2,3,4,4,4,5,6,7,8],
 
     init: function() {
         this.superInit("gunship", 48, 48);
@@ -78,54 +90,67 @@ tm.define("pb3.Player", {
 
     update: function() {
         //操作系
-        var p = app.pointing;
-        if (p.getPointing()) {
-            var pt = this.parentScene.pointer;
-            this.x += (pt.x - this.x)/this.speed;
-            this.y += (pt.y - this.y)/this.speed;
-
-            this.mouseON = true;
-        } else {
-            this.mouseON = false;
-        }
-
-        //機体ロール
-        if (this.bx > this.x) {
-            this.rollcount-=3;
-            if (this.rollcount < 0) this.rollcount = 0;
-        }
-        if (this.bx < this.x) {
-            this.rollcount+=3;
-            if (this.rollcount > 80) this.rollcount = 80;
-        }
-        var vx = Math.abs(this.bx - this.x);
-        if (vx < 2) {
-            if (this.rollcount < 50) this.rollcount+=3;
-            else this.rollcount-=3;
-            if (this.rollcount < 0) this.rollcount = 0;
-            if (this.rollcount > 80) this.rollcount = 80;
-        }
-        //機体ロール
-        if (this.time % 2 == 0) {
-            var i = ~~(this.rollcount/10);
-            if (i < 0) i = 0;
-            if (i > 8) i = 8;
-            this.setFrameIndex(i);
-        }
-
-        //移動範囲の制限
         if (this.control) {
+            //マウス操作
+            var p = app.pointing;
+            if (p.getPointing()) {
+                var pt = this.parentScene.pointer;
+                this.x += (pt.x - this.x)/this.speed;
+                this.y += (pt.y - this.y)/this.speed;
+
+                this.mouseON = true;
+                this.shotON = true;
+            } else {
+                this.mouseON = false;
+                this.shotON = false;
+            }
+
+            //キーボード操作
+            var kb = app.keyboard;
+            var angle = kb.getKeyAngle();
+            if (angle !== null) {
+                var m = KEYBOARD_MOVE[angle];
+                this.x += m.x*this.speed*0.4;
+                this.y += m.y*this.speed*0.4;
+            }
+            if (!this.mouseON) this.shotON = app.keyboard.getKey("Z");
+
+            //移動範囲の制限
             this.x = Math.clamp(this.x, 16, GS_W-16);
             this.y = Math.clamp(this.y, 16, GS_H-16);
         }
 
-        //タッチorクリック中
-        if (this.mouseON && this.control) {
-            //ショット
-            if (this.shotON && this.time % this.shotInterval == 0) {
-                this.enterShot();
-            }
+        //ショット
+        if (this.shotON && this.control && this.time % this.shotInterval == 0) {
+            this.enterShot();
         }
+
+        //機体ロール
+        var x = ~~this.x;
+        var bx = ~~this.bx;
+        if (bx > x) {
+            this.rollcount-=2;
+            if (this.rollcount < 0) this.rollcount = 0;
+        }
+        if (bx < x) {
+            this.rollcount+=2;
+            if (this.rollcount > 100) this.rollcount = 100;
+        }
+        var vx = Math.abs(bx - x);
+        if (vx < 2) {
+            if (this.rollcount < 50) this.rollcount+=2;
+            else this.rollcount-=2;
+            if (this.rollcount < 0) this.rollcount = 0;
+            if (this.rollcount > 100) this.rollcount = 100;
+        }
+        //機体ロール
+//        if (this.time % 2 == 0) {
+            var i = ~~(this.rollcount/10);
+            if (i < 0) i = 0;
+            if (i > 9) i = 9;
+            var index = this.indecies[i];
+            this.setFrameIndex(index);
+//        }
 
         this.bx = this.x;
         this.by = this.y;
@@ -226,6 +251,7 @@ tm.define("pb3.PlayerBit", {
 
     init: function() {
         this.superInit("bit", 32, 32);
+        this.setScale(0.8);
         this.parentScene = app.currentScene;
         this.index = 0;
 
@@ -243,7 +269,7 @@ tm.define("pb3.PlayerBit", {
             this.setFrameIndex(this.index);
         }
         var player = app.player;
-        if (player.mouseON && player.control && player.shotON) {
+        if (player.control && player.shotON) {
             if (this.time % player.shotInterval == 0) {
                 var x = this.x + player.x;
                 var y = this.y + player.y;

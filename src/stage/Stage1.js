@@ -13,6 +13,10 @@ tm.define("pb3.Stage1", {
     init: function(parent, player) {
         this.superInit(parent, player);
 
+        this.add(1, function() {
+            this.ground.tweener.clear().to({speed:1.5}, 3000, "easeInOutQuad");
+        });
+
         this.add( 120, "BigWing-left");
         this.add( 120, "BigWing-right");
 
@@ -24,6 +28,10 @@ tm.define("pb3.Stage1", {
         this.add( 120, "SkyFish1-left");
         this.add(   1, "SkyFish1-right");
         this.add( 180, "SkyFish1-center");
+
+        this.add(1, function() {
+            this.ground.tweener.clear().to({scaleX:0.7, scaleY:0.7, speed: 0.5}, 3000, "easeInOutCubic");
+        });
 
         this.add( 180, "SkyFish1-left");
         this.add(  20, "SkyFish1-right");
