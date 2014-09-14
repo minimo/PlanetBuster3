@@ -41,6 +41,9 @@ tm.define("pb3.MainScene", {
     enemyCount: 0,
     enemyKill: 0,
 
+    //バックグラウンド
+    ground: null,
+
     //プレイヤー情報
     life: 2,
 
@@ -62,11 +65,15 @@ tm.define("pb3.MainScene", {
         }
 
         //マップ（テスト用）
+        this.ground = pb3.Ground("map1g").setPosition(0,-1500).addChildTo(this);
+/*
 //        this.map = tm.display.MapSprite("map1").addChildTo(this);
         this.map = tm.display.Sprite("map1g");
         this.map.layer = LAYER_BACKGROUND;
         this.map.origin.set(0, 0);
         this.map.addChildTo(this).setPosition(0, -1000).setScale(1);
+*/
+
 
         //プレイヤー
         this.player = pb3.Player().addChildTo(this);
@@ -118,7 +125,6 @@ tm.define("pb3.MainScene", {
     },
 
     update: function() {
-        this.map.y++;
         //ステージ進行
         var event = this.stage.get(this.time);
         if (event) {

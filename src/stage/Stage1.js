@@ -13,6 +13,10 @@ tm.define("pb3.Stage1", {
     init: function(parent, player) {
         this.superInit(parent, player);
 
+        this.add(1, function() {
+            this.ground.tweener.clear().to({speed:1}, 3000, "easeInOutQuad");
+        });
+
         this.add( 120, "BigWing-left");
         this.add( 120, "BigWing-right");
 
