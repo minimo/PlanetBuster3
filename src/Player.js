@@ -132,8 +132,8 @@ tm.define("pb3.Player", {
         }
         var vx = Math.abs(bx - x);
         if (vx < 2) {
-            if (this.rollcount < 50) this.rollcount+=4;
-            else this.rollcount-=4;
+            if (this.rollcount < 50) this.rollcount+=2;
+            else this.rollcount-=2;
             if (this.rollcount < 0) this.rollcount = 0;
             if (this.rollcount > 100) this.rollcount = 100;
         }
