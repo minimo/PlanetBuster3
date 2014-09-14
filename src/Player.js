@@ -6,6 +6,17 @@
  */
 (function() {
 
+var KEYBOARD_MOVE = {
+      0: { x:  1.0, y:  0.0 },
+     45: { x:  0.7, y: -0.7 },
+     90: { x:  0.0, y: -1.0 },
+    135: { x: -0.7, y: -0.7 },
+    180: { x: -1.0, y:  0.0 },
+    225: { x: -0.7, y:  0.7 },
+    270: { x:  0.0, y:  1.0 },
+    315: { x:  0.7, y:  0.7 },
+};
+
 tm.define("pb3.Player", {
     superClass: "tm.display.Sprite",
     layer: LAYER_OBJECT,
@@ -15,7 +26,7 @@ tm.define("pb3.Player", {
     height: 2,
 
     control: true,  //操作可能フラグ
-    shotON: true,   //ショットフラグ
+    shotON: false,  //ショットフラグ
     mouseON: false, //マウス操作中フラグ
 
     isCollision: false, //当り判定有効フラグ
@@ -88,12 +99,23 @@ tm.define("pb3.Player", {
                 this.y += (pt.y - this.y)/this.speed;
 
                 this.mouseON = true;
+                this.shotON = true;
             } else {
                 this.mouseON = false;
+                this.shotON = false;
             }
 
             //キーボード操作
             var kb = app.keyboard;
+            var angle = kb.getKeyAngle();
+            if (angle !== null) {
+                var m = KEYBOARD_MOVE[angle];
+                this.x += m.x*this.speed*0.3;
+                this.y += m.y*this.speed*0.3;
+            }
+            if (app.keyboard.getKey("Z")) {
+                this.shotON = true;
+            }
         }
 
 
@@ -130,12 +152,9 @@ tm.define("pb3.Player", {
             this.y = Math.clamp(this.y, 16, GS_H-16);
         }
 
-        //タッチorクリック中
-        if (this.mouseON && this.control) {
-            //ショット
-            if (this.shotON && this.time % this.shotInterval == 0) {
-                this.enterShot();
-            }
+        //ショット
+        if (this.shotON && this.control && this.time % this.shotInterval == 0) {
+            this.enterShot();
         }
 
         this.bx = this.x;
@@ -255,7 +274,7 @@ tm.define("pb3.PlayerBit", {
             this.setFrameIndex(this.index);
         }
         var player = app.player;
-        if (player.mouseON && player.control && player.shotON) {
+        if (player.control && player.shotON) {
             if (this.time % player.shotInterval == 0) {
                 var x = this.x + player.x;
                 var y = this.y + player.y;
