@@ -110,8 +110,8 @@ tm.define("pb3.Player", {
             var angle = kb.getKeyAngle();
             if (angle !== null) {
                 var m = KEYBOARD_MOVE[angle];
-                this.x += m.x*this.speed*0.3;
-                this.y += m.y*this.speed*0.3;
+                this.x += m.x*this.speed*0.4;
+                this.y += m.y*this.speed*0.4;
             }
             if (app.keyboard.getKey("Z")) {
                 this.shotON = true;
