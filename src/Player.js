@@ -32,6 +32,7 @@ tm.define("pb3.Player", {
     pitchcount: 50,
 
     parentScene: null,
+    indecies: [0,1,2,3,4,4,4,5,6,7,8],
 
     init: function() {
         this.superInit("gunship", 48, 48);
@@ -78,39 +79,49 @@ tm.define("pb3.Player", {
 
     update: function() {
         //操作系
-        var p = app.pointing;
-        if (p.getPointing()) {
-            var pt = this.parentScene.pointer;
-            this.x += (pt.x - this.x)/this.speed;
-            this.y += (pt.y - this.y)/this.speed;
+        if (this.control) {
+            //マウス操作
+            var p = app.pointing;
+            if (p.getPointing()) {
+                var pt = this.parentScene.pointer;
+                this.x += (pt.x - this.x)/this.speed;
+                this.y += (pt.y - this.y)/this.speed;
 
-            this.mouseON = true;
-        } else {
-            this.mouseON = false;
+                this.mouseON = true;
+            } else {
+                this.mouseON = false;
+            }
+
+            //キーボード操作
+            var kb = app.keyboard;
         }
+
 
         //機体ロール
-        if (this.bx > this.x) {
-            this.rollcount-=3;
+        var x = ~~this.x;
+        var bx = ~~this.bx;
+        if (bx > x) {
+            this.rollcount-=2;
             if (this.rollcount < 0) this.rollcount = 0;
         }
-        if (this.bx < this.x) {
-            this.rollcount+=3;
-            if (this.rollcount > 80) this.rollcount = 80;
+        if (bx < x) {
+            this.rollcount+=2;
+            if (this.rollcount > 100) this.rollcount = 100;
         }
-        var vx = Math.abs(this.bx - this.x);
+        var vx = Math.abs(bx - x);
         if (vx < 2) {
-            if (this.rollcount < 50) this.rollcount+=3;
-            else this.rollcount-=3;
+            if (this.rollcount < 50) this.rollcount+=4;
+            else this.rollcount-=4;
             if (this.rollcount < 0) this.rollcount = 0;
-            if (this.rollcount > 80) this.rollcount = 80;
+            if (this.rollcount > 100) this.rollcount = 100;
         }
         //機体ロール
         if (this.time % 2 == 0) {
             var i = ~~(this.rollcount/10);
             if (i < 0) i = 0;
-            if (i > 8) i = 8;
-            this.setFrameIndex(i);
+            if (i > 9) i = 9;
+            var index = this.indecies[i];
+            this.setFrameIndex(index);
         }
 
         //移動範囲の制限
