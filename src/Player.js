@@ -113,11 +113,17 @@ tm.define("pb3.Player", {
                 this.x += m.x*this.speed*0.4;
                 this.y += m.y*this.speed*0.4;
             }
-            if (app.keyboard.getKey("Z")) {
-                this.shotON = true;
-            }
+            if (!this.mouseON) this.shotON = app.keyboard.getKey("Z");
+
+            //移動範囲の制限
+            this.x = Math.clamp(this.x, 16, GS_W-16);
+            this.y = Math.clamp(this.y, 16, GS_H-16);
         }
 
+        //ショット
+        if (this.shotON && this.control && this.time % this.shotInterval == 0) {
+            this.enterShot();
+        }
 
         //機体ロール
         var x = ~~this.x;
@@ -138,24 +144,13 @@ tm.define("pb3.Player", {
             if (this.rollcount > 100) this.rollcount = 100;
         }
         //機体ロール
-        if (this.time % 2 == 0) {
+//        if (this.time % 2 == 0) {
             var i = ~~(this.rollcount/10);
             if (i < 0) i = 0;
             if (i > 9) i = 9;
             var index = this.indecies[i];
             this.setFrameIndex(index);
-        }
-
-        //移動範囲の制限
-        if (this.control) {
-            this.x = Math.clamp(this.x, 16, GS_W-16);
-            this.y = Math.clamp(this.y, 16, GS_H-16);
-        }
-
-        //ショット
-        if (this.shotON && this.control && this.time % this.shotInterval == 0) {
-            this.enterShot();
-        }
+//        }
 
         this.bx = this.x;
         this.by = this.y;

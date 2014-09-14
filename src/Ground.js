@@ -20,7 +20,6 @@ tm.define("pb3.Ground", {
         this.superInit(name);
 
         this.map = tm.display.Sprite(name).addChildTo(this);
-        this.map.originX = this.originY = 0;
 
         this.width = this.map.width;
         this.height = this.map.height;
