@@ -32,7 +32,7 @@ tm.define("pb3.TitleScene", {
             ]).toStyle();
         t2.shadowColor = "blue";
         t2.shadowBlur = 10;
-        var ct = this.clickortouch = tm.display.OutlineLabel("Click or Touch", 20).addChildTo(this);
+        var ct = this.clickortouch = tm.display.OutlineLabel("Touch or press[Z]key", 20).addChildTo(this);
         ct.x = SC_W*0.5; ct.y = SC_H*0.8;
         ct.fontFamily = "'UbuntuMono'"; ct.align = "center"; ct.baseline  = "middle"; ct.fontWeight = 500; ct.outlineWidth = 2;
 
@@ -44,6 +44,13 @@ tm.define("pb3.TitleScene", {
     },
 
     update: function() {
+        //キーボード操作
+        var kb = app.keyboard;
+        if (app.keyboard.getKey("Z")) {
+            app.background = "rgba(0, 0, 0, 0.8)";
+            app.score = 0;
+           app.replaceScene(pb3.MainScene());
+        }
         this.time++;
     },
 
