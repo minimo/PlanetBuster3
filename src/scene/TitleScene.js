@@ -32,7 +32,7 @@ tm.define("pb3.TitleScene", {
             ]).toStyle();
         t2.shadowColor = "blue";
         t2.shadowBlur = 10;
-        var ct = this.clickortouch = tm.display.OutlineLabel("Touch or press[Z]key", 20).addChildTo(this);
+        var ct = this.clickortouch = tm.display.OutlineLabel("Press[Z]key or touch", 20).addChildTo(this);
         ct.x = SC_W*0.5; ct.y = SC_H*0.8;
         ct.fontFamily = "'UbuntuMono'"; ct.align = "center"; ct.baseline  = "middle"; ct.fontWeight = 500; ct.outlineWidth = 2;
 
