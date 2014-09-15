@@ -46,7 +46,7 @@ tm.define("pb3.TitleScene", {
     update: function() {
         //キーボード操作
         var kb = app.keyboard;
-        if (app.keyboard.getKey("Z")) {
+        if (this.time > 30 && app.keyboard.getKey("Z")) {
             app.background = "rgba(0, 0, 0, 0.8)";
             app.score = 0;
            app.replaceScene(pb3.MainScene());

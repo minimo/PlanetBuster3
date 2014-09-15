@@ -28,13 +28,13 @@ tm.define("pb3.GameoverScene", {
         }
 
         //ゲームオーバー表示
-        var sc = tm.display.OutlineLabel("GAME OVER", 50).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.4);
+        var sc = tm.display.OutlineLabel("GAME OVER", 30).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.4);
         sc.fontFamily = "'Orbitron'"; sc.align = "center"; sc.baseline  = "middle"; sc.fontWeight = 500; sc.outlineWidth = 2;
 
-        var sc = tm.display.OutlineLabel(this.result1, 30).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
+        var sc = tm.display.OutlineLabel(this.result1, 20).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
         sc.fontFamily = "'Orbitron'"; sc.align = "center"; sc.baseline  = "middle"; sc.fontWeight = 500; sc.outlineWidth = 2;
 
-        var sc = tm.display.OutlineLabel("Please Touch or Click", 25).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.60);
+        var sc = tm.display.OutlineLabel("Press [Z] key or Touch", 20).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.60);
         sc.fontFamily = "'Orbitron'"; sc.align = "center"; sc.baseline  = "middle"; sc.fontWeight = 500; sc.outlineWidth = 2;
 
         //ハイスコア更新
@@ -42,9 +42,17 @@ tm.define("pb3.GameoverScene", {
 
         //１０秒経つと自動でタイトルへ
         this.timer = tm.app.Object2D().addChildTo(this).tweener.wait(10000).call(function(){this.exit()}.bind(this));
+
+        this.time = 0;        
     },
 
     update: function() {
+        //キーボード操作
+        var kb = app.keyboard;
+        if (this.time > 60 && app.keyboard.getKey("Z")) {
+            this.exit();
+        }
+        this.time++;
     },
 
     ontouchstart: function(e) {
