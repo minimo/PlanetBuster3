@@ -81,10 +81,10 @@ tm.define("pb3.Player", {
         this.bits = [];
         this.bits.status = 0; //0:close 1:open1 2:open2 3:rollingStanby 4:rollingReady
         this.bits.roll = 0;
-        this.bits[0] = pb3.PlayerBit().addChildTo(this);
-        this.bits[1] = pb3.PlayerBit().addChildTo(this);
-        this.bits[2] = pb3.PlayerBit().addChildTo(this);
-        this.bits[3] = pb3.PlayerBit().addChildTo(this);
+        this.bits[0] = pb3.PlayerBit(0).addChildTo(this);
+        this.bits[1] = pb3.PlayerBit(1).addChildTo(this);
+        this.bits[2] = pb3.PlayerBit(2).addChildTo(this);
+        this.bits[3] = pb3.PlayerBit(3).addChildTo(this);
 
         this.openBit(0);
     },
@@ -192,10 +192,10 @@ tm.define("pb3.Player", {
         switch (type) {
             case 0:
                 //赤（前方集中型）
-                this.bits[0].tweener.clear().to({ x:  5, y:-32, rotation:0, alpha:1}, 300).call(function(){this.tweener.clear().moveBy(-30,0,500,"easeInOutSine").moveBy( 30,0,500,"easeInOutSine").setLoop(true);}.bind(this.bits[0]));
-                this.bits[1].tweener.clear().to({ x: -5, y:-32, rotation:0, alpha:1}, 300).call(function(){this.tweener.clear().moveBy( 30,0,500,"easeInOutSine").moveBy(-30,0,500,"easeInOutSine").setLoop(true);}.bind(this.bits[1]));
-                this.bits[2].tweener.clear().to({ x: 20, y:-24, rotation:0, alpha:1}, 300).call(function(){this.tweener.clear().moveBy(-40,0,500,"easeInOutSine").moveBy( 40,0,500,"easeInOutSine").setLoop(true);}.bind(this.bits[2]));
-                this.bits[3].tweener.clear().to({ x:-20, y:-24, rotation:0, alpha:1}, 300).call(function(){this.tweener.clear().moveBy( 40,0,500,"easeInOutSine").moveBy(-40,0,500,"easeInOutSine").setLoop(true);}.bind(this.bits[3]));
+                this.bits[0].tweener.clear().to({ x:  5, y:-32, rotation: 2, alpha:1}, 300).call(function(){this.tweener.clear().moveBy(-40,0,500,"easeInOutSine").moveBy( 40,0,500,"easeInOutSine").setLoop(true);}.bind(this.bits[0]));
+                this.bits[1].tweener.clear().to({ x: -5, y:-32, rotation:-2, alpha:1}, 300).call(function(){this.tweener.clear().moveBy( 40,0,500,"easeInOutSine").moveBy(-40,0,500,"easeInOutSine").setLoop(true);}.bind(this.bits[1]));
+                this.bits[2].tweener.clear().to({ x: 20, y:-24, rotation: 2, alpha:1}, 300).call(function(){this.tweener.clear().moveBy(-50,0,500,"easeInOutSine").moveBy( 50,0,500,"easeInOutSine").setLoop(true);}.bind(this.bits[2]));
+                this.bits[3].tweener.clear().to({ x:-20, y:-24, rotation:-2, alpha:1}, 300).call(function(){this.tweener.clear().moveBy( 50,0,500,"easeInOutSine").moveBy(-50,0,500,"easeInOutSine").setLoop(true);}.bind(this.bits[3]));
                 break;
             case 1:
                 //緑（方向変更型）
@@ -266,13 +266,15 @@ tm.define("pb3.Player", {
 tm.define("pb3.PlayerBit", {
     superClass: "tm.display.Sprite",
 
+    id: 0,
     active: false,
 
-    init: function() {
+    init: function(id) {
         this.superInit("bit", 32, 32);
         this.setScale(0.8);
         this.parentScene = app.currentScene;
         this.index = 0;
+        this.id = id;
 
         this.alpha = 1;
 
@@ -284,7 +286,12 @@ tm.define("pb3.PlayerBit", {
 
     update: function() {
         if (this.time % 2 == 0) {
-            this.index = (this.index+1)%9;
+            if (this.id % 2 == 0) {
+                this.index--;
+                if (this.index < 0) this.index = 8;
+            } else {
+                this.index = (this.index+1)%9;
+            }
             this.setFrameIndex(this.index);
         }
         var player = app.player;
