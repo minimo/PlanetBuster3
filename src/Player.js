@@ -199,17 +199,17 @@ tm.define("pb3.Player", {
                 break;
             case 1:
                 //緑（方向変更型）
-                this.bits[0].tweener.clear().to({ x: 36, y:0, rotation:0, alpha:1}, 300);
-                this.bits[1].tweener.clear().to({ x:-36, y:0, rotation:0, alpha:1}, 300);
-                this.bits[2].tweener.clear().to({ x: 48, y:0, rotation:0, alpha:1}, 300);
-                this.bits[3].tweener.clear().to({ x:-48, y:0, rotation:0, alpha:1}, 300);
+                this.bits[0].tweener.clear().to({ x: 36, y:0, rotation:0, alpha:1}, 300).setLoop(false);
+                this.bits[1].tweener.clear().to({ x:-36, y:0, rotation:0, alpha:1}, 300).setLoop(false);
+                this.bits[2].tweener.clear().to({ x: 48, y:0, rotation:0, alpha:1}, 300).setLoop(false);
+                this.bits[3].tweener.clear().to({ x:-48, y:0, rotation:0, alpha:1}, 300).setLoop(false);
                 break;
             case 2:
                 //青（広範囲型）
-                this.bits[0].tweener.clear().to({ x: 36, y:16, rotation:  5, alpha:1}, 300);
-                this.bits[1].tweener.clear().to({ x:-36, y:16, rotation: -5, alpha:1}, 300);
-                this.bits[2].tweener.clear().to({ x: 60, y:24, rotation: 10, alpha:1}, 300);
-                this.bits[3].tweener.clear().to({ x:-60, y:24, rotation:-10, alpha:1}, 300);
+                this.bits[0].tweener.clear().to({ x: 36, y:16, rotation:  5, alpha:1}, 300).setLoop(false);
+                this.bits[1].tweener.clear().to({ x:-36, y:16, rotation: -5, alpha:1}, 300).setLoop(false);
+                this.bits[2].tweener.clear().to({ x: 60, y:24, rotation: 10, alpha:1}, 300).setLoop(false);
+                this.bits[3].tweener.clear().to({ x:-60, y:24, rotation:-10, alpha:1}, 300).setLoop(false);
                 break;
         }
     },
@@ -304,6 +304,8 @@ tm.define("pb3.PlayerBit", {
         }
 
         if (player.type == 1) {
+            this.rotation = Math.clamp(player.rollcount-50, -40, 40);
+            if (-4 < this.rotation && this.rotation < 4) this.rotation = 0;
         }
         this.time++;
     },
