@@ -70,7 +70,7 @@ pb3.enemyData['SkyFish2'] = {
     layer: LAYER_OBJECT,
 
     //敵タイプ
-    type: ENEMY_MIDDLE,
+    type: ENEMY_SMALL,
 
     //機体用テクスチャ情報
     texName: "tex1",
