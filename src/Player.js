@@ -199,10 +199,10 @@ tm.define("pb3.Player", {
                 break;
             case 1:
                 //緑（方向変更型）
-                this.bits[0].tweener.clear().to({ x: 36, y:16, rotation:0, alpha:1}, 300);
-                this.bits[1].tweener.clear().to({ x:-36, y:16, rotation:0, alpha:1}, 300);
-                this.bits[2].tweener.clear().to({ x: 48, y:24, rotation:0, alpha:1}, 300);
-                this.bits[3].tweener.clear().to({ x:-48, y:24, rotation:0, alpha:1}, 300);
+                this.bits[0].tweener.clear().to({ x: 36, y:0, rotation:0, alpha:1}, 300);
+                this.bits[1].tweener.clear().to({ x:-36, y:0, rotation:0, alpha:1}, 300);
+                this.bits[2].tweener.clear().to({ x: 48, y:0, rotation:0, alpha:1}, 300);
+                this.bits[3].tweener.clear().to({ x:-48, y:0, rotation:0, alpha:1}, 300);
                 break;
             case 2:
                 //青（広範囲型）
@@ -294,6 +294,9 @@ tm.define("pb3.PlayerBit", {
                 var y = this.y + player.y;
                 pb3.ShotBullet(this.rotation, player.shotPower).addChildTo(player.parentScene).setPosition(x, y-4);
             }
+        }
+
+        if (player.type == 1) {
         }
         this.time++;
     },
