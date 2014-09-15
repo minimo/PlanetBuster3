@@ -58,6 +58,7 @@ tm.define("pb3.Player", {
         this.checkHierarchy = true;
 
         this.time = 0;
+        this.changeInterval = 0;
         return this;
     },
 
@@ -85,7 +86,7 @@ tm.define("pb3.Player", {
         this.bits[2] = pb3.PlayerBit().addChildTo(this);
         this.bits[3] = pb3.PlayerBit().addChildTo(this);
 
-        this.openBit();
+        this.openBit(0);
     },
 
     update: function() {
@@ -115,14 +116,19 @@ tm.define("pb3.Player", {
             }
             if (!this.mouseON) this.shotON = app.keyboard.getKey("Z");
 
+            //ショットタイプ変更（テスト用）
+            if (app.keyboard.getKey("X") && this.time > this.changeInterval) {
+                this.type = (this.type+1)%3;
+                this.openBit(this.type);
+                this.changeInterval = this.time+30;
+            }
+
             //移動範囲の制限
             this.x = Math.clamp(this.x, 16, GS_W-16);
             this.y = Math.clamp(this.y, 16, GS_H-16);
-        }
 
-        //ショット
-        if (this.shotON && this.control && this.time % this.shotInterval == 0) {
-            this.enterShot();
+            //ショット
+            if (this.shotON && this.time % this.shotInterval == 0) this.enterShot();
         }
 
         //機体ロール
@@ -144,13 +150,7 @@ tm.define("pb3.Player", {
             if (this.rollcount > 100) this.rollcount = 100;
         }
         //機体ロール
-//        if (this.time % 2 == 0) {
-            var i = ~~(this.rollcount/10);
-            if (i < 0) i = 0;
-            if (i > 9) i = 9;
-            var index = this.indecies[i];
-            this.setFrameIndex(index);
-//        }
+        this.setFrameIndex(this.indecies[Math.clamp(~~(this.rollcount/10),0, 9)]);
 
         this.bx = this.x;
         this.by = this.y;
@@ -188,11 +188,30 @@ tm.define("pb3.Player", {
     },
 
     //ビット展開
-    openBit: function() {
-        this.bits[0].tweener.clear().to({ x: 36, y: 16, rotation:  5, alpha:1}, 300);
-        this.bits[1].tweener.clear().to({ x:-36, y: 16, rotation: -5, alpha:1}, 300);
-        this.bits[2].tweener.clear().to({ x: 60, y: 24, rotation: 10, alpha:1}, 300);
-        this.bits[3].tweener.clear().to({ x:-60, y: 24, rotation:-10, alpha:1}, 300);
+    openBit: function(type) {
+        switch (type) {
+            case 0:
+                //赤（前方集中型）
+                this.bits[0].tweener.clear().to({ x:  5, y:-32, rotation:0, alpha:1}, 300).call(function(){this.tweener.clear().moveBy(-30,0,500,"easeInOutSine").moveBy( 30,0,500,"easeInOutSine").setLoop(true);}.bind(this.bits[0]));
+                this.bits[1].tweener.clear().to({ x: -5, y:-32, rotation:0, alpha:1}, 300).call(function(){this.tweener.clear().moveBy( 30,0,500,"easeInOutSine").moveBy(-30,0,500,"easeInOutSine").setLoop(true);}.bind(this.bits[1]));
+                this.bits[2].tweener.clear().to({ x: 20, y:-24, rotation:0, alpha:1}, 300).call(function(){this.tweener.clear().moveBy(-40,0,500,"easeInOutSine").moveBy( 40,0,500,"easeInOutSine").setLoop(true);}.bind(this.bits[2]));
+                this.bits[3].tweener.clear().to({ x:-20, y:-24, rotation:0, alpha:1}, 300).call(function(){this.tweener.clear().moveBy( 40,0,500,"easeInOutSine").moveBy(-40,0,500,"easeInOutSine").setLoop(true);}.bind(this.bits[3]));
+                break;
+            case 1:
+                //緑（方向変更型）
+                this.bits[0].tweener.clear().to({ x: 36, y:16, rotation:0, alpha:1}, 300);
+                this.bits[1].tweener.clear().to({ x:-36, y:16, rotation:0, alpha:1}, 300);
+                this.bits[2].tweener.clear().to({ x: 48, y:24, rotation:0, alpha:1}, 300);
+                this.bits[3].tweener.clear().to({ x:-48, y:24, rotation:0, alpha:1}, 300);
+                break;
+            case 2:
+                //青（広範囲型）
+                this.bits[0].tweener.clear().to({ x: 36, y:16, rotation:  5, alpha:1}, 300);
+                this.bits[1].tweener.clear().to({ x:-36, y:16, rotation: -5, alpha:1}, 300);
+                this.bits[2].tweener.clear().to({ x: 60, y:24, rotation: 10, alpha:1}, 300);
+                this.bits[3].tweener.clear().to({ x:-60, y:24, rotation:-10, alpha:1}, 300);
+                break;
+        }
     },
 
     //ビット収納
@@ -269,11 +288,11 @@ tm.define("pb3.PlayerBit", {
             this.setFrameIndex(this.index);
         }
         var player = app.player;
-        if (player.control && player.shotON) {
+        if (player.shotON) {
             if (this.time % player.shotInterval == 0) {
                 var x = this.x + player.x;
                 var y = this.y + player.y;
-                pb3.ShotBullet(this.rotation, player.shotPower).addChildTo(player.parentScene).setPosition(x, y-8);
+                pb3.ShotBullet(this.rotation, player.shotPower).addChildTo(player.parentScene).setPosition(x, y-4);
             }
         }
         this.time++;
