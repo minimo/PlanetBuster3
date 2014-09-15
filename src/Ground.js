@@ -17,9 +17,12 @@ tm.define("pb3.Ground", {
     speed: 1,
 
     init: function(name) {
-        this.superInit(name);
+        this.superInit();
+        this.position.x = GS_W/2;
+        this.position.y = GS_H/2;
 
-        this.map = tm.display.Sprite(name).addChildTo(this);
+        this.mapBase = tm.app.Object2D().setPosition(0, 0).addChildTo(this);
+        this.map = tm.display.Sprite(name).addChildTo(this.mapBase);
 
         this.width = this.map.width;
         this.height = this.map.height;
@@ -30,16 +33,38 @@ tm.define("pb3.Ground", {
         var vx = Math.cos(rad)*this.speed;
         var vy = Math.sin(rad)*this.speed;
 
-        this.x+=vx;
-        this.y+=vy;
+        this.mapBase.x+=vx;
+        this.mapBase.y+=vy;
+    },
+
+    addLayer: function(name) {
     },
 
     setDirection: function(dir) {
         this.direction = dir;
+        return this;
     },
+
     setSpeed: function(speed) {
         this.speed = speed;
+        return this;
+    },
+
+    setPosition: function(x, y) {
+        this.mapBase.x = x;
+        this.mapBase.y = y;
+        return this;
     },
 });
+
+pb3.Ground.prototype.accessor("x", {
+    "get": function() { return this.mapBase.x; },
+    "set": function(x) { this.mapBase.x = x;}
+});
+pb3.Ground.prototype.accessor("y", {
+    "get": function() { return this.mapBase.y; },
+    "set": function(y) { this.mapBase.x = y;}
+});
+
 
 })();

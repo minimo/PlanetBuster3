@@ -65,7 +65,7 @@ tm.define("pb3.MainScene", {
         }
 
         //マップ（テスト用）
-        this.ground = pb3.Ground("map1g").setPosition(GS_W*0.5, -700).addChildTo(this);
+        this.ground = pb3.Ground("map1g").setPosition(0, -700).addChildTo(this);
 
         //プレイヤー
         this.player = pb3.Player().addChildTo(this);
