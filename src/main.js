@@ -13,8 +13,8 @@ var fontLoadEnd = false;
 
 //定数
 //デバッグ
-var DEBUG = false;
-var MUTEKI = false;
+DEBUG = false;
+MUTEKI = false;
 
 //スクリーンサイズ
 SC_W = 480;
@@ -32,7 +32,7 @@ DIFF_HARD   = 2;
 DIFF_HELL   = 3;
 
 //レイヤー区分
-LAYER_SYSTEM = 10;           //システム表示
+LAYER_SYSTEM = 10;          //システム表示
 LAYER_FOREGROUND = 9;       //フォアグラウンド
 LAYER_EFFECT_UPPER = 8;     //エフェクト上位
 LAYER_PLAYER = 8;           //プレイヤー

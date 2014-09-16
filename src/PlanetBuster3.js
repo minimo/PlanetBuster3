@@ -19,8 +19,6 @@ pb3.PlanetBuster3 = tm.createClass({
     highScoreStage: 0,  //ハイスコア時ステージ
     difficulty: 0,      //難易度(0-3)
 
-    mainScene: null,
-
     highScore: 0,
     score: 0,
     extendNumber: 0,
@@ -35,9 +33,9 @@ pb3.PlanetBuster3 = tm.createClass({
         this.superInit(id);
 
         this.extendScore = [];
-        this.extendScore.push(1000000);
-        this.extendScore.push(2000000);
-        this.extendScore.push(2500000);
+        this.extendScore.push(100000);
+        this.extendScore.push(200000);
+        this.extendScore.push(300000);
 
         pb3.core = this;
         this.resize(SC_W, SC_H).fitWindow();
