@@ -10,46 +10,46 @@
 pb3.enemyUnit = {
 
 /*
- * 突撃ヘリ
+ * 突撃ヘリ「ホーネット」
  */
-"SkyFish1-left": [
-    { "name": "SkyFish1", "x":GS_W*0.1, "y":-150 },
-    { "name": "SkyFish1", "x":GS_W*0.2, "y":-120 },
-    { "name": "SkyFish1", "x":GS_W*0.3, "y":-130 },
-    { "name": "SkyFish1", "x":GS_W*0.4, "y":-120 },
+"Hornet1-left": [
+    { "name": "Hornet1", "x":GS_W*0.1, "y":-150 },
+    { "name": "Hornet1", "x":GS_W*0.2, "y":-120 },
+    { "name": "Hornet1", "x":GS_W*0.3, "y":-130 },
+    { "name": "Hornet1", "x":GS_W*0.4, "y":-120 },
 ],
 
-"SkyFish1-right": [
-    { "name": "SkyFish1", "x":GS_W*0.6, "y":-110 },
-    { "name": "SkyFish1", "x":GS_W*0.7, "y":-120 },
-    { "name": "SkyFish1", "x":GS_W*0.8, "y":-100 },
-    { "name": "SkyFish1", "x":GS_W*0.9, "y":-150 },
+"Hornet1-right": [
+    { "name": "Hornet1", "x":GS_W*0.6, "y":-110 },
+    { "name": "Hornet1", "x":GS_W*0.7, "y":-120 },
+    { "name": "Hornet1", "x":GS_W*0.8, "y":-100 },
+    { "name": "Hornet1", "x":GS_W*0.9, "y":-150 },
 ],
 
-"SkyFish1-center": [
-    { "name": "SkyFish1", "x":GS_W*0.25, "y":-160 },
-    { "name": "SkyFish1", "x":GS_W*0.35, "y":-120 },
-    { "name": "SkyFish1", "x":GS_W*0.40, "y":-100 },
-    { "name": "SkyFish1", "x":GS_W*0.50, "y":-110 },
-    { "name": "SkyFish1", "x":GS_W*0.70, "y":-130 },
-    { "name": "SkyFish1", "x":GS_W*0.85, "y":-120 },
+"Hornet1-center": [
+    { "name": "Hornet1", "x":GS_W*0.25, "y":-160 },
+    { "name": "Hornet1", "x":GS_W*0.35, "y":-120 },
+    { "name": "Hornet1", "x":GS_W*0.40, "y":-100 },
+    { "name": "Hornet1", "x":GS_W*0.50, "y":-110 },
+    { "name": "Hornet1", "x":GS_W*0.70, "y":-130 },
+    { "name": "Hornet1", "x":GS_W*0.85, "y":-120 },
 ],
 
 /*
- * 突撃ヘリ２
+ * 突撃ヘリ２「ホーネット」
  */
-"SkyFish2-left": [
-    { "name": "SkyFish2", "x":GS_W*0.1, "y":-100 },
-    { "name": "SkyFish2", "x":GS_W*0.2, "y":-120 },
-    { "name": "SkyFish2", "x":GS_W*0.3, "y":-130 },
-    { "name": "SkyFish2", "x":GS_W*0.4, "y":-120 },
+"Hornet2-left": [
+    { "name": "Hornet2", "x":GS_W*0.1, "y":-100 },
+    { "name": "Hornet2", "x":GS_W*0.2, "y":-120 },
+    { "name": "Hornet2", "x":GS_W*0.3, "y":-130 },
+    { "name": "Hornet2", "x":GS_W*0.4, "y":-120 },
 ],
 
-"SkyFish2-right": [
-    { "name": "SkyFish2", "x":GS_W*0.6, "y":-100 },
-    { "name": "SkyFish2", "x":GS_W*0.7, "y":-120 },
-    { "name": "SkyFish2", "x":GS_W*0.8, "y":-130 },
-    { "name": "SkyFish2", "x":GS_W*0.9, "y":-120 },
+"Hornet2-right": [
+    { "name": "Hornet2", "x":GS_W*0.6, "y":-100 },
+    { "name": "Hornet2", "x":GS_W*0.7, "y":-120 },
+    { "name": "Hornet2", "x":GS_W*0.8, "y":-130 },
+    { "name": "Hornet2", "x":GS_W*0.9, "y":-120 },
 ],
 
 /*
@@ -76,7 +76,7 @@ pb3.enemyUnit = {
     { "name": "ToyBox", "x":GS_W*0.8, "y":-GS_H*0.3 },
 ],
 
-//ステージ１中ボス「トールハンマー」
+//ステージ１中ボス 軌道走行列車「トールハンマー」
 "ThorHammer": [
     { "name": "ThorHammer", "x":GS_W*0.5, "y":-100 },
 ],

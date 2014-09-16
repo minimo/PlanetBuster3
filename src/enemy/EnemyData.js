@@ -8,9 +8,9 @@
 pb3.enemyData = [];
 
 //攻撃ヘリ（通常）
-pb3.enemyData['SkyFish1'] = {
+pb3.enemyData['Hornet1'] = {
     //使用弾幕パターン
-    bulletPattern: "SkyFish1",
+    bulletPattern: "Hornet1",
 
     //当り判定サイズ
     width:  16,
@@ -55,9 +55,9 @@ pb3.enemyData['SkyFish1'] = {
 };
 
 //攻撃ヘリタイプ（突撃）
-pb3.enemyData['SkyFish2'] = {
+pb3.enemyData['Hornet2'] = {
     //使用弾幕パターン
-    bulletPattern: "SkyFish2",
+    bulletPattern: "Hornet2",
 
     //当り判定サイズ
     width:  16,

@@ -124,8 +124,8 @@ var $whip = function(baseSpeed, delta, count, actionFunc) {
 
 **/
 
-//SkyFish1
-pb3.bulletPattern["SkyFish1"] = new bulletml.Root({
+//Hornet1
+pb3.bulletPattern["Hornet1"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
         $.repeat(999, [
@@ -135,8 +135,8 @@ pb3.bulletPattern["SkyFish1"] = new bulletml.Root({
     ]),
 });
 
-//SkyFish2
-pb3.bulletPattern["SkyFish2"] = new bulletml.Root({
+//Hornet2
+pb3.bulletPattern["Hornet2"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
         $.repeat(3, [
