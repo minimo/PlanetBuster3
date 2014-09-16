@@ -182,5 +182,6 @@ pb3.enemyData['ToyBox'] = {
 
     algorithm: function() {
     },
+}
 
 })();
