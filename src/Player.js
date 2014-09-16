@@ -65,8 +65,8 @@ tm.define("pb3.Player", {
     //機体準備
     setupBody: function() {
         //コア
-        core = tm.display.Shape(16, 16).addChildTo(this);
-        core.canvas.setFillStyle(
+        this.core = tm.display.Shape(16, 16).addChildTo(this);
+        this.core.canvas.setFillStyle(
             tm.graphics.RadialGradient(8, 8, 0, 8, 8, 8)
                 .addColorStopList([
                     {offset:0.0, color: "hsla(200, 60%, 70%, 1.0)"},
@@ -74,8 +74,8 @@ tm.define("pb3.Player", {
                     {offset:1.0, color: "hsla(240, 60%, 50%, 0.0)"},
                 ]).toStyle()
             ).fillRect(0, 0, 16, 16);
-        core.tweener.clear();
-        core.tweener.scale(1.0, 100, "easeInOutQuad").scale(0.5, 150, "easeInOutQuad").setLoop(true);
+        this.core.tweener.clear();
+        this.core.tweener.scale(1.0, 100, "easeInOutQuad").scale(0.5, 150, "easeInOutQuad").setLoop(true);
 
         //ビット
         this.bits = [];
@@ -149,7 +149,6 @@ tm.define("pb3.Player", {
             if (this.rollcount < 0) this.rollcount = 0;
             if (this.rollcount > 100) this.rollcount = 100;
         }
-        //機体ロール
         this.setFrameIndex(this.indecies[Math.clamp(~~(this.rollcount/10),0, 9)]);
 
         this.bx = this.x;
@@ -189,6 +188,7 @@ tm.define("pb3.Player", {
 
     //ビット展開
     openBit: function(type) {
+        var color = 0;
         switch (type) {
             case 0:
                 //赤（前方集中型）
@@ -196,6 +196,7 @@ tm.define("pb3.Player", {
                 this.bits[1].tweener.clear().to({ x: -5, y:-32, rotation:-2, alpha:1}, 300).call(function(){this.tweener.clear().moveBy( 40,0,500,"easeInOutSine").moveBy(-40,0,500,"easeInOutSine").setLoop(true);}.bind(this.bits[1]));
                 this.bits[2].tweener.clear().to({ x: 20, y:-24, rotation: 2, alpha:1}, 300).call(function(){this.tweener.clear().moveBy(-50,0,500,"easeInOutSine").moveBy( 50,0,500,"easeInOutSine").setLoop(true);}.bind(this.bits[2]));
                 this.bits[3].tweener.clear().to({ x:-20, y:-24, rotation:-2, alpha:1}, 300).call(function(){this.tweener.clear().moveBy( 50,0,500,"easeInOutSine").moveBy(-50,0,500,"easeInOutSine").setLoop(true);}.bind(this.bits[3]));
+                color = 0;
                 break;
             case 1:
                 //緑（方向変更型）
@@ -203,6 +204,7 @@ tm.define("pb3.Player", {
                 this.bits[1].tweener.clear().to({ x:-36, y:0, rotation:0, alpha:1}, 300).setLoop(false);
                 this.bits[2].tweener.clear().to({ x: 48, y:0, rotation:0, alpha:1}, 300).setLoop(false);
                 this.bits[3].tweener.clear().to({ x:-48, y:0, rotation:0, alpha:1}, 300).setLoop(false);
+                color = 80;
                 break;
             case 2:
                 //青（広範囲型）
@@ -210,18 +212,27 @@ tm.define("pb3.Player", {
                 this.bits[1].tweener.clear().to({ x:-36, y:16, rotation: -5, alpha:1}, 300).setLoop(false);
                 this.bits[2].tweener.clear().to({ x: 60, y:24, rotation: 10, alpha:1}, 300).setLoop(false);
                 this.bits[3].tweener.clear().to({ x:-60, y:24, rotation:-10, alpha:1}, 300).setLoop(false);
+                color = 200;
+                break;
+            default:
+                //クローズ
+                this.bits[0].tweener.clear().to({ x:0, y: 0, alpha:0}, 300);
+                this.bits[1].tweener.clear().to({ x:0, y: 0, alpha:0}, 300);
+                this.bits[2].tweener.clear().to({ x:0, y: 0, alpha:0}, 300);
+                this.bits[3].tweener.clear().to({ x:0, y: 0, alpha:0}, 300);
+                color = 60;
                 break;
         }
-    },
 
-    //ビット収納
-    closeBit: function() {
-        if (this.bits.status == 0) return;
-        this.bits.status = 0;
-        this.bits[0].tweener.clear().to({ x:0, y: 0, alpha:0}, 300);
-        this.bits[1].tweener.clear().to({ x:0, y: 0, alpha:0}, 300);
-        this.bits[2].tweener.clear().to({ x:0, y: 0, alpha:0}, 300);
-        this.bits[3].tweener.clear().to({ x:0, y: 0, alpha:0}, 300);
+        //武装によってコアの色替え
+        this.core.canvas.setFillStyle(
+            tm.graphics.RadialGradient(8, 8, 0, 8, 8, 8)
+                .addColorStopList([
+                    {offset:0.0, color: "hsla({0}, 60%, 70%, 1.0)".format(color)},
+                    {offset:0.5, color: "hsla({0}, 60%, 70%, 1.0)".format(color+40)},
+                    {offset:1.0, color: "hsla({0}, 60%, 50%, 0.0)".format(color+40)},
+                ]).toStyle()
+            ).fillRect(0, 0, 16, 16);
     },
 
     //プレイヤー投入時演出
