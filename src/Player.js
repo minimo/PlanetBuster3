@@ -177,6 +177,18 @@ tm.define("pb3.Player", {
         }
     },
 
+    //アイテム取得
+    getItem: function(id, type) {
+        switch (id) {
+            case 0: //パワーアップ
+                break;
+            case 1: //ボム
+                break;
+            case 2: //１ＵＰ
+                break;
+        }
+    },
+
     //ショット発射
     enterShot: function() {
         var shotPower = this.shotPower;
@@ -376,6 +388,22 @@ tm.define("pb3.Item", {
         this.parentScene = app.currentScene;
         this.id = id;
 
+        if (id == 0) {
+            this.core = tm.display.Shape(32, 32).addChildTo(this);
+            this.core.canvas.setFillStyle(
+                tm.graphics.RadialGradient(16, 16, 0, 16, 16, 16)
+                    .addColorStopList([
+                        {offset:0.0, color: "rgba(255, 0, 0, 1)"},
+                        {offset:0.5, color: "rgba(255, 0, 0, 1)"},
+                        {offset:1.0, color: "rgba(0, 0, 0, 0)"},
+                    ]).toStyle()
+                ).fillRect(0, 0, 32, 32);
+            this.core.tweener.clear();
+            this.core.tweener.scale(1.0, 100, "easeInOutQuad").scale(0.5, 150, "easeInOutQuad").setLoop(true);
+        } else if (id == 1) {
+        } else if (id == 2) {
+        }
+
         //当り判定設定
         this.boundingType = "rect";
 
@@ -385,7 +413,26 @@ tm.define("pb3.Item", {
     update: function() {
         if (this.id == 0 && this.time % 120 == 0) {
             this.type = (this.type+1)%3;
+            var color = 'red';
+            if (this.type == 0) color = "rgba(255, 0, 0, 1)";
+            if (this.type == 1) color = "rgba(0, 255, 0, 1)";
+            if (this.type == 2) color = "rgba(0, 0, 255, 1)";
+            this.core.canvas.setFillStyle(
+                tm.graphics.RadialGradient(16, 16, 0, 16, 16, 16)
+                    .addColorStopList([
+                        {offset:0.0, color: color},
+                        {offset:0.5, color: color},
+                        {offset:1.0, color: "rgba(0, 0, 0, 0)"},
+                    ]).toStyle()
+                ).fillRect(0, 0, 32, 32);
         }
+
+        //自機との当り判定チェック
+        var player = app.player;
+        if (this.isHitElement(player)) {
+            player.getItem(this.id, this.type);
+        }
+
         this.time++;
     },
 });
