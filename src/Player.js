@@ -35,9 +35,12 @@ tm.define("pb3.Player", {
 
     speed: 10,      //移動係数
     type: 0,        //自機タイプ(0:赤 1:緑 2:青)
+    power: 0,       //パワーアップ段階
+    powerMax: 5,    //パワーアップ最大
 
     shotPower: 10,      //ショット威力
     shotInterval: 6,    //ショット間隔
+
 
     rollcount: 50,
     pitchcount: 50,
@@ -181,6 +184,9 @@ tm.define("pb3.Player", {
     getItem: function(id, type) {
         switch (id) {
             case 0: //パワーアップ
+                if (this.type == type && this.power < this.powerMax) this.power++;
+                this.type = type;
+                this.openBit(type);
                 break;
             case 1: //ボム
                 break;
