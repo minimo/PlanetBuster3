@@ -6,6 +6,8 @@
  */
 (function() {
 
+pb3.checkLayers = [LAYER_OBJECT_UPPER, LAYER_OBJECT, LAYER_OBJECT_LOWER];
+
 tm.define("pb3.Bullet", {
     superClass: "tm.bulletml.Bullet",
     layer: LAYER_BULLET,
@@ -156,9 +158,8 @@ tm.define("pb3.ShotBullet", {
         }
 
         //敵との当り判定チェック
-        var s = [LAYER_OBJECT_UPPER, LAYER_OBJECT, LAYER_OBJECT_LOWER];
         for (var i = 0; i < 3; i++) {
-            var layer = this.parentScene.layers[s[i]];
+            var layer = this.parentScene.layers[pb3.checkLayers[i]];
             layer.children.each(function(a) {
                 if (a === app.player) return;
                 if (this.parent && a.isCollision && a.isHitElement(this)) {
