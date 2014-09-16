@@ -173,14 +173,14 @@ tm.define("pb3.Enemy", {
         this.tweener.clear();
         this.stopDanmaku();
 
-        var area = this.width*this.height;
         var vx = this.x-this.beforeX;
         var vy = this.y-this.beforeY;
-        if (area < 1025) {
+        if (this.data.explodeType == EXPLODE_SMALL) {
             pb3.Effect.enterExplodeSmall(this.parentScene, this.x, this.y, vx, vy);
             app.playSE("explodeSmall");
-        } else {
-            var num = rand(20, 30);
+        }
+        if (this.data.explodeType >= EXPLODE_MIDDLE) {
+            var num = rand(20, 30)*this.data.explodeType;
             for (var i = 0; i < num; i++) {
                 var x = this.x+rand(-this.width, this.width);
                 var y = this.y+rand(-this.height, this.height);

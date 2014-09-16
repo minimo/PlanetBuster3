@@ -63,55 +63,29 @@ pb3.enemyUnit = {
     { "name": "BigWing", "x":GS_W*0.8, "y":-100 },
 ],
 
-
 /*
- * 大型機
+ * アイテムキャリア「トイボックス」
  */
-"square1-left": [
-    { "name": "square1", "x":GS_W*0.2, "y":-100 },
+"ToyBox-left": [
+    { "name": "ToyBox", "x":GS_W*0.2, "y":-GS_H*0.3 },
+],
+"ToyBox-center": [
+    { "name": "ToyBox", "x":GS_W*0.5, "y":-GS_H*0.3 },
+],
+"ToyBox-right": [
+    { "name": "ToyBox", "x":GS_W*0.8, "y":-GS_H*0.3 },
 ],
 
-"square1-right": [
-    { "name": "square1", "x":GS_W*0.8, "y":-100 },
+//ステージ１中ボス「トールハンマー」
+"ThorHammer": [
+    { "name": "ThorHammer", "x":GS_W*0.5, "y":-100 },
 ],
 
-"triangle1-left": [
-    { "name": "triangle1", "x":GS_W*0.1, "y":-GS_H*0.10, "param":"a" },
-    { "name": "triangle1", "x":GS_W*0.2, "y":-GS_H*0.15, "param":"a" },
-    { "name": "triangle1", "x":GS_W*0.3, "y":-GS_H*0.20, "param":"a" },
-    { "name": "triangle1", "x":GS_W*0.4, "y":-GS_H*0.25, "param":"a" },
+//ステージ１ボス　局地制圧用大型戦車「トール」
+"Thor": [
+    { "name": "Thor", "x":GS_W*0.5, "y":-GS_H*0.2 },
 ],
 
-"triangle1-right": [
-    { "name": "triangle1", "x":GS_W*0.9, "y":-GS_H*0.10, "param":"b" },
-    { "name": "triangle1", "x":GS_W*0.8, "y":-GS_H*0.15, "param":"b" },
-    { "name": "triangle1", "x":GS_W*0.7, "y":-GS_H*0.20, "param":"b" },
-    { "name": "triangle1", "x":GS_W*0.6, "y":-GS_H*0.25, "param":"b" },
-],
-
-"triangle1-center": [
-    { "name": "triangle1", "x":GS_W*0.3, "y":-GS_H*0.1, "param":"a" },
-    { "name": "triangle1", "x":GS_W*0.4, "y":-GS_H*0.2, "param":"a" },
-    { "name": "triangle1", "x":GS_W*0.6, "y":-GS_H*0.2, "param":"b" },
-    { "name": "triangle1", "x":GS_W*0.7, "y":-GS_H*0.1, "param":"b" },
-],
-
-"triangle2-left": [
-    { "name": "triangle2", "x":GS_W*0.2, "y":GS_H*-0.3 },
-],
-
-"triangle2-right": [
-    { "name": "triangle2", "x":GS_W*0.8, "y":GS_H*-0.3 },
-],
-
-"mboss1": [
-    { "name": "", "x":GS_W*0.5, "y":-100 },
-],
-
-//ステージ１ボス「四畳半」
-"boss1": [
-    { "name": "yojouhan-a", "x":GS_W*0.5, "y":-GS_H*0.2 },
-],
 
 }
 

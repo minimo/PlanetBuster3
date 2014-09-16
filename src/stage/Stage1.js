@@ -17,17 +17,16 @@ tm.define("pb3.Stage1", {
             this.ground.tweener.clear().to({speed:1.5}, 3000, "easeInOutQuad");
         });
 
-        this.add( 120, "BigWing-left");
-        this.add( 120, "BigWing-right");
-
-        this.add(1, function() {
-            this.ground.tweener.clear().to({scaleX:0.5, scaleY:0.5}, 10000, "easeInOutCubic");
-        });
+        this.add( 120, "ToyBox-center");
 
         //Stage data
         this.add( 180, "SkyFish1-left");
         this.add(   1, "SkyFish1-right");
         this.add( 180, "SkyFish1-center");
+
+        this.add(1, function() {
+            this.ground.tweener.clear().to({scaleX:0.5, scaleY:0.5}, 10000, "easeInOutCubic");
+        });
 
         this.add( 120, "SkyFish1-left");
         this.add(   1, "SkyFish1-right");

@@ -355,4 +355,39 @@ tm.define("pb3.PlayerPointer", {
     },
 });
 
+
+//アイテム
+tm.define("pb3.Item", {
+    superClass: "tm.display.Sprite",
+
+    //アイテム種類
+    //0: パワーアップ
+    //1: ボム
+    //2: １ＵＰ
+    id: 0,
+
+    //パワーアップタイプ
+    type: 0,
+
+    active: false,
+
+    init: function(id) {
+        this.superInit("Item", 32, 32);
+        this.parentScene = app.currentScene;
+        this.id = id;
+
+        //当り判定設定
+        this.boundingType = "rect";
+
+        this.time = 1;
+    },
+
+    update: function() {
+        if (this.id == 0 && this.time % 120 == 0) {
+            this.type = (this.type+1)%3;
+        }
+        this.time++;
+    },
+});
+
 })();
