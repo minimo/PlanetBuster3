@@ -218,10 +218,10 @@ tm.define("pb3.Player", {
                 break;
             case 1:
                 //緑（方向変更型）
-                this.bits[0].tweener.clear().to({ x: 36, y:0, rotation:0, alpha:1}, 300).setLoop(false);
-                this.bits[1].tweener.clear().to({ x:-36, y:0, rotation:0, alpha:1}, 300).setLoop(false);
-                this.bits[2].tweener.clear().to({ x: 48, y:0, rotation:0, alpha:1}, 300).setLoop(false);
-                this.bits[3].tweener.clear().to({ x:-48, y:0, rotation:0, alpha:1}, 300).setLoop(false);
+                this.bits[0].tweener.clear().to({ x: 48, y:0, rotation:0, alpha:1}, 300).setLoop(false);
+                this.bits[1].tweener.clear().to({ x:-48, y:0, rotation:0, alpha:1}, 300).setLoop(false);
+                this.bits[2].tweener.clear().to({ x: 12, y:40, rotation:0, alpha:1}, 300).setLoop(false);
+                this.bits[3].tweener.clear().to({ x:-12, y:40, rotation:0, alpha:1}, 300).setLoop(false);
                 color = 80;
                 break;
             case 2:
@@ -333,7 +333,7 @@ tm.define("pb3.PlayerBit", {
         }
 
         if (player.type == 1) {
-            this.rotation = Math.clamp(player.rollcount-50, -40, 40);
+            this.rotation = Math.clamp(player.rollcount-50, -25, 25);
             if (-4 < this.rotation && this.rotation < 4) this.rotation = 0;
         }
         this.time++;
@@ -403,12 +403,12 @@ tm.define("pb3.Item", {
                 tm.graphics.RadialGradient(16, 16, 0, 16, 16, 16)
                     .addColorStopList([
                         {offset:0.0, color: "rgba(255, 0, 0, 1)"},
-                        {offset:0.5, color: "rgba(255, 0, 0, 1)"},
+                        {offset:0.8, color: "rgba(255, 0, 0, 0.5)"},
                         {offset:1.0, color: "rgba(0, 0, 0, 0)"},
                     ]).toStyle()
                 ).fillRect(0, 0, 32, 32);
             this.core.tweener.clear();
-            this.core.tweener.scale(0.5, 500, "easeInOutQuad").scale(0.3, 500, "easeInOutQuad").setLoop(true);
+            this.core.tweener.scale(0.4, 500, "easeInOutQuad").scale(0.2, 500, "easeInOutQuad").setLoop(true);
             this.core.setScale(0.5);
         } else if (id == 1) {
         } else if (id == 2) {
@@ -423,15 +423,15 @@ tm.define("pb3.Item", {
     update: function() {
         if (this.id == 0 && this.time % 120 == 0) {
             this.type = (this.type+1)%3;
-            var color = 'red';
-            if (this.type == 0) color = "rgba(255, 0, 0, 1)";
-            if (this.type == 1) color = "rgba(0, 255, 0, 1)";
-            if (this.type == 2) color = "rgba(0, 0, 255, 1)";
+            var color1 , color2;
+            if (this.type == 0) {color1 = "rgba(255, 0, 0, 1)"; color2 = "rgba(255, 0, 0, 0.5)";}
+            if (this.type == 1) {color1 = "rgba(0, 255, 0, 1)"; color2 = "rgba(0, 255, 0, 0.5)";}
+            if (this.type == 2) {color1 = "rgba(0, 0, 255, 1)"; color2 = "rgba(0, 0, 255, 0.5)";}
             this.core.canvas.setFillStyle(
                 tm.graphics.RadialGradient(16, 16, 0, 16, 16, 16)
                     .addColorStopList([
-                        {offset:0.0, color: color},
-                        {offset:0.5, color: color},
+                        {offset:0.0, color: color1},
+                        {offset:0.8, color: color2},
                         {offset:1.0, color: "rgba(0, 0, 0, 0)"},
                     ]).toStyle()
                 ).fillRect(0, 0, 32, 32);
