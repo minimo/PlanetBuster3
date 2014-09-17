@@ -45,7 +45,8 @@ tm.define("pb3.MainScene", {
     ground: null,
 
     //プレイヤー情報
-    life: 2,
+    life: 2,    //初期残機
+    bomb: 2,    //初期ボム
 
     init: function() {
         this.superInit();
@@ -135,9 +136,7 @@ tm.define("pb3.MainScene", {
         }
 
         //敵弾強制消去
-        if (this.timeVanish > 0) {
-            this.eraseBullet();
-        }
+        if (this.timeVanish > 0) this.eraseBullet();
 
         //ステージクリア検知
         if (this.stageClear) {
@@ -166,6 +165,10 @@ tm.define("pb3.MainScene", {
         this.time++;
         this.absTime++;
         this.timeVanish--; 
+    },
+
+    //ボム投下
+    enterBomb: function(x, y) {
     },
 
     //敵ユニット単位の投入

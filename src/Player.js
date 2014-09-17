@@ -41,7 +41,6 @@ tm.define("pb3.Player", {
     shotPower: 10,      //ショット威力
     shotInterval: 6,    //ショット間隔
 
-
     rollcount: 50,
     pitchcount: 50,
 
@@ -51,22 +50,7 @@ tm.define("pb3.Player", {
     init: function() {
         this.superInit("gunship", 48, 48);
         this.setFrameIndex(4);
-//        this.setScale(1.5);
 
-        this.setupBody();
-
-        //当り判定設定
-        this.boundingType = "circle";
-        this.radius = 2;
-        this.checkHierarchy = true;
-
-        this.time = 0;
-        this.changeInterval = 0;
-        return this;
-    },
-
-    //機体準備
-    setupBody: function() {
         //コア
         this.core = tm.display.Shape(16, 16).addChildTo(this);
         this.core.canvas.setFillStyle(
@@ -82,14 +66,21 @@ tm.define("pb3.Player", {
 
         //ビット
         this.bits = [];
-        this.bits.status = 0; //0:close 1:open1 2:open2 3:rollingStanby 4:rollingReady
-        this.bits.roll = 0;
         this.bits[0] = pb3.PlayerBit(0).addChildTo(this);
         this.bits[1] = pb3.PlayerBit(1).addChildTo(this);
         this.bits[2] = pb3.PlayerBit(2).addChildTo(this);
         this.bits[3] = pb3.PlayerBit(3).addChildTo(this);
 
         this.openBit(0);
+
+        //当り判定設定
+        this.boundingType = "circle";
+        this.radius = 2;
+        this.checkHierarchy = true;
+
+        this.time = 0;
+        this.changeInterval = 0;
+        return this;
     },
 
     update: function() {
@@ -138,17 +129,16 @@ tm.define("pb3.Player", {
         var x = ~~this.x;
         var bx = ~~this.bx;
         if (bx > x) {
-            this.rollcount-=2;
+            this.rollcount-=1;
             if (this.rollcount < 0) this.rollcount = 0;
         }
         if (bx < x) {
-            this.rollcount+=2;
+            this.rollcount+=1;
             if (this.rollcount > 100) this.rollcount = 100;
         }
         var vx = Math.abs(bx - x);
         if (vx < 2) {
-            if (this.rollcount < 50) this.rollcount+=2;
-            else this.rollcount-=2;
+            if (this.rollcount < 50) this.rollcount+=1; else this.rollcount-=1;
             if (this.rollcount < 0) this.rollcount = 0;
             if (this.rollcount > 100) this.rollcount = 100;
         }
@@ -184,7 +174,12 @@ tm.define("pb3.Player", {
     getItem: function(id, type) {
         switch (id) {
             case 0: //パワーアップ
-                if (this.type == type && this.power < this.powerMax) this.power++;
+                if (this.type == type) {
+                    if (this.power < this.powerMax) {
+                        this.power++;
+                    } else {
+                    }
+                }
                 this.type = type;
                 this.openBit(type);
                 break;
@@ -408,7 +403,7 @@ tm.define("pb3.Item", {
                     ]).toStyle()
                 ).fillRect(0, 0, 32, 32);
             this.core.tweener.clear();
-            this.core.tweener.scale(0.4, 500, "easeInOutQuad").scale(0.2, 500, "easeInOutQuad").setLoop(true);
+            this.core.tweener.scale(0.5, 500, "easeInOutSine").scale(0.3, 500, "easeInOutSine").setLoop(true);
             this.core.setScale(0.5);
         } else if (id == 1) {
         } else if (id == 2) {
@@ -421,7 +416,7 @@ tm.define("pb3.Item", {
     },
 
     update: function() {
-        if (this.id == 0 && this.time % 120 == 0) {
+        if (this.id == 0 && this.time % 150 == 0) {
             this.type = (this.type+1)%3;
             var color1 , color2;
             if (this.type == 0) {color1 = "rgba(255, 0, 0, 1)"; color2 = "rgba(255, 0, 0, 0.5)";}
