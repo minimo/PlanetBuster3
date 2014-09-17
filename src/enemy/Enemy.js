@@ -58,7 +58,7 @@ tm.define("pb3.Enemy", {
 
         this.setup = d.setup || this.setup;
         this.algorithm = d.algorithm || this.algorithm;
-        this.dead = d.dead || this.dead;
+        this.dead = d.dead || this.defaultDead;
 
         //機体用スプライト
         if (d.texName) {
@@ -167,7 +167,7 @@ tm.define("pb3.Enemy", {
     },
 
     //通常破壊パターン
-    dead: function() {
+    defaultDead: function() {
         this.isCollision = false;
         this.isDead = true;
         this.tweener.clear();

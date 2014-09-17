@@ -19,7 +19,7 @@ var KEYBOARD_MOVE = {
 
 tm.define("pb3.Player", {
     superClass: "tm.display.Sprite",
-    layer: LAYER_OBJECT,
+    layer: LAYER_PLAYER,
 
     //当り判定サイズ
     width: 2,
@@ -377,6 +377,7 @@ tm.define("pb3.PlayerPointer", {
 //アイテム
 tm.define("pb3.Item", {
     superClass: "tm.display.Sprite",
+    layer: LAYER_PLAYER,
 
     //アイテム種類
     //0: パワーアップ
@@ -390,9 +391,11 @@ tm.define("pb3.Item", {
     active: false,
 
     init: function(id) {
-        this.superInit("Item", 32, 32);
+        this.superInit("item", 32, 32);
         this.parentScene = app.currentScene;
         this.id = id;
+        this.setFrameIndex(id);
+        this.setScale(2.0);
 
         if (id == 0) {
             this.core = tm.display.Shape(32, 32).addChildTo(this);
@@ -405,7 +408,8 @@ tm.define("pb3.Item", {
                     ]).toStyle()
                 ).fillRect(0, 0, 32, 32);
             this.core.tweener.clear();
-            this.core.tweener.scale(1.0, 100, "easeInOutQuad").scale(0.5, 150, "easeInOutQuad").setLoop(true);
+            this.core.tweener.scale(0.5, 500, "easeInOutQuad").scale(0.3, 500, "easeInOutQuad").setLoop(true);
+            this.core.setScale(0.5);
         } else if (id == 1) {
         } else if (id == 2) {
         }
@@ -437,7 +441,10 @@ tm.define("pb3.Item", {
         var player = app.player;
         if (this.isHitElement(player)) {
             player.getItem(this.id, this.type);
+            this.remove();
         }
+
+        this.y++;
 
         this.time++;
     },

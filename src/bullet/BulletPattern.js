@@ -37,8 +37,8 @@ var $interval = function(v) {v = v===undefined?1:v; return $.wait(~~(v-$rank))};
 var $spd = function(v) { v = v===undefined?1:v; return $.speed($rank*0.1*v+v);};
 
 //自機狙い弾
-var $fireBS = function(spd) { return $.fire($.direction(0), $.speed(spd) || $spd, BS) };
-var $fireRS = function(spd) { return $.fire($.direction(0), $.speed(spd) || $spd, RS) };
+var $fireBS = function(spd, x, y) { return $.fire($.direction(0), $.speed(spd) || $spd, BS, $.offsetX(x), $.offsetY(y)) };
+var $fireRS = function(spd, x, y) { return $.fire($.direction(0), $.speed(spd) || $spd, RS, $.offsetX(x), $.offsetY(y)) };
 
 /**
 
@@ -176,7 +176,7 @@ pb3.bulletPattern["ToyBox"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
         $.repeat(999, [
-            $fireRS(2),
+            $fireRS(3, 0, -42),
             $.wait("$rand*90"),
         ]),
     ]),

@@ -182,6 +182,11 @@ pb3.enemyData['ToyBox'] = {
 
     algorithm: function() {
     },
+
+    dead: function() {
+        pb3.Item(0).addChildTo(this.parentScene).setPosition(this.x, this.y);
+        this.defaultDead();
+    },
 }
 
 })();
