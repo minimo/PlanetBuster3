@@ -170,12 +170,14 @@ tm.define("pb3.Enemy", {
             //スコア加算
             app.score += this.data.point;
 
+/*
             //得点表示
             var sc = tm.display.OutlineLabel(this.data.point, 30);
             sc.layer = LAYER_FOREGROUND;
             sc.addChildTo(this.parentScene).setPosition(this.x, this.y);
             sc.setParam({fontFamily:"'UbuntuMono'", align: "center", baseline:"middle", fontWeight:300, outlineWidth:2 });
             sc.tweener.to({x: this.x, y: this.y-50, alpha:0}, 1000).call(function(){this.remove()}.bind(sc));
+ */
             return true;
         }
         return false;
