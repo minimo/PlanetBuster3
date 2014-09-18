@@ -200,7 +200,7 @@ tm.define("pb3.Enemy", {
         var vx = this.x-this.beforeX;
         var vy = this.y-this.beforeY;
         if (this.data.explodeType == EXPLODE_SMALL) {
-            pb3.Effect.enterExplodeSmall(this.parentScene, this.x, this.y, vx, vy);
+            pb3.Effect.enterExplode(this.parentScene, this.x, this.y, vx, vy);
             app.playSE("explodeSmall");
         }
         if (this.data.explodeType >= EXPLODE_MIDDLE) {
@@ -209,7 +209,7 @@ tm.define("pb3.Enemy", {
                 var x = this.x+rand(-this.width, this.width);
                 var y = this.y+rand(-this.height, this.height);
                 var delay = rand(0, 30);
-                pb3.Effect.enterExplodeSmall(this.parentScene, x, y, vx, vy, delay);
+                pb3.Effect.enterExplode(this.parentScene, x, y, vx, vy, delay);
             }
             app.playSE("explodeLarge");
         }

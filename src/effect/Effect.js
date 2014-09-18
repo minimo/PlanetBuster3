@@ -107,18 +107,18 @@ tm.define("pb3.Effect.EffectBase", {
     }
 });
 
-//爆発エフェクト（小）
-tm.define("pb3.Effect.ExplodeSmall1", {
+//爆発エフェクト（標準）
+tm.define("pb3.Effect.Explode", {
     superClass: "pb3.Effect.EffectBase",
     layer: LAYER_EFFECT_UPPER,
 
     init: function(delay) {
-        this.superInit("explode2", 16, 16, 4, 0, 7, delay);
+        this.superInit("explode1", 64, 64, 2, 0, 17, delay);
     },
 });
 
 //爆発エフェクト（小）
-tm.define("pb3.Effect.ExplodeSmall2", {
+tm.define("pb3.Effect.ExplodeSmall", {
     superClass: "pb3.Effect.EffectBase",
     layer: LAYER_EFFECT_UPPER,
 
@@ -127,13 +127,13 @@ tm.define("pb3.Effect.ExplodeSmall2", {
     },
 });
 
-//爆発エフェクト（中）
-tm.define("pb3.Effect.ExplodeMiddle", {
+//爆発エフェクト（極小）
+tm.define("pb3.Effect.ExplodeSmall2", {
     superClass: "pb3.Effect.EffectBase",
     layer: LAYER_EFFECT_UPPER,
 
     init: function(delay) {
-        this.superInit("explode3", 48, 48, 4, 0, 7, delay);
+        this.superInit("explode2", 16, 16, 4, 0, 7, delay);
     },
 });
 
@@ -143,7 +143,7 @@ tm.define("pb3.Effect.ExplodeLarge", {
     layer: LAYER_EFFECT_UPPER,
 
     init: function(delay) {
-        this.superInit("explode1", 64, 64, 2, 0, 17, delay);
+        this.superInit("explode3", 48, 48, 4, 0, 7, delay);
     },
 });
 
