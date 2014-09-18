@@ -21,7 +21,10 @@ pb3.assets = {
     "tex1":    "assets/images/tex1.png",
 
     //エフェクト
-    "explode1": "assets/images/explode1.png",
+    "explode1": "assets/images/explode1.png", //64x64
+    "explode2": "assets/images/explode2.png", //16x16(small&large)
+    "explode3": "assets/images/explode3.png", //48x48
+    "explode4": "assets/images/explode4.png", //32x48
     "chip1":    "assets/images/chip1.png",
     "chip2":    "assets/images/chip2.png",
 
