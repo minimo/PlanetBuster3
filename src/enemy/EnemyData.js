@@ -7,7 +7,9 @@
 (function() {
 pb3.enemyData = [];
 
-//攻撃ヘリ（通常）
+/*
+ *  攻撃ヘリ「ホーネット」
+ */
 pb3.enemyData['Hornet1'] = {
     //使用弾幕パターン
     bulletPattern: "Hornet1",
@@ -54,7 +56,9 @@ pb3.enemyData['Hornet1'] = {
     },
 };
 
-//攻撃ヘリタイプ（突撃）
+/*
+ *  攻撃ヘリ「ホーネット」（突撃型）
+ */
 pb3.enemyData['Hornet2'] = {
     //使用弾幕パターン
     bulletPattern: "Hornet2",
@@ -103,7 +107,9 @@ pb3.enemyData['Hornet2'] = {
     },
 };
 
-//中型機
+/*
+ *  中型爆撃機「ビッグウィング」
+ */
 pb3.enemyData['BigWing'] = {
     //使用弾幕パターン
     bulletPattern: "BigWing",
@@ -146,7 +152,9 @@ pb3.enemyData['BigWing'] = {
     },
 };
 
-//アイテムキャリア
+/*
+ *  中型輸送キャリア「トイボックス」
+ */
 pb3.enemyData['ToyBox'] = {
     //使用弾幕パターン
     bulletPattern: "ToyBox",

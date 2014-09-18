@@ -13,7 +13,7 @@ var fontLoadEnd = false;
 
 //定数
 //デバッグ
-DEBUG = false;
+DEBUG = true;
 MUTEKI = false;
 
 //スクリーンサイズ
