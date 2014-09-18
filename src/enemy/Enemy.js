@@ -28,7 +28,7 @@ tm.define("pb3.Enemy", {
     bulletPattern: null,
     nowBulletPattern: null,
     id: -1,
-    param: null,
+    enterParam: null,
 
     body: null,     //機体描画用スプライト
     texName: null,  //機体描画用テクスチャ
@@ -42,7 +42,7 @@ tm.define("pb3.Enemy", {
         this.superInit();
         this.setPosition(x, y);
         this.id = id || -1;
-        this.param = param; //EnemyUnitからの投入時パラメータ
+        this.enterParam = param; //EnemyUnitからの投入時パラメータ
 
         this.name = name;
         var d = this.data = pb3.enemyData[name];
@@ -115,7 +115,7 @@ tm.define("pb3.Enemy", {
         this.time = 0;
     },
 
-    setup: function(param) {
+    setup: function(enterParam) {
     },
 
     update: function() {
@@ -179,6 +179,15 @@ tm.define("pb3.Enemy", {
             return true;
         }
         return false;
+    },
+
+    //瀕死状態
+    nearDeath: function() {
+        if (this.time % 30 == 0) {
+            this.body._sprite.toRed();
+        } else if (this.time % 30 == 5) {
+            this.body._sprite.toNormal();
+        }
     },
 
     //通常破壊パターン

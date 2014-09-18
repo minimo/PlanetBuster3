@@ -66,14 +66,27 @@ pb3.enemyUnit = {
 /*
  * アイテムキャリア「トイボックス」
  */
-"ToyBox-left": [
-    { "name": "ToyBox", "x":GS_W*0.2, "y":-GS_H*0.3 },
+
+//パワーアップ
+"ToyBox-p-left": [
+    { "name": "ToyBox", "x":GS_W*0.2, "y":-GS_H*0.3, param:"power" },
 ],
-"ToyBox-center": [
-    { "name": "ToyBox", "x":GS_W*0.5, "y":-GS_H*0.3 },
+"ToyBox-p-center": [
+    { "name": "ToyBox", "x":GS_W*0.5, "y":-GS_H*0.3, param:"power" },
 ],
-"ToyBox-right": [
-    { "name": "ToyBox", "x":GS_W*0.8, "y":-GS_H*0.3 },
+"ToyBox-p-right": [
+    { "name": "ToyBox", "x":GS_W*0.8, "y":-GS_H*0.3, param:"power" },
+],
+
+//ボム
+"ToyBox-b-left": [
+    { "name": "ToyBox", "x":GS_W*0.2, "y":-GS_H*0.3, param:"bomb" },
+],
+"ToyBox-b-center": [
+    { "name": "ToyBox", "x":GS_W*0.5, "y":-GS_H*0.3, param:"bomb" },
+],
+"ToyBox-b-right": [
+    { "name": "ToyBox", "x":GS_W*0.8, "y":-GS_H*0.3, param:"bomb" },
 ],
 
 //ステージ１中ボス 軌道走行列車「トールハンマー」

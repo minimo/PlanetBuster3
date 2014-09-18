@@ -184,7 +184,13 @@ pb3.enemyData['ToyBox'] = {
     texHeight: 128,
     texIndex: 2,
 
-    setup: function() {
+    //投下アイテム種類
+    kind: 0,
+
+    setup: function(enterParam) {
+        if (enterParam == "power") this.kind = 0;
+        if (enterParam == "bomb") this.kind = 1;
+        if (enterParam == "1UP") this.kind = 2;
         this.tweener.clear().moveBy(0, GS_H*0.5, 5000).wait(8000).moveBy(0, -GS_H, 10000);
     },
 
@@ -192,7 +198,7 @@ pb3.enemyData['ToyBox'] = {
     },
 
     dead: function() {
-        pb3.Item(0).addChildTo(this.parentScene).setPosition(this.x, this.y);
+        pb3.Item(this.kind).addChildTo(this.parentScene).setPosition(this.x, this.y);
         this.defaultDead();
     },
 }

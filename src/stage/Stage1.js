@@ -14,10 +14,11 @@ tm.define("pb3.Stage1", {
         this.superInit(parent, player);
 
         this.add(1, function() {
-            this.ground.tweener.clear().to({speed:1.5}, 3000, "easeInOutQuad");
+            this.ground.tweener.clear().to({scaleX:0.5, scaleY:0.5, speed:1.5}, 1, "easeInOutQuad");
         });
 
-        this.add( 120, "ToyBox-center");
+        this.add( 120, "ToyBox-p-center");
+        this.add( 120, "ToyBox-b-right");
 
         //Stage data
         this.add( 180, "Hornet1-left");
@@ -25,7 +26,7 @@ tm.define("pb3.Stage1", {
         this.add( 180, "Hornet1-center");
 
         this.add(1, function() {
-            this.ground.tweener.clear().to({scaleX:0.5, scaleY:0.5}, 10000, "easeInOutCubic");
+            this.ground.tweener.clear().to({scaleX:1.0, scaleY:1.0}, 5000, "easeInOutCubic");
         });
 
         this.add( 120, "Hornet1-left");
