@@ -182,6 +182,7 @@ tm.define("pb3.Player", {
                 }
                 this.type = type;
                 this.openBit(type);
+                app.playSE("powerup");
                 break;
             case 1: //ボム
                 break;

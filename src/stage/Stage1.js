@@ -13,8 +13,10 @@ tm.define("pb3.Stage1", {
     init: function(parent, player) {
         this.superInit(parent, player);
 
+        //初期化処理
         this.add(1, function() {
             this.ground.tweener.clear().to({scaleX:0.5, scaleY:0.5, speed:1.5}, 1, "easeInOutQuad");
+            app.playBGM("stage1", true);
         });
 
         this.add( 120, "ToyBox-p-center");
