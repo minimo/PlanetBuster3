@@ -31,19 +31,20 @@ var RE = function(action) { return $.bullet(action, {type: "RE"}); };
 var BE = function(action) { return $.bullet(action, {type: "BE"}); };
 
 //ランクを考慮したウェイト
-var $interval = function(v) {
-    v = v===undefined?1:v;
-    return $.wait(~~(v-$rank*0.1))
-};
+var $interval = function(v) {v = v===undefined?1:v; return $.wait(~~(v-$rank))};
 
 //速度
-var $spd = function(v) {
-    v = v===undefined?1:v;
-    return $.speed($rank*0.1*v+v);
-};
+var $spd = function(v) { v = v===undefined?1:v; return $.speed($rank*0.1*v+v);};
 
-var $fireBS = function(spd) { return $.fire($.direction(0), $.speed(spd) || $spd, BS) };
-var $fireRS = function(spd) { return $.fire($.direction(0), $.speed(spd) || $spd, RS) };
+//自機狙い弾
+var $fireBS = function(spd, x, y) { return $.fire($.direction(0), $.speed(spd) || $spd, BS, $.offsetX(x), $.offsetY(y)) };
+var $fireRS = function(spd, x, y) { return $.fire($.direction(0), $.speed(spd) || $spd, RS, $.offsetX(x), $.offsetY(y)) };
+
+/**
+
+    汎用弾幕定義
+
+**/
 
 //no operation
 pb3.bulletPattern["nop"] = new bulletml.Root({top: $.action([$.wait(10000)])});
@@ -117,8 +118,14 @@ var $whip = function(baseSpeed, delta, count, actionFunc) {
     ]);
 };
 
-//SkyFish1
-pb3.bulletPattern["SkyFish1"] = new bulletml.Root({
+/**
+
+    固有弾幕定義
+
+**/
+
+//Hornet1
+pb3.bulletPattern["Hornet1"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
         $.repeat(999, [
@@ -128,8 +135,8 @@ pb3.bulletPattern["SkyFish1"] = new bulletml.Root({
     ]),
 });
 
-//SkyFish2
-pb3.bulletPattern["SkyFish2"] = new bulletml.Root({
+//Hornet2
+pb3.bulletPattern["Hornet2"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
         $.repeat(3, [
@@ -164,189 +171,13 @@ pb3.bulletPattern["BigWing"] = new bulletml.Root({
     ]),
 });
 
-//square
-pb3.bulletPattern["square1"] = new bulletml.Root({
-    top1: $.action([
-        $.wait(180),
-        $.fire($.direction(  0), $spd(3), LR),
-        $.repeat(999, [
-            $.fire($.direction( 10, "sequence"), $spd(3), LR),
-            $.fire($.direction( 10, "sequence"), $spd(3), LR),
-            $.fire($.direction( 10, "sequence"), $spd(3), LR),
-            $.fire($.direction( 10, "sequence"), $spd(3), LR),
-            $.fire($.direction( 10, "sequence"), $spd(3), LR),
-            $.fire($.direction( 10, "sequence"), $spd(3), LR),
-            $.fire($.direction( 10, "sequence"), $spd(3), LR),
-            $interval(60),
-        ]),
-    ]),
-    top2: $.action([
-        $.wait(180),
-        $.fire($.direction(120), $spd(3), LR),
-        $.repeat(999, [
-            $.fire($.direction( 10, "sequence"), $spd(3), LR),
-            $.fire($.direction( 10, "sequence"), $spd(3), LR),
-            $.fire($.direction( 10, "sequence"), $spd(3), LR),
-            $.fire($.direction( 10, "sequence"), $spd(3), LR),
-            $.fire($.direction( 10, "sequence"), $spd(3), LR),
-            $.fire($.direction( 10, "sequence"), $spd(3), LR),
-            $.fire($.direction( 10, "sequence"), $spd(3), LR),
-            $interval(60),
-        ]),
-    ]),
-    top3: $.action([
-        $.wait(180),
-        $.fire($.direction(240), $spd(3), LR),
-        $.repeat(999, [
-            $.fire($.direction( 10, "sequence"), $spd(3), LR),
-            $.fire($.direction( 10, "sequence"), $spd(3), LR),
-            $.fire($.direction( 10, "sequence"), $spd(3), LR),
-            $.fire($.direction( 10, "sequence"), $spd(3), LR),
-            $.fire($.direction( 10, "sequence"), $spd(3), LR),
-            $.fire($.direction( 10, "sequence"), $spd(3), LR),
-            $.fire($.direction( 10, "sequence"), $spd(3), LR),
-            $interval(60),
-        ]),
-    ]),
-});
-
-//小型空中砲台
-pb3.bulletPattern["triangle1-a"] = new bulletml.Root({
+//ToyBox
+pb3.bulletPattern["ToyBox"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
-        $.fire($.direction(180), $spd(4), BE),
         $.repeat(999, [
-            $.fire($.direction(37, "sequence"), $spd(3), BE),
-            $interval(10),
-        ]),
-    ]),
-});
-pb3.bulletPattern["triangle1-b"] = new bulletml.Root({
-    top: $.action([
-        $.wait(60),
-        $.fire($.direction(180), $spd(4), BE),
-        $.repeat(999, [
-            $.fire($.direction(-37, "sequence"), $spd(3), BE),
-            $interval(10),
-        ]),
-    ]),
-});
-
-//大型機
-pb3.bulletPattern["triangle2"] = new bulletml.Root({
-    top0: $.action([
-        $.wait(60),
-        $.repeat(999, [
-            $.repeat(3, [
-                $nway(3, -30, 30, $spd(4), LR, 0, 0),
-                $interval(10),
-            ]),
-            $interval(120),
-            $.repeat(3, [
-                $nway(4, -30, 30, $spd(5), LB, 0, 0),
-                $interval(10),
-            ]),
-            $interval(120),
-        ]),
-    ]),
-    top1: $.action([
-        $.wait(60),
-        $.repeat(999, [
-            $.repeat(6, [
-                $.fire($.direction(180 ,"absolute"), $spd(3), LR, $.offsetX(-64)),
-                $.fire($.direction(180 ,"absolute"), $spd(3), LR, $.offsetX( 64)),
-                $interval(10),
-            ]),
-            $interval(90),
-        ]),
-    ]),
-});
-
-//square1-child
-pb3.bulletPattern["square1-child"] = new bulletml.Root({
-    top: $.action([
-        $.wait(300),
-        $.repeat(3, [
-            $fireRS(6),
-            $.wait("$rand * 60"),
-        ]),
-    ]),
-});
-
-//四畳半第一段階
-pb3.bulletPattern["yojouhan-a-1"] = new bulletml.Root({
-    top1: $.action([
-        $.wait(180),
-        $.fire($.direction(0), $spd(3), LR),
-        $.repeat(999, [
-            $.repeat(4, [
-                $.repeat(12, [
-                    $.fire($.direction( 10, "sequence"), $spd(3), LR),
-                    $interval(5),
-                ]),
-                $interval(30),
-            ]),
-            $interval(120),
-        ]),
-    ]),
-    top2: $.action([
-        $.wait(180),
-        $.fire($.direction(180), $spd(3), LR),
-        $.repeat(999, [
-            $.repeat(4, [
-                $.repeat(12, [
-                    $.fire($.direction( 10, "sequence"), $spd(3), LR),
-                    $interval(5),
-                ]),
-                $interval(30),
-            ]),
-            $interval(120),
-        ]),
-    ]),
-    top3: $.action([
-        $.wait(180),
-        $.repeat(999, [
-            $whip($spd(4), 0.1, 5, $nwayVs(7, -60, 60, LB)),
-            $interval(60*3),
-            $whip($spd(4), 0.1, 5, $nwayVs(6, -60, 60, LR)),
-            $interval(60*4),
-        ]),
-    ]),
-});
-
-//四畳半第二段階
-pb3.bulletPattern["yojouhan-a-2"] = new bulletml.Root({
-    top1: $.action([
-        $.wait(180),
-        $.fire($.direction(0), $spd(3), LR),
-        $.repeat(999, [
-            $.repeat(20, [
-                $.fire($.direction( 5, "sequence"), $spd(3), LR),
-                $interval(5),
-            ]),
-            $interval(60),
-        ]),
-    ]),
-    top1: $.action([
-        $.wait(180),
-        $.fire($.direction(180), $spd(3), LR),
-        $.repeat(999, [
-            $.repeat(20, [
-                $.fire($.direction( 5, "sequence"), $spd(3), LR),
-                $interval(5),
-            ]),
-            $interval(60),
-        ]),
-    ]),
-});
-
-//四畳半子機第一段階
-pb3.bulletPattern["yojouhan-b-1"] = new bulletml.Root({
-    top: $.action([
-        $.wait(300),
-        $.repeat(3, [
-            $fireRS(6),
-            $.wait("$rand * 60"),
+            $fireRS(3, 0, -42),
+            $.wait("$rand*90"),
         ]),
     ]),
 });

@@ -45,7 +45,8 @@ tm.define("pb3.MainScene", {
     ground: null,
 
     //プレイヤー情報
-    life: 2,
+    life: 2,    //初期残機
+    bomb: 2,    //初期ボム
 
     init: function() {
         this.superInit();
@@ -54,6 +55,7 @@ tm.define("pb3.MainScene", {
         //マルチタッチ初期化
         this.touches = tm.input.TouchesEx(this);
 
+        //最下位マスク
         this.mask = tm.display.Shape(SC_W, SC_H).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
         this.mask.renderRectangle({fillStyle: "rgba(0,0,0,1.0)", strokeStyle: "rgba(0,0,0,1.0)"});
 
@@ -65,7 +67,7 @@ tm.define("pb3.MainScene", {
         }
 
         //マップ（テスト用）
-        this.ground = pb3.Ground("map1g").setPosition(GS_W*0.5, -700).addChildTo(this);
+        this.ground = pb3.Ground("map1g").setPosition(0, -700).addChildTo(this);
 
         //プレイヤー
         this.player = pb3.Player().addChildTo(this);
@@ -105,6 +107,12 @@ tm.define("pb3.MainScene", {
         //ボス耐久力ゲージ
         this.bossGauge = pb3.BossGauge().addChildTo(this.systemBase).setPosition(0, -24);
 
+        //最上位マスク
+        this.maskTop = tm.display.Shape(SC_W, SC_H).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
+        this.maskTop.renderRectangle({fillStyle: "rgba(255,255,255,1.0)", strokeStyle: "rgba(255,255,255,1.0)"});
+        this.maskTop.alpha = 0
+
+        //左右画面マスク
         this.systemMaskL = tm.display.Shape(80, SC_H).addChildTo(this).setPosition(0, 0);
         this.systemMaskL.renderRectangle({fillStyle: "rgba(0,0,0,1.0)", strokeStyle: "rgba(0,0,0,1.0)"});
         this.systemMaskL.origin.set(0, 0);
@@ -128,9 +136,7 @@ tm.define("pb3.MainScene", {
         }
 
         //敵弾強制消去
-        if (this.timeVanish > 0) {
-            this.eraseBullet();
-        }
+        if (this.timeVanish > 0) this.eraseBullet();
 
         //ステージクリア検知
         if (this.stageClear) {
@@ -159,6 +165,10 @@ tm.define("pb3.MainScene", {
         this.time++;
         this.absTime++;
         this.timeVanish--; 
+    },
+
+    //ボム投下
+    enterBomb: function(x, y) {
     },
 
     //敵ユニット単位の投入

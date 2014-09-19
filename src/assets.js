@@ -15,11 +15,16 @@ pb3.assets = {
     "shot2":   "assets/images/shot2.png",
     "shotimpact": "assets/images/shotimpact.png",
 
+    "item":     "assets/images/item.png",
+
     //敵機
     "tex1":    "assets/images/tex1.png",
 
     //エフェクト
-    "explode1": "assets/images/explode1.png",
+    "explode1": "assets/images/explode1.png", //64x64
+    "explode2": "assets/images/explode2.png", //16x16(small&large)
+    "explode3": "assets/images/explode3.png", //48x48
+    "explode4": "assets/images/explode4.png", //32x48
     "chip1":    "assets/images/chip1.png",
     "chip2":    "assets/images/chip2.png",
 
@@ -28,11 +33,13 @@ pb3.assets = {
     "map1g":   "assets/images/map1.png",
 
     //SE
+    "powerup": "assets/sounds/ta_ta_suraido01.mp3",
     "explodeSmall":  "assets/sounds/sen_ge_taihou03.mp3", 
     "explodeLarge":  "assets/sounds/sen_ge_hasai01.mp3", 
     "explodePlayer": "assets/sounds/ta_ta_zuban_d01.mp3", 
 
     //BGM
+    "stage1": "assets/sounds/expsy.mp3",
     "warning": "assets/sounds/bgm_warning.mp3",
 }
 

@@ -7,10 +7,12 @@
 (function() {
 pb3.enemyData = [];
 
-//攻撃ヘリ（通常）
-pb3.enemyData['SkyFish1'] = {
+/*
+ *  攻撃ヘリ「ホーネット」
+ */
+pb3.enemyData['Hornet1'] = {
     //使用弾幕パターン
-    bulletPattern: "SkyFish1",
+    bulletPattern: "Hornet1",
 
     //当り判定サイズ
     width:  16,
@@ -27,6 +29,9 @@ pb3.enemyData['SkyFish1'] = {
 
     //敵タイプ
     type: ENEMY_SMALL,
+
+    //爆発タイプ
+    explodeType: EXPLODE_SMALL,
 
     //機体用テクスチャ情報
     texName: "tex1",
@@ -51,10 +56,12 @@ pb3.enemyData['SkyFish1'] = {
     },
 };
 
-//攻撃ヘリタイプ（突撃）
-pb3.enemyData['SkyFish2'] = {
+/*
+ *  攻撃ヘリ「ホーネット」（突撃型）
+ */
+pb3.enemyData['Hornet2'] = {
     //使用弾幕パターン
-    bulletPattern: "SkyFish2",
+    bulletPattern: "Hornet2",
 
     //当り判定サイズ
     width:  16,
@@ -70,7 +77,10 @@ pb3.enemyData['SkyFish2'] = {
     layer: LAYER_OBJECT,
 
     //敵タイプ
-    type: ENEMY_MIDDLE,
+    type: ENEMY_SMALL,
+
+    //爆発タイプ
+    explodeType: EXPLODE_SMALL,
 
     //機体用テクスチャ情報
     texName: "tex1",
@@ -97,7 +107,9 @@ pb3.enemyData['SkyFish2'] = {
     },
 };
 
-//中型機
+/*
+ *  中型爆撃機「ビッグウィング」
+ */
 pb3.enemyData['BigWing'] = {
     //使用弾幕パターン
     bulletPattern: "BigWing",
@@ -110,13 +122,16 @@ pb3.enemyData['BigWing'] = {
     def: 800,
 
     //得点
-    point: 1000,
+    point: 3000,
 
     //表示レイヤー番号
     layer: LAYER_OBJECT,
 
     //敵タイプ
     type: ENEMY_MIDDLE,
+
+    //爆発タイプ
+    explodeType: EXPLODE_MIDDLE,
 
     //機体用テクスチャ情報
     texName: "tex1",
@@ -137,17 +152,19 @@ pb3.enemyData['BigWing'] = {
     },
 };
 
-//中型機
-pb3.enemyData['square1'] = {
+/*
+ *  中型輸送キャリア「トイボックス」
+ */
+pb3.enemyData['ToyBox'] = {
     //使用弾幕パターン
-    bulletPattern: "square1",
+    bulletPattern: "ToyBox",
 
     //当り判定サイズ
-    width:  64,
-    height: 64,
+    width:  40,
+    height: 100,
 
     //耐久力
-    def: 1500,
+    def: 500,
 
     //得点
     point: 5000,
@@ -156,341 +173,34 @@ pb3.enemyData['square1'] = {
     layer: LAYER_OBJECT,
 
     //敵タイプ
-    type: ENEMY_LARGE,
-
-    setup: function() {
-        this.phase = 0;
-        this.rotation = 45;
-
-        var colorparam = {
-            strokeStyle:"hsla(180, 50%, 70%, 1.0)",
-            fillStyle:  "hsla(180, 50%, 50%, 0.5)",
-            lineWidth: 1,
-        };
-        tm.display.Shape(64, 64).addChildTo(this).renderRectangle(colorparam);
-
-        var that = this;
-        this.c1 = tm.display.Shape(64, 64).addChildTo(this).renderRectangle(colorparam).setPosition(-32,-32);
-        this.c1.update = function() {if (that.phase ==1) this.rotation = -that.rotation+45;}
-        this.c2 = tm.display.Shape(64, 64).addChildTo(this).renderRectangle(colorparam).setPosition( 32,-32);
-        this.c2.update = function() {if (that.phase ==1) this.rotation = -that.rotation+45;}
-        this.c3 = tm.display.Shape(64, 64).addChildTo(this).renderRectangle(colorparam).setPosition(-32, 32);
-        this.c3.update = function() {if (that.phase ==1) this.rotation = -that.rotation+45;}
-        this.c4 = tm.display.Shape(64, 64).addChildTo(this).renderRectangle(colorparam).setPosition( 32, 32);
-        this.c4.update = function() {if (that.phase ==1) this.rotation = -that.rotation+45;}
-
-        this.tweener.moveBy(0, 300, 4000, "easeOutQuart")
-            .call(function(){
-                if (this.x < GS_W*0.5) {
-                    this.tweener.clear().moveBy(GS_W*0.5, 10, 3000, "easeInOutCubic").moveBy(-GS_W*0.5, 10, 3000, "easeInOutCubic").setLoop(true);
-                } else {
-                    this.tweener.clear().moveBy(-GS_W*0.5, 10, 3000, "easeInOutCubic").moveBy(GS_W*0.5, 10, 3000, "easeInOutCubic").setLoop(true);
-                }
-                this.phase++;
-            }.bind(this));
-    },
-
-    algorithm: function() {
-        if (this.phase == 1) this.rotation-=2;
-    },
-};
-
-//小型空中砲台
-pb3.enemyData['triangle1'] = {
-    //使用弾幕パターン
-    bulletPattern: "triangle1-a",
-
-    //当り判定サイズ
-    width:  8,
-    height: 8,
-
-    //耐久力
-    def: 100,
-
-    //得点
-    point: 500,
-
-    //表示レイヤー番号
-    layer: LAYER_OBJECT,
-
-    //敵タイプ
-    type: ENEMY_MIDDLE,
-
-    setup: function() {
-
-        this.phase = 0;
-        this.rotation = 0;
-
-        var colorparam = {
-            strokeStyle:"hsla(200, 50%, 70%, 1.0)",
-            fillStyle:  "hsla(200, 50%, 50%, 0.5)",
-            lineWidth: 1,
-        };
-        tm.display.Shape(32, 32).addChildTo(this).renderTriangle(colorparam);
-
-        if (this.x > GS_W*0.5)this.bulletPattern = "triangle1-b";
-    },
-
-    algorithm: function() {
-        this.rotation += 10;
-        this.y++;
-    },
-};
-
-//大型機
-pb3.enemyData['triangle2'] = {
-    //使用弾幕パターン
-    bulletPattern: "triangle2",
-
-    //当り判定サイズ
-    width:  128,
-    height: 64,
-
-    //耐久力
-    def: 500,
-
-    //得点
-    point: 2000,
-
-    //レイヤー
-    layer: LAYER_OBJECT,
-
-    //敵タイプ
     type: ENEMY_SMALL,
 
-    setup: function() {
-        this.rotation = 180;
+    //爆発タイプ
+    explodeType: EXPLODE_LARGE,
 
-        var colorparam = {
-            strokeStyle:"hsla(200, 50%, 70%, 1.0)",
-            fillStyle:  "hsla(200, 50%, 50%, 0.5)",
-            lineWidth: 1,
-        };
-        var s = tm.display.Shape(64, 64).addChildTo(this).renderTriangle(colorparam);
-        s.scaleX = 2;
-        
+    //機体用テクスチャ情報
+    texName: "tex1",
+    texWidth: 64,
+    texHeight: 128,
+    texIndex: 2,
+
+    //投下アイテム種類
+    kind: 0,
+
+    setup: function(enterParam) {
+        if (enterParam == "power") this.kind = 0;
+        if (enterParam == "bomb") this.kind = 1;
+        if (enterParam == "1UP") this.kind = 2;
+        this.tweener.clear().moveBy(0, GS_H*0.5, 5000).wait(8000).moveBy(0, -GS_H, 10000);
     },
 
     algorithm: function() {
-        this.y++;
-    },
-};
-
-//ステージ１中ボス（未定）
-pb3.enemyData['mboss1'] = {
-    //使用弾幕パターン
-    bulletPattern: "basic-aim1",
-
-    //当り判定サイズ
-    width:  256,
-    height: 110,
-
-    //耐久力
-    def: 5000,
-
-    //得点
-    point: 100000,
-
-    //レイヤー
-    layer: LAYER_OBJECT,
-
-    //敵タイプ
-    type: ENEMY_BOSS,
-
-    setup: function() {
-        var colorparam = {
-            strokeStyle:"hsla(250, 50%, 50%, 1.0)",
-            fillStyle:  "hsla(250, 50%, 50%, 0.3)",
-            lineWidth: 2,
-        };
-        tm.display.Shape(200, 100).addChildTo(this).renderRectangle(colorparam);
-        tm.display.Shape(240,  80).addChildTo(this).renderRectangle(colorparam);
-
-        var r1 = tm.display.Shape(64, 128).addChildTo(this).setPosition( 138, 0).renderRectangle(colorparam);
-        var r2 = tm.display.Shape(54, 118).addChildTo(this).setPosition( 138, 0).renderRectangle(colorparam);
-
-        var l1 = tm.display.Shape(64, 128).addChildTo(this).setPosition(-138, 0).renderRectangle(colorparam);
-        var l2 = tm.display.Shape(54, 118).addChildTo(this).setPosition(-138, 0).renderRectangle(colorparam);
-
-        //ローター
-        tm.display.Shape(16, 16).addChildTo(r1).renderRectangle(colorparam);
-        var sh = tm.display.Shape(110, 20).addChildTo(r1);
-        sh.renderRectangle(colorparam);
-        sh.update = function() {
-            this.rotation += 10;
-        }
-        var sh = tm.display.Shape(110, 20).addChildTo(r1);
-        sh.renderRectangle(colorparam);
-        sh.rotation = 90;
-        sh.update = function() {
-            this.rotation += 10;
-        }
-
-        tm.display.Shape(16, 16).addChildTo(l1).renderRectangle(colorparam);
-        var sh = tm.display.Shape(110, 20).addChildTo(l1);
-        sh.renderRectangle(colorparam);
-        sh.update = function() {
-            this.rotation -= 10;
-        }
-        var sh = tm.display.Shape(110, 20).addChildTo(l1);
-        sh.renderRectangle(colorparam);
-        sh.rotation = 90;
-        sh.update = function() {
-            this.rotation -= 10;
-        }
-
-        this.phase = 0;
-        this.tweener.moveBy(0, 300, 3000).wait(2000).call(function(){this.phase++}.bind(this));
     },
 
-    algorithm: function() {
-        if (this.phase == 1) {
-            this.x += Math.sin(this.time*toRad);
-        }
+    dead: function() {
+        pb3.Item(this.kind).addChildTo(this.parentScene).setPosition(this.x, this.y);
+        this.defaultDead();
     },
-};
-
-//ステージ１ボス（四畳半）コア
-pb3.enemyData['yojouhan-a'] = {
-    //使用弾幕パターン
-    bulletPattern: ["yojouhan-a-1", "yojouhan-a-2"],
-
-    //当り判定サイズ
-    width:  64,
-    height: 64,
-
-    //耐久力
-    def: 3000,
-
-    //得点
-    point: 50000,
-
-    //表示レイヤー番号
-    layer: LAYER_OBJECT,
-
-    //敵タイプ
-    type: ENEMY_BOSS,
-
-    setup: function() {
-        this.phase = 0;
-
-        var colorparam = {
-            strokeStyle:"hsla(180, 50%, 70%, 1.0)",
-            fillStyle:  "hsla(180, 50%, 50%, 0.5)",
-            lineWidth: 1,
-        };
-        tm.display.Shape(64, 64).addChildTo(this).renderRectangle(colorparam);
-
-        this.tweener
-            .moveBy(0, GS_H*0.5, 3000, "easeOutQuart")
-            .call(function(){this.phase++}.bind(this))
-            .wait(1000)
-            .moveBy(GS_W*0.3, 0, 3000, "easeInOutCubic")
-            .call(function(){
-                this.tweener.clear()
-                .moveBy(-GS_W*0.6, 0, 6000, "easeInOutCubic")
-                .moveBy( GS_W*0.6, 0, 6000, "easeInOutCubic").setLoop(true);
-            }.bind(this));
-
-        //子機の投入（右上から時計回り）
-        var sc = this.parentScene;
-        sc.enterEnemy("yojouhan-b", this.x+64, this.y-32, {num:1, rotation:  0}).setParentEnemy(this);
-        sc.enterEnemy("yojouhan-b", this.x+32, this.y+64, {num:2, rotation: 90}).setParentEnemy(this);
-        sc.enterEnemy("yojouhan-b", this.x-64, this.y+32, {num:3, rotation:180}).setParentEnemy(this);
-        sc.enterEnemy("yojouhan-b", this.x-32, this.y-64, {num:4, rotation:270}).setParentEnemy(this);
-    },
-
-    algorithm: function() {
-        if (this.phase > 0) this.rotation += 5;
-    },
-};
-
-//ステージ１ボス（四畳半）子機
-pb3.enemyData['yojouhan-b'] = {
-    bulletPattern: "yojouhan-b-1",  //使用弾幕パターン
-
-    //当り判定サイズ
-    width:  64,
-    height: 64,
-
-    //耐久力
-    def: 1000,
-
-    //得点
-    point: 10000,
-
-    //表示レイヤー番号
-    layer: LAYER_OBJECT,
-
-    //敵タイプ
-    type: ENEMY_MIDDLE,
-
-    setup: function(param) {
-        this.phase = 0;
-        this.originY = 0.25;
-        this.num = param.num;
-
-        this.rotation = param.rotation;
-
-        var colorparam = {
-            strokeStyle:"hsla(180, 50%, 70%, 1.0)",
-            fillStyle:  "hsla(180, 50%, 50%, 0.5)",
-            lineWidth: 1,
-        };
-        tm.display.Shape(64, 128).addChildTo(this).renderRectangle(colorparam);
-
-        var x = 0, y = 0;
-        if (param.num == 1) {x = GS_W*0.4; y = GS_H*0.2}
-        if (param.num == 2) {x = GS_W*0.6; y = GS_H*0.2}
-        if (param.num == 3) {x = GS_W*0.3; y = GS_H*0.3}
-        if (param.num == 4) {x = GS_W*0.7; y = GS_H*0.3}
-        this.relativeX = x-GS_W*0.5;
-        this.relativeY = y-GS_W*0.3;
-        this.tweener
-            .moveBy(0, GS_H*0.5, 3000, "easeOutQuart")
-            .call(function(){this.phase++}.bind(this))
-            .wait(500)
-            .to({rotation:0, x:x, y:y},1000,"easeInOutCubic")
-            .call(function(){this.phase++}.bind(this));
-    },
-
-    algorithm: function() {
-        if (this.phase == 1) {
-            //初期位置の記録
-            this.startX = this.x;
-            this.startY = this.y;
-            this.startR = this.rotation;
-            this.phase++;
-        }
-        if (this.phase == 3) {
-            this.x = this.parentEnemy.x+this.relativeX;
-            this.y = this.parentEnemy.y+this.relativeY;
-            this.lookAt();
-        }
-
-        if (this.phase == 11) {
-            var x = rand(GS_W*0.1, GS_W*0.9);
-            var y = rand(GS_H*0.1, GS_H*0.4);
-            this.tweener.clear()
-                .to({rotation:0, x:x, y:y},1000,"easeInOutCubic")
-                .call(function(){this.phase++}.bind(this));
-            this.phase++;
-        }
-        if (this.phase > 12) this.lookAt();
-        if (this.phase == 13) {
-            this.tweener.clear()
-                .to({x:rand(GS_W*0.1, GS_W*0.9), y:rand(GS_H*0.1, GS_H*0.4)},1000,"easeInOutCubic")
-                .wait(1000)
-                .call(function(){this.phase = 3}.bind(this));
-            this.phase++;
-        }
-
-        if (this.phase == 10) {
-            this.tweener.clear()
-                .to({rotation:0, x:this.startX, y:this.startY},1000,"easeInOutCubic");
-        } 
-    },
-};
-
+}
 
 })();

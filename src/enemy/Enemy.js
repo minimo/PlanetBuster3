@@ -28,7 +28,7 @@ tm.define("pb3.Enemy", {
     bulletPattern: null,
     nowBulletPattern: null,
     id: -1,
-    param: null,
+    enterParam: null,
 
     body: null,     //機体描画用スプライト
     texName: null,  //機体描画用テクスチャ
@@ -42,14 +42,13 @@ tm.define("pb3.Enemy", {
         this.superInit();
         this.setPosition(x, y);
         this.id = id || -1;
-        this.param = param;
+        this.enterParam = param; //EnemyUnitからの投入時パラメータ
 
         this.name = name;
         var d = this.data = pb3.enemyData[name];
         if (!d) return false;
 
-        this.def = d.def;
-        this.defMax = d.def;
+        this.def = this.defMax = d.def;
 
         this.width = d.width || 32;
         this.height = d.height || 32;
@@ -58,15 +57,34 @@ tm.define("pb3.Enemy", {
 
         this.setup = d.setup || this.setup;
         this.algorithm = d.algorithm || this.algorithm;
-        this.dead = d.dead || this.dead;
+        this.dead = d.dead || this.defaultDead;
 
         //機体用スプライト
         if (d.texName) {
             this.texName = d.texName;
             this.body = tm.display.Sprite(d.texName, d.texWidth, d.texHeight).addChildTo(this);
             this.body.setFrameIndex(d.texIndex);
+        } else {
+            //当り判定ダミー表示
+            var that = this;
+            this.texName = null;
+            this.body = tm.display.Shape(this.width, this.height).addChildTo(this);
+            this.body.renderRectangle({fillStyle: "rgba(255,255,0,1.0)", strokeStyle: "rgba(255,255,0,1.0)"});
+            this.body.update = function() {this.rotation = -that.rotation;};
         }
 
+        if (DEBUG) {
+            //耐久力表示
+            var df = this.defDisp = tm.display.OutlineLabel("[0/0]", 20).addChildTo(this);
+            df.setParam({fontFamily:"'UbuntuMono'", align: "center", baseline:"middle", fontWeight:300, outlineWidth:2 });
+            var that = this;
+            df.update = function() {
+                this.rotation = -that.rotation;
+                this.text = "["+that.def+"/"+that.defMax+"]";
+            }
+        }
+
+        //弾幕定義        
         this.bulletPattern = d.bulletPattern;
         if (this.bulletPattern instanceof Array) {
             this.nowBulletPattern = this.bulletPattern[0];
@@ -77,6 +95,7 @@ tm.define("pb3.Enemy", {
         this.parentScene = app.currentScene;
         this.setup(param);
 
+        //bulletML起動
         var bulletMLparams = {
             rank: this.parentScene.rank,
             target: app.player,
@@ -96,13 +115,7 @@ tm.define("pb3.Enemy", {
         this.time = 0;
     },
 
-    setup: function(name) {
-        var param = {
-            strokeStyle:"hsla(0, 100%, 100%, 1.0)",
-            fillStyle:  "hsla(0, 100%, 100%, 1.0)",
-            lineWidth: 2,
-        };
-        var sh = tm.display.Shape(this.width, this.height).addChildTo(this).renderRectangle(param);
+    setup: function(enterParam) {
     },
 
     update: function() {
@@ -157,33 +170,48 @@ tm.define("pb3.Enemy", {
             //スコア加算
             app.score += this.data.point;
 
+/*
             //得点表示
-            var sc = tm.display.OutlineLabel(this.data.point, 30).addChildTo(this.parentScene).setPosition(this.x, this.y);
-            sc.fontFamily = "'UbuntuMono'"; sc.align = "center"; sc.baseline  = "middle"; sc.fontWeight = 300; sc.outlineWidth = 2;
+            var sc = tm.display.OutlineLabel(this.data.point, 30);
+            sc.layer = LAYER_FOREGROUND;
+            sc.addChildTo(this.parentScene).setPosition(this.x, this.y);
+            sc.setParam({fontFamily:"'UbuntuMono'", align: "center", baseline:"middle", fontWeight:300, outlineWidth:2 });
             sc.tweener.to({x: this.x, y: this.y-50, alpha:0}, 1000).call(function(){this.remove()}.bind(sc));
+ */
+            return true;
+        }
+        return false;
+    },
+
+    //瀕死状態
+    nearDeath: function() {
+        if (this.time % 30 == 0) {
+            this.body._sprite.toRed();
+        } else if (this.time % 30 == 5) {
+            this.body._sprite.toNormal();
         }
     },
 
     //通常破壊パターン
-    dead: function() {
+    defaultDead: function() {
         this.isCollision = false;
         this.isDead = true;
         this.tweener.clear();
         this.stopDanmaku();
 
-        var area = this.width*this.height;
         var vx = this.x-this.beforeX;
         var vy = this.y-this.beforeY;
-        if (area < 1025) {
-            pb3.Effect.enterExplodeSmall(this.parentScene, this.x, this.y, vx, vy);
+        if (this.data.explodeType == EXPLODE_SMALL) {
+            pb3.Effect.enterExplode(this.parentScene, this.x, this.y, vx, vy);
             app.playSE("explodeSmall");
-        } else {
-            var num = rand(20, 30);
+        }
+        if (this.data.explodeType >= EXPLODE_MIDDLE) {
+            var num = rand(20, 30)*this.data.explodeType;
             for (var i = 0; i < num; i++) {
                 var x = this.x+rand(-this.width, this.width);
                 var y = this.y+rand(-this.height, this.height);
                 var delay = rand(0, 30);
-                pb3.Effect.enterExplodeSmall(this.parentScene, x, y, vx, vy, delay);
+                pb3.Effect.enterExplode(this.parentScene, x, y, vx, vy, delay);
             }
             app.playSE("explodeLarge");
         }

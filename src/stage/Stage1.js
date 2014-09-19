@@ -13,40 +13,42 @@ tm.define("pb3.Stage1", {
     init: function(parent, player) {
         this.superInit(parent, player);
 
+        //初期化処理
         this.add(1, function() {
-            this.ground.tweener.clear().to({speed:1.5}, 3000, "easeInOutQuad");
+            this.ground.tweener.clear().to({scaleX:0.5, scaleY:0.5, speed:1.5}, 1, "easeInOutQuad");
+            app.playBGM("stage1", true);
         });
 
-        this.add( 120, "BigWing-left");
-        this.add( 120, "BigWing-right");
+        this.add( 120, "ToyBox-p-center");
+        this.add( 120, "ToyBox-b-right");
 
         //Stage data
-        this.add( 180, "SkyFish1-left");
-        this.add(   1, "SkyFish1-right");
-        this.add( 180, "SkyFish1-center");
-
-        this.add( 120, "SkyFish1-left");
-        this.add(   1, "SkyFish1-right");
-        this.add( 180, "SkyFish1-center");
+        this.add( 180, "Hornet1-left");
+        this.add(   1, "Hornet1-right");
+        this.add( 180, "Hornet1-center");
 
         this.add(1, function() {
-            this.ground.tweener.clear().to({scaleX:0.7, scaleY:0.7, speed: 0.5}, 3000, "easeInOutCubic");
+            this.ground.tweener.clear().to({scaleX:1.0, scaleY:1.0}, 5000, "easeInOutCubic");
         });
 
-        this.add( 180, "SkyFish1-left");
-        this.add(  20, "SkyFish1-right");
-        this.add( 120, "SkyFish1-center");
+        this.add( 120, "Hornet1-left");
+        this.add(   1, "Hornet1-right");
+        this.add( 180, "Hornet1-center");
 
-        this.add( 180, "SkyFish2-left");
-        this.add( 120, "SkyFish2-right");
-        this.add( 120, "SkyFish2-center");
+        this.add( 180, "Hornet1-left");
+        this.add(  20, "Hornet1-right");
+        this.add( 120, "Hornet1-center");
+
+        this.add( 180, "Hornet2-left");
+        this.add( 120, "Hornet2-right");
+        this.add( 120, "Hornet2-center");
 
         this.add( 240, "BigWing-left");
         this.add( 240, "BigWing-right");
 
-        this.add( 180, "SkyFish2-left");
-        this.add(  20, "SkyFish2-right");
-        this.add( 120, "SkyFish2-center");
+        this.add( 180, "Hornet2-left");
+        this.add(  20, "Hornet2-right");
+        this.add( 120, "Hornet2-center");
     },
 });
 
