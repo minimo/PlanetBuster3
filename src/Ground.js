@@ -16,16 +16,9 @@ tm.define("pb3.Ground", {
     direction: 0,
     speed: 1,
 
-    init: function(name) {
+    init: function() {
         this.superInit();
-        this.position.x = GS_W/2;
-        this.position.y = GS_H/2;
-
         this.mapBase = tm.app.Object2D().setPosition(0, 0).addChildTo(this);
-        this.map = tm.display.Sprite(name).addChildTo(this.mapBase);
-
-        this.width = this.map.width;
-        this.height = this.map.height;
     },
 
     update: function() {
