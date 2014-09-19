@@ -66,9 +66,6 @@ tm.define("pb3.MainScene", {
             this.layers[i] = tm.app.Object2D().addChildTo(this.base);
         }
 
-        //マップ（テスト用）
-        this.ground = pb3.Ground("map1g").setPosition(0, -700).addChildTo(this);
-
         //プレイヤー
         this.player = pb3.Player().addChildTo(this);
         this.player.stageStartup();
@@ -240,6 +237,8 @@ tm.define("pb3.MainScene", {
         switch (this.nowStage) {
             case 1:
                 this.stage = pb3.Stage1(this, app.player);
+                if (this.ground) this.ground.remove();
+                this.ground = pb3.Ground("map1g").setPosition(0, -700).addChildTo(this);
                 break;
             case 2:
                 this.stage = pb3.Stage1(this, app.player);

@@ -25,6 +25,7 @@ pb3.assets = {
     "explode2": "assets/images/explode2.png", //16x16(small&large)
     "explode3": "assets/images/explode3.png", //48x48
     "explode4": "assets/images/explode4.png", //32x48
+    "explode5": "assets/images/explode5.png", //48x48
     "chip1":    "assets/images/chip1.png",
     "chip2":    "assets/images/chip2.png",
 

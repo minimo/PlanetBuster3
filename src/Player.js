@@ -154,7 +154,7 @@ tm.define("pb3.Player", {
     damage: function() {
         if (this.timeMuteki>0 || MUTEKI) return;
 
-        pb3.burnParticlePlayer(this.x, this.y).addChildTo(this.parentScene);
+        pb3.Effect.ExplodePlayer().setPosition(this.x, this.y).addChildTo(this.parentScene);
         app.playSE("explodePlayer");
 
         this.parentScene.stageMiss++;

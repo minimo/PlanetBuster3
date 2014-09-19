@@ -20,6 +20,7 @@ tm.define("pb3.Enemy", {
     isBoss: false,      //ボス
     isOnScreen: false,  //画面内に入った
     isGround: false,    //地上フラグ
+    isEnemy: true,      //敵機判別
 
     //キャラクタ情報
     name: null,

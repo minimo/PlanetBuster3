@@ -43,29 +43,4 @@ pb3.Effect.enterExplodeLarge = function(parentScene, x, y, vx, vy, delay) {
     }
 }
 
-//自機爆発パーティクル
-pb3.burnParticlePlayer = function(x, y) {
-    color = 200;
-
-    var num = 60;
-    var life = 2000;
-    var base = tm.app.Object2D().setPosition(x, y);
-    base.layer = LAYER_EFFECT_UPPER;
-    for (var i = 0; i < num; i++ ) {
-        var p = pb3.Effect.Particle(96, 1, 0.96, color).addChildTo(base);
-        var r = rand(0, 618) / 100;
-        var d = rand(80, 120);
-        var x = Math.cos(r)*d;
-        var y = Math.sin(r)*d;
-        var w = rand(0, 300);
-        p.tweener.moveBy(x+rand(-20,20), y+rand(-20,20), life, "easeOutCubic");
-    }
-    base.tweener.clear().wait(life).call(function(){this.removeChild();this.remove()}.bind(base));
-    return base;
-}
-
-//衝撃波
-pb3.ShockWave = function(size, x, y) {
-}
-
 })();

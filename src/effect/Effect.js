@@ -174,6 +174,16 @@ tm.define("pb3.Effect.Chip", {
     },
 });
 
+//爆発エフェクト（プレイヤー）
+tm.define("pb3.Effect.ExplodePlayer", {
+    superClass: "pb3.Effect.EffectBase",
+    layer: LAYER_EFFECT_UPPER,
+
+    init: function(delay) {
+        this.superInit("explode5", 48, 48, 4, 0, 7, delay);
+    },
+});
+
 //汎用パーティクル
 tm.define("pb3.Effect.Particle", {
     superClass: "tm.display.Shape",

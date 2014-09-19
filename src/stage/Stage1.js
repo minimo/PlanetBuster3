@@ -15,7 +15,7 @@ tm.define("pb3.Stage1", {
 
         //初期化処理
         this.add(1, function() {
-            this.ground.tweener.clear().to({scaleX:0.5, scaleY:0.5, speed:1.5}, 1, "easeInOutQuad");
+            this.ground.tweener.clear().to({scaleX:0.5, scaleY:0.5, speed:1.0}, 1, "easeInOutQuad");
             app.playBGM("stage1", true);
         });
 
@@ -28,7 +28,7 @@ tm.define("pb3.Stage1", {
         this.add( 180, "Hornet1-center");
 
         this.add(1, function() {
-            this.ground.tweener.clear().to({scaleX:1.0, scaleY:1.0}, 5000, "easeInOutCubic");
+            this.ground.tweener.clear().to({scaleX:1.0, scaleY:1.5}, 5000, "easeInOutCubic");
         });
 
         this.add( 120, "Hornet1-left");

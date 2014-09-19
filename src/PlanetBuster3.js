@@ -24,14 +24,22 @@ pb3.PlanetBuster3 = tm.createClass({
     extendNumber: 0,
     extendScore: null,
 
+    //演奏中ＢＧＭ
     bgm: null,
+
+    //ＢＧＭ演奏フラグ
     bgmIsPlay: false,
+
+    //ＢＧＭ音量
     volumeBGM: 1.0,
+
+    //ＳＥ音量
     volumeSE: 1.0,
 
     init: function(id) {
         this.superInit(id);
 
+        //エクステンドスコア配列
         this.extendScore = [];
         this.extendScore.push(100000);
         this.extendScore.push(200000);
@@ -41,9 +49,9 @@ pb3.PlanetBuster3 = tm.createClass({
         this.resize(SC_W, SC_H).fitWindow();
         this.fps = 60;
         this.background = "rgba(0, 0, 0, 1.0)";
-
         this.keyboard = tm.input.Keyboard(window);
 
+        //アセット読み込みシーン
         var loadingScene = tm.ui.LoadingScene({
             assets: pb3.assets,
             width: SC_W,
@@ -135,11 +143,11 @@ pb3.PlanetBuster3 = tm.createClass({
         }
     },
 
-    playSE: function(asset) {
+    playSE: function(asset, volume) {
         var se = tm.asset.AssetManager.get(asset).clone();
         if (se) {
             se.loop = false;
-            se.volume = this.volumeSE*0.34;
+            se.volume = volume || this.volumeSE*0.34;
             se.play();
         }
         return se;
