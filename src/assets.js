@@ -32,6 +32,7 @@ pb3.assets = {
     //マップ
     "map1":    "assets/images/map1.tmx",
     "map1g":   "assets/images/map1.png",
+    "cloud":   "assets/images/cloud.png",
 
     //SE
     "powerup": "assets/sounds/ta_ta_suraido01.mp3",
