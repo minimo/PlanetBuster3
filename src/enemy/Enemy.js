@@ -63,8 +63,7 @@ tm.define("pb3.Enemy", {
         this.setup = d.setup || this.setup;
         this.algorithm = d.algorithm || this.algorithm;
         this.dead = d.dead || this.defaultDead;
-        this.toRed = d.toRed || this.toRed;
-        this.toNormal = d.toNormal || this.toNormal;
+        this.changeColor = d.changeColor || this.changeColor;
 
         //機体用スプライト
         if (d.texName) {
@@ -154,7 +153,7 @@ tm.define("pb3.Enemy", {
         if (this.parentEnemy && this.parentEnemy.isDead) this.dead();
 
         //瀕死
-        if (this.defMax < this.def) this.nearDeath();
+        if (this.defMax*0.5 < this.def) this.nearDeath();
 
         this.beforeX = this.x;
         this.beforeY = this.y;
@@ -197,8 +196,8 @@ tm.define("pb3.Enemy", {
         }
 
         //被ダメージ演出
-        this.toRed();
-        this.body.tweener.clear().wait(1).call(function(){this.toNormal()}.bind(this));
+        this.changeColor("White");
+        this.body.tweener.clear().wait(1).call(function(){this.changeColor()}.bind(this));
 
         return false;
     },
@@ -206,27 +205,25 @@ tm.define("pb3.Enemy", {
     //瀕死状態
     nearDeath: function() {
         if (this.time % 30 == 0) {
-            this.toRed();
+            this.changeColor("Red");
             var x = this.x+rand(-this.width, this.width);
             var y = this.y+rand(-this.height, this.height);
             var delay = rand(0, 30);
             pb3.Effect.enterExplodeSmall(this.parentScene, x, y, vx, vy, delay);
         } else if (this.time % 30 == 5) {
-            this.toNormal();
+            this.changeColor();
         }
     },
 
-    //色を赤くする
-    toRed: function() {
+    //色を赤or白くする
+    changeColor: function(color) {
         if (!this.texName) return;
-        this.body.setImage(this.texName+"Red", this.texWidth, this.texHeight);
-        this.body.setFrameIndex(this.texIndex);
-    },
-
-    //色を元に戻す
-    toNormal: function() {
-        if (!this.texName) return;
-        this.body.setImage(this.texName, this.texWidth, this.texHeight);
+        if (color === undefined) {
+            color = "";
+        } else {
+            if (color != "Red" && color != "White") color = "Red";
+        }
+        this.body.setImage(this.texName+color, this.texWidth, this.texHeight);
         this.body.setFrameIndex(this.texIndex);
     },
 

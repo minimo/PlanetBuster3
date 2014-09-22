@@ -73,7 +73,7 @@ pb3.PlanetBuster3 = tm.createClass({
         [
             "tex1",
         ].forEach(function(name) {
-            //被ダメージ用の赤ビットマップ作成
+            //赤ビットマップ作成
             var tex = tm.asset.AssetManager.get(name);
             var canvas = tm.graphics.Canvas();
             canvas.resize(tex.width, tex.height);
@@ -89,6 +89,26 @@ pb3.PlanetBuster3 = tm.createClass({
             cvRed.resize(tex.width, tex.height);
             cvRed.drawBitmap(bmRed, 0, 0);
             tm.asset.AssetManager.set(name + "Red", cvRed);
+
+            //白ビットマップ作成
+            var tex = tm.asset.AssetManager.get(name);
+            var canvas = tm.graphics.Canvas();
+            canvas.resize(tex.width, tex.height);
+            canvas.drawTexture(tex, 0, 0);
+
+            var bmRed = canvas.getBitmap();
+            bmRed.filter({
+                calc: function(pixel, index, x, y, bitmap) {
+                    var r = (pixel[0]==0?0:255);
+                    var g = (pixel[1]==0?0:255);
+                    var b = (pixel[2]==0?0:255);
+                    bitmap.setPixelIndex(index, r, g, b);
+                }
+            });
+            var cvRed = tm.graphics.Canvas();
+            cvRed.resize(tex.width, tex.height);
+            cvRed.drawBitmap(bmRed, 0, 0);
+            tm.asset.AssetManager.set(name + "White", cvRed);
         });
     },
 
