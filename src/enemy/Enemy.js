@@ -181,16 +181,33 @@ tm.define("pb3.Enemy", {
  */
             return true;
         }
+
+        //被ダメージ演出
+        this.toRed();
+        this.body.tweener.clear().wait(1).call(function(){this.toNormal()}.bind(this));
+
         return false;
     },
 
     //瀕死状態
     nearDeath: function() {
         if (this.time % 30 == 0) {
-            this.body._sprite.toRed();
+            this.toRed();
         } else if (this.time % 30 == 5) {
-            this.body._sprite.toNormal();
+            this.toNormal();
         }
+    },
+
+    //色を赤くする
+    toRed: function() {
+        this.body.setImage(this.data.texName+"Red", this.data.texWidth, this.data.texHeight);
+        this.body.setFrameIndex(this.data.texIndex);
+    },
+
+    //色を元に戻す
+    toNormal: function() {
+        this.body.setImage(this.data.texName, this.data.texWidth, this.data.texHeight);
+        this.body.setFrameIndex(this.data.texIndex);
     },
 
     //通常破壊パターン
