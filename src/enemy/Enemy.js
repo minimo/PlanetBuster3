@@ -207,7 +207,7 @@ tm.define("pb3.Enemy", {
         if (this.time % 30 == 0) {
             this.changeColor("Red");
             var w = this.width/2;
-            var h = this.width/2;
+            var h = this.height/2;
             var x = this.x+rand(-w, w);
             var y = this.y+rand(-h, h);
             var vx = this.x-this.beforeX;
