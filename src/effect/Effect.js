@@ -158,6 +158,7 @@ tm.define("pb3.Effect.ExplodeGround", {
 });
 
 //破片
+//num:0=小  1-3=中
 tm.define("pb3.Effect.Chip", {
     superClass: "pb3.Effect.EffectBase",
     layer: LAYER_EFFECT_UPPER,

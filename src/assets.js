@@ -9,10 +9,10 @@
 //アセット一覧
 pb3.assets = {
     //images
-    "bit":     "assets/images/bit1.png",
-    "gunship": "assets/images/gunship1.png",
-    "shot1":   "assets/images/shot1.png",
-    "shot2":   "assets/images/shot2.png",
+    "bit":        "assets/images/bit1.png",
+    "gunship":    "assets/images/gunship1.png",
+    "shot1":      "assets/images/shot1.png",
+    "shot2":      "assets/images/shot2.png",
     "shotimpact": "assets/images/shotimpact.png",
 
     "item":     "assets/images/item.png",

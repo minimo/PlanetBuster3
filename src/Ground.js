@@ -7,7 +7,7 @@
 (function() {
 
 tm.define("pb3.Ground", {
-    superClass: "tm.app.Object2D",
+    superClass: "tm.display.CanvasElement",
     layer: LAYER_BACKGROUND,    //所属レイヤー
     parentScene: null,      //親シーン
 
