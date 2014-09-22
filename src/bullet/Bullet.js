@@ -100,6 +100,7 @@ tm.define("pb3.Bullet", {
         //リムーブ時
         this.on("removed", function(){
             if (this.isVanishEffect) pb3.Effect.BulletVanish(this).addChildTo(app.currentScene);
+            this.removeChildren();
         }.bind(this));
 
         this.beforeX = this.x;
@@ -174,6 +175,7 @@ tm.define("pb3.ShotBullet", {
 
     vanish: function() {
         pb3.Effect.EffectBase("shotimpact", 16, 16, 2, 0, 7).addChildTo(this.parentScene).setPosition(this.x, this.y);
+        this.removeChildren();
     },
 });
 

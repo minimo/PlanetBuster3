@@ -81,7 +81,10 @@ tm.define("pb3.Effect.EffectBase", {
 
         this.addVelocity();
         this.time++;
-        if (this.isRemove) this.remove();
+        if (this.isRemove) {
+            this.removeChildren();
+            this.remove();
+        }
     },
 
     //現在の座標に加速度を加算

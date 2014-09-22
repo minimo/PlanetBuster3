@@ -9,6 +9,8 @@
 
 //爆発エフェクト投入（標準）
 pb3.Effect.enterExplode = function(parentScene, x, y, vx, vy, delay) {
+    vx = vx || 0;
+    vy = vy || 0;
     delay = delay || 0;
     pb3.Effect.Explode(delay).addChildTo(parentScene).setPosition(x, y).setVelocity(vx, vy, 0);
 
@@ -27,6 +29,8 @@ pb3.Effect.enterExplode = function(parentScene, x, y, vx, vy, delay) {
 
 //爆発エフェクト投入（小）
 pb3.Effect.enterExplodeSmall = function(parentScene, x, y, vx, vy, delay) {
+    vx = vx || 0;
+    vy = vy || 0;
     delay = delay || 0;
     pb3.Effect.Explode(delay).addChildTo(parentScene).setPosition(x, y).setVelocity(vx, vy, 0);
 
@@ -45,6 +49,8 @@ pb3.Effect.enterExplodeSmall = function(parentScene, x, y, vx, vy, delay) {
 
 //爆発エフェクト投入（大）
 pb3.Effect.enterExplodeLarge = function(parentScene, x, y, vx, vy, delay) {
+    vx = vx || 0;
+    vy = vy || 0;
     delay = delay || 0;
     pb3.Effect.ExplodeLarge(delay).addChildTo(parentScene).setPosition(x, y).setVelocity(vx, vy, 0);
 

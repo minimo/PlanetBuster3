@@ -153,7 +153,7 @@ tm.define("pb3.Enemy", {
         if (this.parentEnemy && this.parentEnemy.isDead) this.dead();
 
         //瀕死
-        if (this.defMax*0.5 < this.def) this.nearDeath();
+        if (this.def < this.defMax*0.2) this.nearDeath();
 
         this.beforeX = this.x;
         this.beforeY = this.y;
@@ -206,10 +206,13 @@ tm.define("pb3.Enemy", {
     nearDeath: function() {
         if (this.time % 30 == 0) {
             this.changeColor("Red");
-            var x = this.x+rand(-this.width, this.width);
-            var y = this.y+rand(-this.height, this.height);
-            var delay = rand(0, 30);
-            pb3.Effect.enterExplodeSmall(this.parentScene, x, y, vx, vy, delay);
+            var w = this.width/2;
+            var h = this.width/2;
+            var x = this.x+rand(-w, w);
+            var y = this.y+rand(-h, h);
+            var vx = this.x-this.beforeX;
+            var vy = this.y-this.beforeY;
+            pb3.Effect.enterExplode(this.parentScene, x, y, vx, vy);
         } else if (this.time % 30 == 5) {
             this.changeColor();
         }
@@ -272,6 +275,8 @@ tm.define("pb3.Enemy", {
             if (this.alpha < 0.02) this.remove();
         }.bind(this));
 
+        var vx = this.x-this.beforeX;
+        var vy = this.y-this.beforeY;
         for (var i = 0; i < 10; i++) {
             var x = rand(0, this.width)-this.width/2;
             var y = rand(0, this.height)-this.height/2;
