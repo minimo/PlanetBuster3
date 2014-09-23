@@ -24,18 +24,17 @@ tm.define("pb3.Stage1", {
             this.ground.map.tweener.clear().to({alpha:1}, 2000, "easeInOutQuad");
         });
 
-        this.add( 120, "ToyBox-p-center");
-        this.add( 120, "ToyBox-b-right");
-
         //Stage data
         this.add( 180, "Hornet1-left");
-        this.add(   1, "Hornet1-right");
-        this.add( 180, "Hornet1-center");
-
+        this.add(  60, "Hornet1-right");
+        this.add(  60, "Hornet1-center");
 
         this.add( 120, "Hornet1-left");
         this.add(   1, "Hornet1-right");
         this.add( 180, "Hornet1-center");
+
+        this.add( 120, "BigWing-left");
+        this.add( 120, "BigWing-right");
 
         this.add( 180, "Hornet1-left");
         this.add(  20, "Hornet1-right");
@@ -45,12 +44,14 @@ tm.define("pb3.Stage1", {
         this.add( 120, "Hornet2-right");
         this.add( 120, "Hornet2-center");
 
-        this.add( 240, "BigWing-left");
-        this.add( 240, "BigWing-right");
+        this.add( 120, "BigWing-left");
+        this.add( 120, "BigWing-right");
 
-        this.add( 180, "Hornet2-left");
+        this.add( 120, "Hornet2-left");
         this.add(  20, "Hornet2-right");
         this.add( 120, "Hornet2-center");
+
+        this.add( 120, "ToyBox-p-right");
     },
 });
 
