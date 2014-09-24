@@ -20,6 +20,7 @@ tm.define("pb3.Enemy", {
     isBoss: false,      //ボス
     isOnScreen: false,  //画面内に入った
     isGround: false,    //地上フラグ
+    isEnemy: true,      //敵機判別
 
     //キャラクタ情報
     name: null,
@@ -30,8 +31,12 @@ tm.define("pb3.Enemy", {
     id: -1,
     enterParam: null,
 
-    body: null,     //機体描画用スプライト
-    texName: null,  //機体描画用テクスチャ
+    //機体用テクスチャ情報
+    body: null,
+    texName: null,
+    texIndex: 0,
+    texWidth: 32,
+    texHeight: 32,
 
     data: null,
 
@@ -58,16 +63,22 @@ tm.define("pb3.Enemy", {
         this.setup = d.setup || this.setup;
         this.algorithm = d.algorithm || this.algorithm;
         this.dead = d.dead || this.defaultDead;
+        this.changeColor = d.changeColor || this.changeColor;
 
         //機体用スプライト
         if (d.texName) {
             this.texName = d.texName;
+            this.texIndex = d.texIndex;
+            this.texWidth = d.texWidth;
+            this.texHeight = d.texHeight;
             this.body = tm.display.Sprite(d.texName, d.texWidth, d.texHeight).addChildTo(this);
-            this.body.setFrameIndex(d.texIndex);
+            this.body.setFrameIndex(this.texIndex);
         } else {
             //当り判定ダミー表示
             var that = this;
             this.texName = null;
+            this.texWidth = this.width;
+            this.texHeight = this.height;
             this.body = tm.display.Shape(this.width, this.height).addChildTo(this);
             this.body.renderRectangle({fillStyle: "rgba(255,255,0,1.0)", strokeStyle: "rgba(255,255,0,1.0)"});
             this.body.update = function() {this.rotation = -that.rotation;};
@@ -141,6 +152,9 @@ tm.define("pb3.Enemy", {
         //親機が破壊された場合、自分も破壊
         if (this.parentEnemy && this.parentEnemy.isDead) this.dead();
 
+        //瀕死
+        if (this.def < this.defMax*0.2) this.nearDeath();
+
         this.beforeX = this.x;
         this.beforeY = this.y;
         this.time++;
@@ -180,16 +194,40 @@ tm.define("pb3.Enemy", {
  */
             return true;
         }
+
+        //被ダメージ演出
+        this.changeColor("White");
+        this.body.tweener.clear().wait(1).call(function(){this.changeColor()}.bind(this));
+
         return false;
     },
 
     //瀕死状態
     nearDeath: function() {
         if (this.time % 30 == 0) {
-            this.body._sprite.toRed();
+            this.changeColor("Red");
         } else if (this.time % 30 == 5) {
-            this.body._sprite.toNormal();
+            this.changeColor();
         }
+
+        if (this.time % 35 == 0) {
+            var w = this.width/2,         h = this.height/2;
+            var x = this.x+rand(-w, w),   y = this.y+rand(-h, h);
+            var vx = this.x-this.beforeX, vy = this.y-this.beforeY;
+            pb3.Effect.enterExplode(this.parentScene, x, y, vx, vy);
+        }
+    },
+
+    //色を赤or白くする
+    changeColor: function(color) {
+        if (!this.texName) return;
+        if (color === undefined) {
+            color = "";
+        } else {
+            if (color != "Red" && color != "White") color = "Red";
+        }
+        this.body.setImage(this.texName+color, this.texWidth, this.texHeight);
+        this.body.setFrameIndex(this.texIndex);
     },
 
     //通常破壊パターン
@@ -237,6 +275,8 @@ tm.define("pb3.Enemy", {
             if (this.alpha < 0.02) this.remove();
         }.bind(this));
 
+        var vx = this.x-this.beforeX;
+        var vy = this.y-this.beforeY;
         for (var i = 0; i < 10; i++) {
             var x = rand(0, this.width)-this.width/2;
             var y = rand(0, this.height)-this.height/2;

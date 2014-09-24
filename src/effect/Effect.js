@@ -81,7 +81,10 @@ tm.define("pb3.Effect.EffectBase", {
 
         this.addVelocity();
         this.time++;
-        if (this.isRemove) this.remove();
+        if (this.isRemove) {
+            this.removeChildren();
+            this.remove();
+        }
     },
 
     //現在の座標に加速度を加算
@@ -158,7 +161,8 @@ tm.define("pb3.Effect.ExplodeGround", {
 });
 
 //破片
-tm.define("pb3.Effect.Chip", {
+//num:0=小  1-3=中
+tm.define("pb3.Effect.Debri", {
     superClass: "pb3.Effect.EffectBase",
     layer: LAYER_EFFECT_UPPER,
 
@@ -166,11 +170,21 @@ tm.define("pb3.Effect.Chip", {
         num = num || 0;
         num = Math.clamp(num, 0, 3);
         if (num == 0) {
-            this.superInit("chip2", 8, 8, 2, 0, 16, delay);
+            this.superInit("debri2", 8, 8, 2, 0, 16, delay);
         } else {
             num--;
-            this.superInit("chip1", 16, 16, 4, num*8, (num+1)*8-1, delay);
+            this.superInit("debri1", 16, 16, 4, num*8, (num+1)*8-1, delay);
         }
+    },
+});
+
+//爆発エフェクト（プレイヤー）
+tm.define("pb3.Effect.ExplodePlayer", {
+    superClass: "pb3.Effect.EffectBase",
+    layer: LAYER_EFFECT_UPPER,
+
+    init: function(delay) {
+        this.superInit("explode5", 48, 48, 4, 0, 7, delay);
     },
 });
 
