@@ -162,7 +162,7 @@ tm.define("pb3.Effect.ExplodeGround", {
 
 //破片
 //num:0=小  1-3=中
-tm.define("pb3.Effect.Chip", {
+tm.define("pb3.Effect.Debri", {
     superClass: "pb3.Effect.EffectBase",
     layer: LAYER_EFFECT_UPPER,
 
@@ -170,10 +170,10 @@ tm.define("pb3.Effect.Chip", {
         num = num || 0;
         num = Math.clamp(num, 0, 3);
         if (num == 0) {
-            this.superInit("chip2", 8, 8, 2, 0, 16, delay);
+            this.superInit("debri2", 8, 8, 2, 0, 16, delay);
         } else {
             num--;
-            this.superInit("chip1", 16, 16, 4, num*8, (num+1)*8-1, delay);
+            this.superInit("debri1", 16, 16, 4, num*8, (num+1)*8-1, delay);
         }
     },
 });

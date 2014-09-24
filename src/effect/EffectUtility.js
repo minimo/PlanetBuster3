@@ -23,7 +23,7 @@ pb3.Effect.enterExplode = function(parentScene, x, y, vx, vy, delay) {
         var delay2 = delay+rand(0, 10);
         var pattern = 0;
         if (i > val-2) pattern = rand(1, 3);
-        pb3.Effect.Chip(pattern, delay2).addChildTo(parentScene).setPosition(x, y).setVelocity(vx2, vy2, 0.9);
+        pb3.Effect.Debri(pattern, delay2).addChildTo(parentScene).setPosition(x, y).setVelocity(vx2, vy2, 0.9);
     }
 }
 
@@ -43,7 +43,7 @@ pb3.Effect.enterExplodeSmall = function(parentScene, x, y, vx, vy, delay) {
         var delay2 = delay+rand(0, 10);
         var pattern = 0;
         if (i > val-2) pattern = rand(1, 3);
-        pb3.Effect.Chip(pattern, delay2).addChildTo(parentScene).setPosition(x, y).setVelocity(vx2, vy2, 0.9);
+        pb3.Effect.Debri(pattern, delay2).addChildTo(parentScene).setPosition(x, y).setVelocity(vx2, vy2, 0.9);
     }
 }
 
@@ -62,7 +62,22 @@ pb3.Effect.enterExplodeLarge = function(parentScene, x, y, vx, vy, delay) {
         var vy2 = Math.sin(rad) * v;
         var delay2 = delay+rand(0, 10);
         var pattern = rand(0, 3);
-        pb3.Effect.Chip(pattern, delay2).addChildTo(parentScene).setPosition(x, y).setVelocity(vx2, vy2, 0.9);
+        pb3.Effect.Debri(pattern, delay2).addChildTo(parentScene).setPosition(x, y).setVelocity(vx2, vy2, 0.9);
+    }
+}
+
+//破片投入
+pb3.Effect.enterDebrisSmall = function(parentScene, x, y, num, delay) {
+    num = num || 5;
+    delay = delay || 0;
+    for (var i = 0; i < num; i++) {
+        var rad = rand(0, 359) * toRad;
+        var v = rand(5, 10);
+        var vx2 = Math.cos(rad) * v;
+        var vy2 = Math.sin(rad) * v;
+        var delay2 = delay+rand(0, 10);
+        var pattern = 0;
+        pb3.Effect.Debri(pattern, delay2).addChildTo(parentScene).setPosition(x, y).setVelocity(vx2, vy2, 0.9);
     }
 }
 

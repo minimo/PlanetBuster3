@@ -26,8 +26,8 @@ pb3.assets = {
     "explode3": "assets/images/explode3.png", //48x48
     "explode4": "assets/images/explode4.png", //32x48
     "explode5": "assets/images/explode5.png", //48x48
-    "chip1":    "assets/images/chip1.png",
-    "chip2":    "assets/images/chip2.png",
+    "debri1":   "assets/images/debri1.png",
+    "debri2":   "assets/images/debri2.png",
 
     //マップ
     "map1":    "assets/images/map1.tmx",

@@ -175,6 +175,7 @@ tm.define("pb3.ShotBullet", {
 
     vanish: function() {
         pb3.Effect.EffectBase("shotimpact", 16, 16, 2, 0, 7).addChildTo(this.parentScene).setPosition(this.x, this.y);
+        pb3.Effect.enterDebrisSmall(this.parentScene, this.x, this.y, 1);
         this.removeChildren();
     },
 });
