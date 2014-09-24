@@ -99,9 +99,9 @@ pb3.PlanetBuster3 = tm.createClass({
             var bmRed = canvas.getBitmap();
             bmRed.filter({
                 calc: function(pixel, index, x, y, bitmap) {
-                    var r = (pixel[0]==0?0:255);
-                    var g = (pixel[1]==0?0:255);
-                    var b = (pixel[2]==0?0:255);
+                    var r = (pixel[0]==0?0:128);
+                    var g = (pixel[1]==0?0:128);
+                    var b = (pixel[2]==0?0:128);
                     bitmap.setPixelIndex(index, r, g, b);
                 }
             });

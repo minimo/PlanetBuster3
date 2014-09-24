@@ -206,15 +206,15 @@ tm.define("pb3.Enemy", {
     nearDeath: function() {
         if (this.time % 30 == 0) {
             this.changeColor("Red");
-            var w = this.width/2;
-            var h = this.height/2;
-            var x = this.x+rand(-w, w);
-            var y = this.y+rand(-h, h);
-            var vx = this.x-this.beforeX;
-            var vy = this.y-this.beforeY;
-            pb3.Effect.enterExplode(this.parentScene, x, y, vx, vy);
         } else if (this.time % 30 == 5) {
             this.changeColor();
+        }
+
+        if (this.time % 35 == 0) {
+            var w = this.width/2,         h = this.height/2;
+            var x = this.x+rand(-w, w),   y = this.y+rand(-h, h);
+            var vx = this.x-this.beforeX, vy = this.y-this.beforeY;
+            pb3.Effect.enterExplode(this.parentScene, x, y, vx, vy);
         }
     },
 
