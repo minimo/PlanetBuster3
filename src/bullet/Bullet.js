@@ -6,6 +6,8 @@
  */
 (function() {
 
+pb3.checkLayers = [LAYER_OBJECT_UPPER, LAYER_OBJECT, LAYER_OBJECT_LOWER];
+
 tm.define("pb3.Bullet", {
     superClass: "tm.bulletml.Bullet",
     layer: LAYER_BULLET,
@@ -32,44 +34,48 @@ tm.define("pb3.Bullet", {
 
         //弾種別グラフィック
 //        this.removeChildren();
+        var size = 20, pos = 2, gra = "NormalR-1";
         switch (param.type) {
             case "RS":
-                tm.display.Shape(20, 20).addChildTo(this).canvas = pb3.bulletGraphic["NormalR-1"];
-                tm.display.Shape(10, 10).addChildTo(this).setPosition(-2,-2).canvas = pb3.bulletGraphic["NormalR-2"];
-                tm.display.Shape(10, 10).addChildTo(this).setPosition( 2, 2).canvas = pb3.bulletGraphic["NormalR-2"];
+                size = 16; pos = 2; gra = "NormalR"
                 break;
             case "BS":
-                tm.display.Shape(20, 20).addChildTo(this).canvas = pb3.bulletGraphic["NormalB-1"];
-                tm.display.Shape(10, 10).addChildTo(this).setPosition(-2,-2).canvas = pb3.bulletGraphic["NormalB-2"];
-                tm.display.Shape(10, 10).addChildTo(this).setPosition( 2, 2).canvas = pb3.bulletGraphic["NormalB-2"];
+                size = 16; pos = 2; gra = "NormalB"
                 break;
+
+            case "RM":
+                size = 20; pos = 3; gra = "NormalR"
+                break;
+            case "BM":
+                size = 20; pos = 3; gra = "NormalB"
+                break;
+
             case "RL":
-                tm.display.Shape(32, 32).addChildTo(this).canvas = pb3.bulletGraphic["NormalR-1"];
-                tm.display.Shape(16, 16).addChildTo(this).setPosition(-3,-3).canvas = pb3.bulletGraphic["NormalR-2"];
-                tm.display.Shape(16, 16).addChildTo(this).setPosition( 3, 3).canvas = pb3.bulletGraphic["NormalR-2"];
+                size = 32; pos = 3; gra = "NormalR"
                 break;
             case "BL":
-                tm.display.Shape(32, 32).addChildTo(this).canvas = pb3.bulletGraphic["NormalB-1"];
-                tm.display.Shape(16, 16).addChildTo(this).setPosition(-3,-3).canvas = pb3.bulletGraphic["NormalB-2"];
-                tm.display.Shape(16, 16).addChildTo(this).setPosition( 3, 3).canvas = pb3.bulletGraphic["NormalB-2"];
+                size = 32; pos = 3; gra = "NormalB"
                 break;
+
             case "RE":
-                tm.display.Shape(32, 32).addChildTo(this).canvas = pb3.bulletGraphic["NormalR-1"];
-                tm.display.Shape(16, 16).addChildTo(this).setPosition(-3,-3).canvas = pb3.bulletGraphic["NormalR-2"];
-                tm.display.Shape(16, 16).addChildTo(this).setPosition( 3, 3).canvas = pb3.bulletGraphic["NormalR-2"];
+                size = 32; pos = 3; gra = "NormalR"
                 this.scaleY = 0.8;
                 break;
             case "BE":
-                tm.display.Shape(32, 32).addChildTo(this).canvas = pb3.bulletGraphic["NormalB-1"];
-                tm.display.Shape(16, 16).addChildTo(this).setPosition(-3,-3).canvas = pb3.bulletGraphic["NormalB-2"];
-                tm.display.Shape(16, 16).addChildTo(this).setPosition( 3, 3).canvas = pb3.bulletGraphic["NormalB-2"];
+                size = 32; pos = 3; gra = "NormalB"
                 this.scaleY = 0.8;
                 break;
+
             default:
-                this.body = tm.display.Shape(32, 32).addChildTo(this);
-                this.body.canvas = pb3.bulletGraphic["NormalR-1"];
+                size = 6; pos = 1; gra = "NormalR"
+//                this.body = tm.display.Shape(32, 32).addChildTo(this);
+//                this.body.canvas = pb3.bulletGraphic["NormalR-1"];
                 break;
         }
+        var size_h = size/2;
+        tm.display.Shape(size,  size  ).addChildTo(this).canvas = pb3.bulletGraphic[gra+"-1"];
+        tm.display.Shape(size_h,size_h).addChildTo(this).setPosition(-pos,-pos).canvas = pb3.bulletGraphic[gra+"-2"];
+        tm.display.Shape(size_h,size_h).addChildTo(this).setPosition( pos, pos).canvas = pb3.bulletGraphic[gra+"-2"];
 
         this.on("enterframe", function(){
             this.rotation += this.speedRoll;
@@ -83,7 +89,7 @@ tm.define("pb3.Bullet", {
             }
 
             //画面範囲外
-            if (this.x<-32 || this.x>SC_W+32 || this.y<-32 || this.y>SC_H+323) {
+            if (this.x<-32 || this.x>GS_W+32 || this.y<-32 || this.y>GS_H+32) {
                 this.isVanish = true;
                 this.isVanishEffect = false;
             }
@@ -94,6 +100,7 @@ tm.define("pb3.Bullet", {
         //リムーブ時
         this.on("removed", function(){
             if (this.isVanishEffect) pb3.Effect.BulletVanish(this).addChildTo(app.currentScene);
+            this.removeChildren();
         }.bind(this));
 
         this.beforeX = this.x;
@@ -115,10 +122,10 @@ tm.define("pb3.ShotBullet", {
     init: function(rotation, power, type) {
         if (type == 0) {
             this.superInit("shot1", 16, 16);
-            this.setScale(3);
+            this.setScale(2);
         } else {
             this.superInit("shot2", 16, 32);
-            this.setScale(2);
+            this.scaleX = 1.5;
         }
 
         this.rotation = rotation || 0;
@@ -147,14 +154,13 @@ tm.define("pb3.ShotBullet", {
         this.x += this.vx;
         this.y += this.vy;
 
-        if (this.x<-20 || this.x>SC_W+20 || this.y<-20 || this.y>SC_H+20) {
+        if (this.x<-20 || this.x>GS_W+20 || this.y<-20 || this.y>GS_H+20) {
             this.remove();
         }
 
         //敵との当り判定チェック
-        var s = [LAYER_OBJECT_UPPER, LAYER_OBJECT, LAYER_OBJECT_LOWER];
         for (var i = 0; i < 3; i++) {
-            var layer = this.parentScene.layers[s[i]];
+            var layer = this.parentScene.layers[pb3.checkLayers[i]];
             layer.children.each(function(a) {
                 if (a === app.player) return;
                 if (this.parent && a.isCollision && a.isHitElement(this)) {
@@ -168,12 +174,9 @@ tm.define("pb3.ShotBullet", {
     },
 
     vanish: function() {
-        for (var i = 0; i < 5; i++) {
-            var p = pb3.Effect.Particle(32, 1, 0.95).addChildTo(this.parentScene).setPosition(this.x, this.y);
-            var x = rand(0, 30)-15;
-            var y = rand(0, 50)*-1;
-            p.tweener.moveBy(x, y, 1000, "easeOutCubic");
-        }
+        pb3.Effect.EffectBase("shotimpact", 16, 16, 2, 0, 7).addChildTo(this.parentScene).setPosition(this.x, this.y);
+        pb3.Effect.enterDebrisSmall(this.parentScene, this.x, this.y, 1);
+        this.removeChildren();
     },
 });
 

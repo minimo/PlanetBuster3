@@ -13,8 +13,8 @@ var fontLoadEnd = false;
 
 //定数
 //デバッグ
-var DEBUG = false;
-var MUTEKI = false;
+DEBUG = true;
+MUTEKI = false;
 
 //スクリーンサイズ
 SC_W = 480;
@@ -23,8 +23,7 @@ SC_H = 480;
 //ゲームスクリーンサイズ
 GS_W = 320;
 GS_H = 480;
-GS_OFFSET_X = 0;
-GS_OFFSET_Y = 0;
+GS_OFFSET = 80;
 
 //難易度
 DIFF_EASY   = 0;
@@ -33,7 +32,7 @@ DIFF_HARD   = 2;
 DIFF_HELL   = 3;
 
 //レイヤー区分
-LAYER_SYSTEM = 10;           //システム表示
+LAYER_SYSTEM = 10;          //システム表示
 LAYER_FOREGROUND = 9;       //フォアグラウンド
 LAYER_EFFECT_UPPER = 8;     //エフェクト上位
 LAYER_PLAYER = 8;           //プレイヤー
@@ -46,12 +45,17 @@ LAYER_EFFECT_LOWER = 1;     //エフェクト下位
 LAYER_BACKGROUND = 0;       //バックグラウンド
 
 //敵タイプ定数
-ENEMY_ITEM = 0;
 ENEMY_SMALL = 0;
 ENEMY_MIDDLE = 1;
 ENEMY_LARGE = 2;
 ENEMY_MBOSS = 3;
 ENEMY_BOSS = 4;
+ENEMY_ITEM = 9;
+
+//爆発タイプ定数
+EXPLODE_SMALL = 0;
+EXPLODE_MIDDLE = 1;
+EXPLODE_LARGE = 2;
 
 var toRad = 3.14159/180;    //弧度法toラジアン変換
 var toDeg = 180/3.14159;    //ラジアンto弧度法変換
@@ -76,7 +80,7 @@ app = {};
 
 //アプリケーションメイン
 tm.main(function() {
-    app = pb3.TouchShooter("#world");
+    app = pb3.PlanetBuster3("#world");
 //    app.enableStats();
     detectFontLoading("Orbitron");
     app.run();

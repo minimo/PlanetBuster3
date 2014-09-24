@@ -35,13 +35,18 @@ tm.define("pb3.MainScene", {
     boss: false,    //ボス戦中フラグ
     stageClear: false,  //ステージクリアフラグ
     stageMiss: 0,   //ステージ内ミス回数
+    rank: 0,        //ゲームランク
 
     //敵投入数と撃破数
     enemyCount: 0,
     enemyKill: 0,
 
+    //バックグラウンド
+    ground: null,
+
     //プレイヤー情報
-    life: 2,
+    life: 2,    //初期残機
+    bomb: 2,    //初期ボム
 
     init: function() {
         this.superInit();
@@ -50,13 +55,12 @@ tm.define("pb3.MainScene", {
         //マルチタッチ初期化
         this.touches = tm.input.TouchesEx(this);
 
+        //最下位マスク
         this.mask = tm.display.Shape(SC_W, SC_H).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
         this.mask.renderRectangle({fillStyle: "rgba(0,0,0,1.0)", strokeStyle: "rgba(0,0,0,1.0)"});
-//        this.map = tm.display.MapSprite("map1").addChildTo(this);
-        this.map = tm.display.Sprite("map1g").addChildTo(this).setPosition(0, -1000).setScale(1);
 
         //レイヤー作成
-        this.base = tm.app.Object2D().addChildTo(this);
+        this.base = tm.app.Object2D().addChildTo(this).setPosition(GS_OFFSET, 0);
         this.layers = [];
         for (var i = 0; i < LAYER_SYSTEM+1; i++) {
             this.layers[i] = tm.app.Object2D().addChildTo(this.base);
@@ -76,7 +80,7 @@ tm.define("pb3.MainScene", {
 
         //スコア表示ラベル
         app.score = 0;
-        var sc = this.scoreLabel = tm.display.OutlineLabel("SCORE:0", 30).addChildTo(this.systemBase);
+        var sc = this.scoreLabel = tm.display.OutlineLabel("SCORE:0", 20).addChildTo(this.systemBase).setPosition(GS_OFFSET, 0);
         sc.fontFamily = "'Orbitron'"; sc.align = "left"; sc.baseline  = "top"; sc.fontWeight = 700; sc.outlineWidth = 2;
         sc.update = function() {
             this.text = "SCORE:"+app.score;
@@ -88,7 +92,7 @@ tm.define("pb3.MainScene", {
         this.dispLife.life = 0;
         this.dispLife.inc = function() {
             this.life++;
-            this.players[this.life] = pb3.PlayerDisp().addChildTo(this).setPosition(this.life*50-20, 64);
+            this.players[this.life] = pb3.PlayerDisp().addChildTo(this).setPosition(GS_OFFSET+this.life*36-20, 40);
         }
         this.dispLife.dec = function() {
             if (this.life == 0) return;
@@ -100,16 +104,24 @@ tm.define("pb3.MainScene", {
         //ボス耐久力ゲージ
         this.bossGauge = pb3.BossGauge().addChildTo(this.systemBase).setPosition(0, -24);
 
-        this.systemMask = tm.display.Shape(SC_W-GS_W, SC_H).addChildTo(this).setPosition(GS_W, 0);
-        this.systemMask.renderRectangle({fillStyle: "rgba(0,0,0,1.0)", strokeStyle: "rgba(0,0,0,1.0)"});
-        this.systemMask.origin.set(0, 0);
+        //最上位マスク
+        this.maskTop = tm.display.Shape(SC_W, SC_H).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
+        this.maskTop.renderRectangle({fillStyle: "rgba(255,255,255,1.0)", strokeStyle: "rgba(255,255,255,1.0)"});
+        this.maskTop.alpha = 0
+
+        //左右画面マスク
+        this.systemMaskL = tm.display.Shape(80, SC_H).addChildTo(this).setPosition(0, 0);
+        this.systemMaskL.renderRectangle({fillStyle: "rgba(0,0,0,1.0)", strokeStyle: "rgba(0,0,0,1.0)"});
+        this.systemMaskL.origin.set(0, 0);
+        this.systemMaskR = tm.display.Shape(80, SC_H).addChildTo(this).setPosition(GS_W+80, 0);
+        this.systemMaskR.renderRectangle({fillStyle: "rgba(0,0,0,1.0)", strokeStyle: "rgba(0,0,0,1.0)"});
+        this.systemMaskR.origin.set(0, 0);
 
         //ステージ制御
         this.initStage();
     },
 
     update: function() {
-        this.map.y++;
         //ステージ進行
         var event = this.stage.get(this.time);
         if (event) {
@@ -121,9 +133,7 @@ tm.define("pb3.MainScene", {
         }
 
         //敵弾強制消去
-        if (this.timeVanish > 0 && this.time % 6 == 0) {
-            this.eraseBullet();
-        }
+        if (this.timeVanish > 0) this.eraseBullet();
 
         //ステージクリア検知
         if (this.stageClear) {
@@ -154,6 +164,10 @@ tm.define("pb3.MainScene", {
         this.timeVanish--; 
     },
 
+    //ボム投下
+    enterBomb: function(x, y) {
+    },
+
     //敵ユニット単位の投入
     enterEnemyUnit: function(name) {
         var unit = pb3.enemyUnit[name];
@@ -181,6 +195,7 @@ tm.define("pb3.MainScene", {
 
     //弾の消去
     eraseBullet: function(target) {
+        if (this.layers[LAYER_BULLET].length == 0)return;
         if (target) {
             //個別弾消し
             this.layers[LAYER_BULLET].children.each(function(a) {
@@ -219,9 +234,11 @@ tm.define("pb3.MainScene", {
 
     //ステージ初期化
     initStage: function() {
+        if (this.ground) this.ground.remove();
         switch (this.nowStage) {
             case 1:
                 this.stage = pb3.Stage1(this, app.player);
+                this.ground = pb3.Stage1.Ground("map1g").setPosition(0, -700).addChildTo(this);
                 break;
             case 2:
                 this.stage = pb3.Stage1(this, app.player);

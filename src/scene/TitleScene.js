@@ -19,11 +19,11 @@ tm.define("pb3.TitleScene", {
         //タイトルロゴ
         var t1 = this.title1 = tm.display.OutlineLabel("2D DANMAKU Shooting", 25).addChildTo(this);
         t1.x = SC_W*0.5; t1.y = SC_H*0.4;
-        t1.fontFamily = "'UbuntuMono'"; t1.align = "center"; t1.baseline  = "middle"; t1.fontWeight = 300; t1.outlineWidth = 2;
+        t1.setParam({fontFamily:"'UbuntuMono'", align: "center", baseline:"middle", fontWeight:300, outlineWidth:2 });
 
         var t2 = this.title2 = tm.display.OutlineLabel("Planet Buster", 40).addChildTo(this);
         t2.x = SC_W*0.5; t2.y = SC_H*0.5;
-        t2.fontFamily = "'Orbitron'"; t2.align = "center"; t2.baseline  = "middle"; t2.fontWeight = 800; t2.outlineWidth = 2;
+        t2.setParam({fontFamily:"'Orbitron'", align: "center", baseline:"middle", fontWeight:800, outlineWidth:2 });
         t2.fillStyle = tm.graphics.LinearGradient(-SC_W*0.5, 0, SC_W*0.5, 64)
             .addColorStopList([
                 { offset: 0.1, color: "hsla(230, 90%, 50%, 0.5)"},
@@ -32,18 +32,29 @@ tm.define("pb3.TitleScene", {
             ]).toStyle();
         t2.shadowColor = "blue";
         t2.shadowBlur = 10;
-        var ct = this.clickortouch = tm.display.OutlineLabel("Click or Touch", 20).addChildTo(this);
+        var t3 = this.title3 = tm.display.OutlineLabel("tmlib label", 25).addChildTo(this);
+        t3.x = SC_W*0.5; t3.y = SC_H*0.6;
+        t3.setParam({fontFamily:"'UbuntuMono'", align: "center", baseline:"middle", fontWeight:300, outlineWidth:2 });
+
+        var ct = this.clickortouch = tm.display.OutlineLabel("Press[Z]key or touch", 20).addChildTo(this);
         ct.x = SC_W*0.5; ct.y = SC_H*0.8;
-        ct.fontFamily = "'UbuntuMono'"; ct.align = "center"; ct.baseline  = "middle"; ct.fontWeight = 500; ct.outlineWidth = 2;
+        ct.setParam({fontFamily:"'UbuntuMono'", align: "center", baseline:"middle", fontWeight:500, outlineWidth:2 });
 
         //スコア表示ラベル
         var sc = this.scoreLabel = tm.display.OutlineLabel("HIGHSCORE:"+app.highScore, 20).addChildTo(this);
-        sc.fontFamily = "'Orbitron'"; sc.align = "left"; sc.baseline  = "top"; sc.fontWeight = 700; sc.outlineWidth = 2;
+        sc.setParam({fontFamily:"'Orbitron'", align: "left", baseline:"top", fontWeight:700, outlineWidth:2 });
 
         this.time = 0;
     },
 
     update: function() {
+        //キーボード操作
+        var kb = app.keyboard;
+        if (this.time > 30 && app.keyboard.getKey("Z")) {
+            app.background = "rgba(0, 0, 0, 0.8)";
+            app.score = 0;
+           app.replaceScene(pb3.MainScene());
+        }
         this.time++;
     },
 

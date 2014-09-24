@@ -9,88 +9,96 @@
 //敵小隊単位定義
 pb3.enemyUnit = {
 
-"cube1-left": [
-    { "name": "cube1", "x":GS_W*0.1, "y":-150 },
-    { "name": "cube1", "x":GS_W*0.2, "y":-120 },
-    { "name": "cube1", "x":GS_W*0.3, "y":-130 },
-    { "name": "cube1", "x":GS_W*0.4, "y":-120 },
+/*
+ * 突撃ヘリ「ホーネット」
+ */
+"Hornet1-left": [
+    { "name": "Hornet1", "x":GS_W*0.1, "y":-150 },
+    { "name": "Hornet1", "x":GS_W*0.2, "y":-120 },
+    { "name": "Hornet1", "x":GS_W*0.3, "y":-130 },
+    { "name": "Hornet1", "x":GS_W*0.4, "y":-120 },
 ],
 
-"cube1-right": [
-    { "name": "cube1", "x":GS_W*0.6, "y":-110 },
-    { "name": "cube1", "x":GS_W*0.7, "y":-120 },
-    { "name": "cube1", "x":GS_W*0.8, "y":-100 },
-    { "name": "cube1", "x":GS_W*0.9, "y":-150 },
+"Hornet1-right": [
+    { "name": "Hornet1", "x":GS_W*0.6, "y":-110 },
+    { "name": "Hornet1", "x":GS_W*0.7, "y":-120 },
+    { "name": "Hornet1", "x":GS_W*0.8, "y":-100 },
+    { "name": "Hornet1", "x":GS_W*0.9, "y":-150 },
 ],
 
-"cube1-center": [
-    { "name": "cube1", "x":GS_W*0.25, "y":-160 },
-    { "name": "cube1", "x":GS_W*0.35, "y":-120 },
-    { "name": "cube1", "x":GS_W*0.40, "y":-100 },
-    { "name": "cube1", "x":GS_W*0.50, "y":-110 },
-    { "name": "cube1", "x":GS_W*0.70, "y":-130 },
-    { "name": "cube1", "x":GS_W*0.85, "y":-120 },
+"Hornet1-center": [
+    { "name": "Hornet1", "x":GS_W*0.25, "y":-160 },
+    { "name": "Hornet1", "x":GS_W*0.35, "y":-120 },
+    { "name": "Hornet1", "x":GS_W*0.40, "y":-100 },
+    { "name": "Hornet1", "x":GS_W*0.50, "y":-110 },
+    { "name": "Hornet1", "x":GS_W*0.70, "y":-130 },
+    { "name": "Hornet1", "x":GS_W*0.85, "y":-120 },
 ],
 
-"cube2-left": [
-    { "name": "cube2", "x":GS_W*0.1, "y":-100 },
-    { "name": "cube2", "x":GS_W*0.2, "y":-120 },
-    { "name": "cube2", "x":GS_W*0.3, "y":-130 },
-    { "name": "cube2", "x":GS_W*0.4, "y":-120 },
+/*
+ * 突撃ヘリ２「ホーネット」
+ */
+"Hornet2-left": [
+    { "name": "Hornet2", "x":GS_W*0.1, "y":-100 },
+    { "name": "Hornet2", "x":GS_W*0.2, "y":-120 },
+    { "name": "Hornet2", "x":GS_W*0.3, "y":-130 },
+    { "name": "Hornet2", "x":GS_W*0.4, "y":-120 },
 ],
 
-"cube2-right": [
-    { "name": "cube2", "x":GS_W*0.6, "y":-100 },
-    { "name": "cube2", "x":GS_W*0.7, "y":-120 },
-    { "name": "cube2", "x":GS_W*0.8, "y":-130 },
-    { "name": "cube2", "x":GS_W*0.9, "y":-120 },
+"Hornet2-right": [
+    { "name": "Hornet2", "x":GS_W*0.6, "y":-100 },
+    { "name": "Hornet2", "x":GS_W*0.7, "y":-120 },
+    { "name": "Hornet2", "x":GS_W*0.8, "y":-130 },
+    { "name": "Hornet2", "x":GS_W*0.9, "y":-120 },
 ],
 
-"square1-left": [
-    { "name": "square1", "x":GS_W*0.2, "y":-100 },
+/*
+ * 中型機
+ */
+"BigWing-left": [
+    { "name": "BigWing", "x":GS_W*0.2, "y":-100 },
 ],
 
-"square1-right": [
-    { "name": "square1", "x":GS_W*0.8, "y":-100 },
+"BigWing-right": [
+    { "name": "BigWing", "x":GS_W*0.8, "y":-100 },
 ],
 
-"triangle1-left": [
-    { "name": "triangle1", "x":GS_W*0.1, "y":-GS_H*0.10, "param":"a" },
-    { "name": "triangle1", "x":GS_W*0.2, "y":-GS_H*0.15, "param":"a" },
-    { "name": "triangle1", "x":GS_W*0.3, "y":-GS_H*0.20, "param":"a" },
-    { "name": "triangle1", "x":GS_W*0.4, "y":-GS_H*0.25, "param":"a" },
+/*
+ * アイテムキャリア「トイボックス」
+ */
+
+//パワーアップ
+"ToyBox-p-left": [
+    { "name": "ToyBox", "x":GS_W*0.2, "y":-GS_H*0.3, param:"power" },
+],
+"ToyBox-p-center": [
+    { "name": "ToyBox", "x":GS_W*0.5, "y":-GS_H*0.3, param:"power" },
+],
+"ToyBox-p-right": [
+    { "name": "ToyBox", "x":GS_W*0.8, "y":-GS_H*0.3, param:"power" },
 ],
 
-"triangle1-right": [
-    { "name": "triangle1", "x":GS_W*0.9, "y":-GS_H*0.10, "param":"b" },
-    { "name": "triangle1", "x":GS_W*0.8, "y":-GS_H*0.15, "param":"b" },
-    { "name": "triangle1", "x":GS_W*0.7, "y":-GS_H*0.20, "param":"b" },
-    { "name": "triangle1", "x":GS_W*0.6, "y":-GS_H*0.25, "param":"b" },
+//ボム
+"ToyBox-b-left": [
+    { "name": "ToyBox", "x":GS_W*0.2, "y":-GS_H*0.3, param:"bomb" },
+],
+"ToyBox-b-center": [
+    { "name": "ToyBox", "x":GS_W*0.5, "y":-GS_H*0.3, param:"bomb" },
+],
+"ToyBox-b-right": [
+    { "name": "ToyBox", "x":GS_W*0.8, "y":-GS_H*0.3, param:"bomb" },
 ],
 
-"triangle1-center": [
-    { "name": "triangle1", "x":GS_W*0.3, "y":-GS_H*0.1, "param":"a" },
-    { "name": "triangle1", "x":GS_W*0.4, "y":-GS_H*0.2, "param":"a" },
-    { "name": "triangle1", "x":GS_W*0.6, "y":-GS_H*0.2, "param":"b" },
-    { "name": "triangle1", "x":GS_W*0.7, "y":-GS_H*0.1, "param":"b" },
+//ステージ１中ボス 軌道走行列車「トールハンマー」
+"ThorHammer": [
+    { "name": "ThorHammer", "x":GS_W*0.5, "y":-100 },
 ],
 
-"triangle2-left": [
-    { "name": "triangle2", "x":GS_W*0.2, "y":GS_H*-0.3 },
+//ステージ１ボス　局地制圧用大型戦車「トール」
+"Thor": [
+    { "name": "Thor", "x":GS_W*0.5, "y":-GS_H*0.2 },
 ],
 
-"triangle2-right": [
-    { "name": "triangle2", "x":GS_W*0.8, "y":GS_H*-0.3 },
-],
-
-"mboss1": [
-    { "name": "", "x":GS_W*0.5, "y":-100 },
-],
-
-//ステージ１ボス「四畳半」
-"boss1": [
-    { "name": "yojouhan-a", "x":GS_W*0.5, "y":-GS_H*0.2 },
-],
 
 }
 
