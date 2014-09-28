@@ -108,6 +108,51 @@ pb3.enemyData['Hornet2'] = {
 };
 
 /*
+ *  中型攻撃ヘリ「」
+ */
+pb3.enemyData['BigWing'] = {
+    //使用弾幕パターン
+    bulletPattern: "BigWing",
+
+    //当り判定サイズ
+    width:  128,
+    height: 20,
+
+    //耐久力
+    def: 800,
+
+    //得点
+    point: 3000,
+
+    //表示レイヤー番号
+    layer: LAYER_OBJECT,
+
+    //敵タイプ
+    type: ENEMY_MIDDLE,
+
+    //爆発タイプ
+    explodeType: EXPLODE_MIDDLE,
+
+    //機体用テクスチャ情報
+    texName: "tex1",
+    texWidth: 128,
+    texHeight: 64,
+    texIndex: 6,
+
+    setup: function() {
+        this.index = 0;
+    },
+
+    algorithm: function() {
+        if (this.time % 2 == 0) this.y++;
+        if (this.time % 10 == 0) {
+            this.index = (this.index+1)%2+6;
+            this.body.setFrameIndex(this.index);
+        }
+    },
+};
+
+/*
  *  中型爆撃機「ビッグウィング」
  */
 pb3.enemyData['BigWing'] = {
