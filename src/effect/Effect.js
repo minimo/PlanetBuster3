@@ -116,7 +116,7 @@ tm.define("pb3.Effect.Explode", {
     layer: LAYER_EFFECT_UPPER,
 
     init: function(delay) {
-        this.superInit("explode1", 64, 64, 2, 0, 17, delay);
+        this.superInit("effect", 64, 64, 2, 0, 17, delay);
     },
 });
 
@@ -156,6 +156,7 @@ tm.define("pb3.Effect.ExplodeGround", {
     layer: LAYER_EFFECT_UPPER,
 
     init: function(delay) {
+        this.setFrameTrim(256, 192, 256, 48);
         this.superInit("explode4", 32, 48, 2, 0, 7, delay);
     },
 });
@@ -170,10 +171,12 @@ tm.define("pb3.Effect.Debri", {
         num = num || 0;
         num = Math.clamp(num, 0, 3);
         if (num == 0) {
-            this.superInit("debri2", 8, 8, 2, 0, 16, delay);
+            this.setFrameTrim(192, 128, 64, 48);
+            this.superInit("effect", 8, 8, 2, 0, 8, delay);
         } else {
             num--;
-            this.superInit("debri1", 16, 16, 4, num*8, (num+1)*8-1, delay);
+            this.setFrameTrim(384, 128, 128, 48);
+            this.superInit("effect", 16, 16, 4, num*8, (num+1)*8-1, delay);
         }
     },
 });
@@ -184,7 +187,8 @@ tm.define("pb3.Effect.ExplodePlayer", {
     layer: LAYER_EFFECT_UPPER,
 
     init: function(delay) {
-        this.superInit("explode5", 48, 48, 4, 0, 7, delay);
+        this.setFrameTrim(0, 288, 384, 48);
+        this.superInit("effect", 48, 48, 4, 0, 7, delay);
     },
 });
 
