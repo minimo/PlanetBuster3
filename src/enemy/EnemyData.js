@@ -144,7 +144,7 @@ pb3.enemyData['MudDauber'] = {
         this.phase = 0;
 
         this.roter = tm.display.Sprite("tex1", 114, 48).addChildTo(this);
-        this.roter.setFrameTrim(256, 128, 228, 96);
+        this.roter.setFrameTrim(288, 128, 228, 96);
         this.roter.setFrameIndex(0);
         this.roter.index = 0;
 
