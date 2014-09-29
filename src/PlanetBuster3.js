@@ -179,10 +179,10 @@ pb3.PlanetBuster3 = tm.createClass({
 tm.display.Sprite.prototype.setFrameIndex = function(index, width, height) {
 
     //テクスチャのトリミング設定
-    var sx = this.frameStartX || 0;
-    var sy = this.frameStartY || 0;
-    var sw = this.frameStartW || (this.image.width-sx);
-    var sh = this.frameStartH || (this.image.height-sy);
+    var sx = this.frameTrimX || 0;
+    var sy = this.frameTrimY || 0;
+    var sw = this.frameTrimW || (this.image.width-sx);
+    var sh = this.frameTrimH || (this.image.height-sy);
 
     var tw  = width || this.width;      // tw
     var th  = height || this.height;    // th
@@ -203,5 +203,12 @@ tm.display.Sprite.prototype.setFrameIndex = function(index, width, height) {
     return this;
 }
 
+tm.display.Sprite.prototype.setFrameTrim = function(x, y, width, height) {
+    this.frameTrimX = x || 0;
+    this.frameTrimY = y || 0;
+    this.frameTrimW = width || this.image.width - this.frameTrimX;
+    this.frameTrimH = height || this.image.height - this.frameTrimY;
+    return this;
+}
 
 })();
