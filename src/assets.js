@@ -15,10 +15,8 @@ pb3.assets = {
     "shot2":      "assets/images/shot2.png",
     "shotimpact": "assets/images/shotimpact.png",
 
-    "item":     "assets/images/item.png",
-
-    //敵機
     "tex1":    "assets/images/tex1.png",
+    "roter1":  "assets/images/roter1.png",
 
     //エフェクト
     "explode1": "assets/images/explode1.png", //64x64

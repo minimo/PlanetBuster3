@@ -389,10 +389,10 @@ tm.define("pb3.Item", {
     active: false,
 
     init: function(id) {
-        this.superInit("item", 32, 32);
+        this.superInit("tex1", 32, 32);
         this.parentScene = app.currentScene;
         this.id = id;
-        this.setFrameIndex(id);
+        this.setFrameIndex(id+48);
         this.setScale(2.0);
 
         if (id == 0) {

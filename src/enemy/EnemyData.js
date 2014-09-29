@@ -108,11 +108,11 @@ pb3.enemyData['Hornet2'] = {
 };
 
 /*
- *  中型攻撃ヘリ「」
+ *  中型攻撃ヘリ「ジガバチ」
  */
-pb3.enemyData['BigWing'] = {
+pb3.enemyData['MudDauber'] = {
     //使用弾幕パターン
-    bulletPattern: "BigWing",
+    bulletPattern: "MudDauber",
 
     //当り判定サイズ
     width:  128,
@@ -140,7 +140,17 @@ pb3.enemyData['BigWing'] = {
     texIndex: 6,
 
     setup: function() {
-        this.index = 0;
+        this.index = this.texIndex;
+        this.phase = 0;
+
+        //行動設定
+        if (this.x < 0) {
+            this.px = 1;
+            this.tweener.moveBy( GS_W*0.6, 0, 3000, "easeOutCubic").call(function(){this.phase++;}.bind(this));
+        } else {
+            this.px = -1;
+            this.tweener.moveBy(-GS_W*0.6, 0, 3000, "easeOutCubic").call(function(){this.phase++;}.bind(this));
+        }
     },
 
     algorithm: function() {
@@ -148,6 +158,11 @@ pb3.enemyData['BigWing'] = {
         if (this.time % 10 == 0) {
             this.index = (this.index+1)%2+6;
             this.body.setFrameIndex(this.index);
+        }
+
+        if (this.phase == 1) {
+            this.y--;
+            this.x+=this.px;
         }
     },
 };
@@ -164,7 +179,7 @@ pb3.enemyData['BigWing'] = {
     height: 20,
 
     //耐久力
-    def: 800,
+    def: 1000,
 
     //得点
     point: 3000,
@@ -185,7 +200,7 @@ pb3.enemyData['BigWing'] = {
     texIndex: 2,
 
     setup: function() {
-        this.index = 0;
+        this.index = this.texIndex;
     },
 
     algorithm: function() {

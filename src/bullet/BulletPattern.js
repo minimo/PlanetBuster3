@@ -9,7 +9,12 @@
 pb3.bulletPattern = [];
 var $ = bulletml.dsl;
 
-$rank = 1;
+//ゲーム難易度
+$diff = 1;
+
+//難易度ランク
+$rank = 0;
+
 
 //弾種
 //小弾（赤）
@@ -124,7 +129,9 @@ var $whip = function(baseSpeed, delta, count, actionFunc) {
 
 **/
 
-//Hornet1
+/*
+ * 突撃ヘリ「ホーネット」
+ */
 pb3.bulletPattern["Hornet1"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
@@ -135,7 +142,9 @@ pb3.bulletPattern["Hornet1"] = new bulletml.Root({
     ]),
 });
 
-//Hornet2
+/*
+ * 突撃ヘリ２「ホーネット」
+ */
 pb3.bulletPattern["Hornet2"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
@@ -146,7 +155,36 @@ pb3.bulletPattern["Hornet2"] = new bulletml.Root({
     ]),
 });
 
-//BigWing
+/*
+ *  中型攻撃ヘリ「ジガバチ」
+ */
+pb3.bulletPattern["MudDauber"] = new bulletml.Root({
+    top0: $.action([
+        $.wait(90),
+        $.repeat(999, [
+            $.repeat(5, [
+                $absoluteNway(3, 200, 160, $spd(2), RM),
+                $interval(10),
+            ]),
+            $interval(120),
+        ]),
+    ]),
+    top1: $.action([
+        $.wait(90),
+        $.repeat(999, [
+            $.repeat(3, [
+                $.fire($.direction(180, "absolute"), $spd(3), BM, $.offsetX(-32)),
+                $.fire($.direction(180, "absolute"), $spd(3), BM, $.offsetX( 32)),
+                $interval(20),
+            ]),
+            $interval(60),
+        ]),
+    ]),
+});
+
+/*
+ *  中型爆撃機「ビッグウィング」
+ */
 pb3.bulletPattern["BigWing"] = new bulletml.Root({
     top0: $.action([
         $.wait(90),

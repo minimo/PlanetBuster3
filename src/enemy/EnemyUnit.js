@@ -53,7 +53,18 @@ pb3.enemyUnit = {
 ],
 
 /*
- * 中型機
+ *  中型攻撃ヘリ「ジガバチ」
+ */
+"MudDauber-left": [
+    { "name": "MudDauber", "x":-GS_W*0.2, "y":GS_H*0.4 },
+],
+
+"MudDauber-right": [
+    { "name": "MudDauber", "x": GS_W*1.2, "y":GS_H*0.4 },
+],
+
+/*
+ *  中型爆撃機「ビッグウィング」
  */
 "BigWing-left": [
     { "name": "BigWing", "x":GS_W*0.2, "y":-100 },
