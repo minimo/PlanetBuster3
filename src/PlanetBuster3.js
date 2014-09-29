@@ -174,4 +174,32 @@ pb3.PlanetBuster3 = tm.createClass({
     },
 });
 
+
+//SpriteのframeIndexをちょっと改造
+tm.display.Sprite.prototype.setFrameIndex = function(index, width, height) {
+
+    //テクスチャの始点を設定
+    var sx = this.frameStartX || 0;
+    var sy = this.frameStartY || 0;
+
+    var tw  = width || this.width;      // tw
+    var th  = height || this.height;    // th
+    var row = ~~((this.image.width-sx) / tw);
+    var col = ~~((this.image.height-sy) / th);
+    var maxIndex = row*col;
+    index = index%maxIndex;
+
+    var x   = index%row;
+    var y   = ~~(index/row);
+    this.srcRect.x = sx+x*tw;
+    this.srcRect.y = sy+y*th;
+    this.srcRect.width  = tw;
+    this.srcRect.height = th;
+
+    this._frameIndex = index;
+
+    return this;
+}
+
+
 })();
