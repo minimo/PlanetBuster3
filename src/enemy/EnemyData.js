@@ -143,6 +143,11 @@ pb3.enemyData['MudDauber'] = {
         this.index = this.texIndex;
         this.phase = 0;
 
+        this.roter = tm.display.Sprite("tex1", 114, 48).addChildTo(this);
+        this.roter.setFrameTrim(256, 128, 228, 96);
+        this.roter.setFrameIndex(0);
+        this.roter.index = 0;
+
         //行動設定
         if (this.x < 0) {
             this.px = 1;
@@ -154,7 +159,10 @@ pb3.enemyData['MudDauber'] = {
     },
 
     algorithm: function() {
-        if (this.time % 2 == 0) this.y++;
+        if (this.time % 4 == 0) {
+            this.roter.index = (this.roter.index+1)%4+32;
+            this.roter.setFrameIndex(this.roter.index);
+        }
         if (this.time % 10 == 0) {
             this.index = (this.index+1)%2+6;
             this.body.setFrameIndex(this.index);
