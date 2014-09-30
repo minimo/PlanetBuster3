@@ -183,6 +183,33 @@ pb3.bulletPattern["MudDauber"] = new bulletml.Root({
 });
 
 /*
+ *  飛行艇「モーンブレイド」
+ */
+pb3.bulletPattern["MournBlade"] = new bulletml.Root({
+    top0: $.action([
+        $.wait(90),
+        $.repeat(999, [
+            $.repeat(5, [
+                $fireBS(3),
+                $interval(10),
+            ]),
+            $interval(120),
+        ]),
+    ]),
+    top1: $.action([
+        $.wait(90),
+        $.repeat(999, [
+            $.repeat(3, [
+                $.fire($.direction(180, "absolute"), $spd(3), BM, $.offsetX(-32)),
+                $.fire($.direction(180, "absolute"), $spd(3), BM, $.offsetX( 32)),
+                $interval(15),
+            ]),
+            $interval(60),
+        ]),
+    ]),
+});
+
+/*
  *  中型爆撃機「ビッグウィング」
  */
 pb3.bulletPattern["BigWing"] = new bulletml.Root({

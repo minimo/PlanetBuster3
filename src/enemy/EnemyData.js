@@ -115,7 +115,7 @@ pb3.enemyData['MudDauber'] = {
     bulletPattern: "MudDauber",
 
     //当り判定サイズ
-    width:  128,
+    width:  100,
     height: 20,
 
     //耐久力
@@ -183,7 +183,7 @@ pb3.enemyData['BigWing'] = {
     bulletPattern: "BigWing",
 
     //当り判定サイズ
-    width:  128,
+    width:  100,
     height: 20,
 
     //耐久力
@@ -265,10 +265,10 @@ pb3.enemyData['MournBlade'] = {
         //行動設定
         if (this.x < 0) {
             this.px = 1;
-            this.tweener.moveBy( GS_W*0.6, 0, 3000, "easeOutCubic").call(function(){this.phase++;}.bind(this));
+            this.tweener.moveBy( GS_W*0.6, 0, 3000, "easeOutCubic").moveBy( GS_W*1.0, 0, 5000, "easeOutCubic");
         } else {
             this.px = -1;
-            this.tweener.moveBy(-GS_W*0.6, 0, 3000, "easeOutCubic").call(function(){this.phase++;}.bind(this));
+            this.tweener.moveBy(-GS_W*0.6, 0, 3000, "easeOutCubic").moveBy(-GS_W*1.0, 0, 5000, "easeOutCubic");
         }
     },
 
@@ -281,11 +281,52 @@ pb3.enemyData['MournBlade'] = {
             this.index = (this.index+1)%2;
             this.body.setFrameIndex(this.index);
         }
-
         if (this.phase == 1) {
             this.y--;
             this.x+=this.px;
         }
+    },
+};
+
+/*
+ *  砲台「」
+ */
+pb3.enemyData[''] = {
+    //使用弾幕パターン
+    bulletPattern: "nop",
+
+    //当り判定サイズ
+    width:  128,
+    height: 20,
+
+    //耐久力
+    def: 800,
+
+    //得点
+    point: 3000,
+
+    //表示レイヤー番号
+    layer: LAYER_OBJECT,
+
+    //敵タイプ
+    type: ENEMY_MIDDLE,
+
+    //爆発タイプ
+    explodeType: EXPLODE_MIDDLE,
+
+    //機体用テクスチャ情報
+    texName: "tex1",
+    texWidth: 48,
+    texHeight: 104,
+    texIndex: 0,
+
+    setup: function() {
+        this.index = this.texIndex;
+        this.phase = 0;
+        this.setFrameTrim(0, 128, 96, 104);
+    },
+
+    algorithm: function() {
     },
 };
 
