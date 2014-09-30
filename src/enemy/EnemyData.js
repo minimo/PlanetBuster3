@@ -221,6 +221,75 @@ pb3.enemyData['BigWing'] = {
 };
 
 /*
+ *  飛空挺「モーンブレイド」
+ */
+pb3.enemyData['MournBlade'] = {
+    //使用弾幕パターン
+    bulletPattern: "MournBlade",
+
+    //当り判定サイズ
+    width:  128,
+    height: 20,
+
+    //耐久力
+    def: 800,
+
+    //得点
+    point: 3000,
+
+    //表示レイヤー番号
+    layer: LAYER_OBJECT,
+
+    //敵タイプ
+    type: ENEMY_MIDDLE,
+
+    //爆発タイプ
+    explodeType: EXPLODE_MIDDLE,
+
+    //機体用テクスチャ情報
+    texName: "tex1",
+    texWidth: 48,
+    texHeight: 104,
+    texIndex: 0,
+
+    setup: function() {
+        this.index = this.texIndex;
+        this.phase = 0;
+        this.setFrameTrim(0, 128, 96, 104);
+
+        this.roter = tm.display.Sprite("tex1", 114, 48).addChildTo(this);
+        this.roter.setFrameTrim(96, 128, 192, 104);
+        this.roter.setFrameIndex(0);
+        this.roter.index = 0;
+
+        //行動設定
+        if (this.x < 0) {
+            this.px = 1;
+            this.tweener.moveBy( GS_W*0.6, 0, 3000, "easeOutCubic").call(function(){this.phase++;}.bind(this));
+        } else {
+            this.px = -1;
+            this.tweener.moveBy(-GS_W*0.6, 0, 3000, "easeOutCubic").call(function(){this.phase++;}.bind(this));
+        }
+    },
+
+    algorithm: function() {
+        if (this.time % 4 == 0) {
+            this.roter.index = (this.roter.index+1)%4;
+            this.roter.setFrameIndex(this.roter.index);
+        }
+        if (this.time % 10 == 0) {
+            this.index = (this.index+1)%2;
+            this.body.setFrameIndex(this.index);
+        }
+
+        if (this.phase == 1) {
+            this.y--;
+            this.x+=this.px;
+        }
+    },
+};
+
+/*
  *  中型輸送キャリア「トイボックス」
  */
 pb3.enemyData['ToyBox'] = {
@@ -272,3 +341,22 @@ pb3.enemyData['ToyBox'] = {
 }
 
 })();
+
+/*
+
+１面中ボス  装甲輸送列車「トールハンマー」
+１面ボス    局地制圧型巨大戦車「ゴリアテ」
+
+２面中ボス  
+２面ボス    浮揚空母「ストームブリンガー」
+
+３面中ボス  
+３面ボス    大型超高高度爆撃機「ガルーダ」
+
+４面中ボス
+４面ボス
+
+５面中ボス
+５面ボス
+
+*/

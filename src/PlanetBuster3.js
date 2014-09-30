@@ -203,6 +203,7 @@ tm.display.Sprite.prototype.setFrameIndex = function(index, width, height) {
     return this;
 }
 
+//トリミング開始位置設定
 tm.display.Sprite.prototype.setFrameTrim = function(x, y, width, height) {
     this.frameTrimX = x || 0;
     this.frameTrimY = y || 0;

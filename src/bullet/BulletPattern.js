@@ -26,9 +26,9 @@ var RM = function(action) { return $.bullet(action, {type: "RM"}); };
 //通常弾（青）
 var BM = function(action) { return $.bullet(action, {type: "BM"}); };
 //大弾（赤）
-var LR = function(action) { return $.bullet(action, {type: "LR"}); };
+var RL = function(action) { return $.bullet(action, {type: "RL"}); };
 //大弾（青）
-var LB = function(action) { return $.bullet(action, {type: "LB"}); };
+var BL = function(action) { return $.bullet(action, {type: "BL"}); };
 
 //楕円弾（赤）(RedEllipsean)
 var RE = function(action) { return $.bullet(action, {type: "RE"}); };
@@ -163,7 +163,7 @@ pb3.bulletPattern["MudDauber"] = new bulletml.Root({
         $.wait(90),
         $.repeat(999, [
             $.repeat(5, [
-                $absoluteNway(3, 200, 160, $spd(2), RM),
+                $fireBS(3),
                 $interval(10),
             ]),
             $interval(120),
@@ -175,7 +175,7 @@ pb3.bulletPattern["MudDauber"] = new bulletml.Root({
             $.repeat(3, [
                 $.fire($.direction(180, "absolute"), $spd(3), BM, $.offsetX(-32)),
                 $.fire($.direction(180, "absolute"), $spd(3), BM, $.offsetX( 32)),
-                $interval(20),
+                $interval(15),
             ]),
             $interval(60),
         ]),
