@@ -10,46 +10,67 @@
 pb3.enemyUnit = {
 
 /*
- * 突撃ヘリ「ホーネット」
+ * 突撃ヘリ「ホーネット」（パターン１）
  */
 "Hornet1-left": [
-    { "name": "Hornet1", "x":GS_W*0.1, "y":-150 },
-    { "name": "Hornet1", "x":GS_W*0.2, "y":-120 },
-    { "name": "Hornet1", "x":GS_W*0.3, "y":-130 },
-    { "name": "Hornet1", "x":GS_W*0.4, "y":-120 },
+    { "name": "Hornet", "x":GS_W*0.1, "y":-150, param:1 },
+    { "name": "Hornet", "x":GS_W*0.2, "y":-120, param:1 },
+    { "name": "Hornet", "x":GS_W*0.3, "y":-130, param:1 },
+    { "name": "Hornet", "x":GS_W*0.4, "y":-120, param:1 },
 ],
-
 "Hornet1-right": [
-    { "name": "Hornet1", "x":GS_W*0.6, "y":-110 },
-    { "name": "Hornet1", "x":GS_W*0.7, "y":-120 },
-    { "name": "Hornet1", "x":GS_W*0.8, "y":-100 },
-    { "name": "Hornet1", "x":GS_W*0.9, "y":-150 },
+    { "name": "Hornet", "x":GS_W*0.6, "y":-110, param:1 },
+    { "name": "Hornet", "x":GS_W*0.7, "y":-120, param:1 },
+    { "name": "Hornet", "x":GS_W*0.8, "y":-100, param:1 },
+    { "name": "Hornet", "x":GS_W*0.9, "y":-150, param:1 },
 ],
-
 "Hornet1-center": [
-    { "name": "Hornet1", "x":GS_W*0.25, "y":-160 },
-    { "name": "Hornet1", "x":GS_W*0.35, "y":-120 },
-    { "name": "Hornet1", "x":GS_W*0.40, "y":-100 },
-    { "name": "Hornet1", "x":GS_W*0.50, "y":-110 },
-    { "name": "Hornet1", "x":GS_W*0.70, "y":-130 },
-    { "name": "Hornet1", "x":GS_W*0.85, "y":-120 },
+    { "name": "Hornet", "x":GS_W*0.25, "y":-160, param:1 },
+    { "name": "Hornet", "x":GS_W*0.35, "y":-120, param:1 },
+    { "name": "Hornet", "x":GS_W*0.40, "y":-100, param:1 },
+    { "name": "Hornet", "x":GS_W*0.50, "y":-110, param:1 },
+    { "name": "Hornet", "x":GS_W*0.70, "y":-130, param:1 },
+    { "name": "Hornet", "x":GS_W*0.85, "y":-120, param:1 },
 ],
 
 /*
- * 突撃ヘリ２「ホーネット」
+ * 突撃ヘリ「ホーネット」（パターン２）
  */
 "Hornet2-left": [
-    { "name": "Hornet2", "x":GS_W*0.1, "y":-100 },
-    { "name": "Hornet2", "x":GS_W*0.2, "y":-120 },
-    { "name": "Hornet2", "x":GS_W*0.3, "y":-130 },
-    { "name": "Hornet2", "x":GS_W*0.4, "y":-120 },
+    { "name": "Hornet", "x":GS_W*0.1, "y":-100, param:2 },
+    { "name": "Hornet", "x":GS_W*0.2, "y":-120, param:2 },
+    { "name": "Hornet", "x":GS_W*0.3, "y":-130, param:2 },
+    { "name": "Hornet", "x":GS_W*0.4, "y":-120, param:2 },
+],
+"Hornet2-right": [
+    { "name": "Hornet", "x":GS_W*0.6, "y":-100, param:2 },
+    { "name": "Hornet", "x":GS_W*0.7, "y":-120, param:2 },
+    { "name": "Hornet", "x":GS_W*0.8, "y":-130, param:2 },
+    { "name": "Hornet", "x":GS_W*0.9, "y":-120, param:2 },
 ],
 
-"Hornet2-right": [
-    { "name": "Hornet2", "x":GS_W*0.6, "y":-100 },
-    { "name": "Hornet2", "x":GS_W*0.7, "y":-120 },
-    { "name": "Hornet2", "x":GS_W*0.8, "y":-130 },
-    { "name": "Hornet2", "x":GS_W*0.9, "y":-120 },
+/*
+ * 突撃ヘリ「ホーネット」（パターン３）
+ */
+"Hornet3-left": [
+    { "name": "Hornet", "x":GS_W*0.1, "y":-100, param:3 },
+    { "name": "Hornet", "x":GS_W*0.2, "y":-120, param:3 },
+    { "name": "Hornet", "x":GS_W*0.3, "y":-130, param:3 },
+    { "name": "Hornet", "x":GS_W*0.4, "y":-120, param:3 },
+],
+"Hornet3-right": [
+    { "name": "Hornet", "x":GS_W*0.6, "y":-100, param:3 },
+    { "name": "Hornet", "x":GS_W*0.7, "y":-120, param:3 },
+    { "name": "Hornet", "x":GS_W*0.8, "y":-130, param:3 },
+    { "name": "Hornet", "x":GS_W*0.9, "y":-120, param:3 },
+],
+"Hornet3-center": [
+    { "name": "Hornet", "x":GS_W*0.25, "y":-160, param:3 },
+    { "name": "Hornet", "x":GS_W*0.35, "y":-120, param:3 },
+    { "name": "Hornet", "x":GS_W*0.40, "y":-100, param:3 },
+    { "name": "Hornet", "x":GS_W*0.50, "y":-110, param:3 },
+    { "name": "Hornet", "x":GS_W*0.70, "y":-130, param:3 },
+    { "name": "Hornet", "x":GS_W*0.85, "y":-120, param:3 },
 ],
 
 /*
@@ -72,6 +93,17 @@ pb3.enemyUnit = {
 
 "BigWing-right": [
     { "name": "BigWing", "x":GS_W*0.8, "y":-100 },
+],
+
+/*
+ *  飛空艇「モーンブレイド」
+ */
+"MournBlade-left": [
+    { "name": "MournBlade", "x": GS_W*0.9, "y":-GS_H*0.2 },
+],
+
+"MournBlade-left": [
+    { "name": "MournBlade", "x":-GS_W*0.1, "y":-GS_H*0.2 },
 ],
 
 /*

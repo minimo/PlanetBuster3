@@ -10,9 +10,9 @@ pb3.enemyData = [];
 /*
  *  攻撃ヘリ「ホーネット」
  */
-pb3.enemyData['Hornet1'] = {
+pb3.enemyData['Hornet'] = {
     //使用弾幕パターン
-    bulletPattern: "Hornet1",
+    bulletPattern: "Hornet",
 
     //当り判定サイズ
     width:  16,
@@ -39,12 +39,26 @@ pb3.enemyData['Hornet1'] = {
     texHeight: 32,
     texIndex: 0,
 
-    setup: function() {
+    setup: function(enterParam) {
+        this.phase = 0;
         this.roter = tm.display.Sprite("tex1", 32, 32).addChildTo(this);
         this.roter.setFrameIndex(32);
         this.roter.index = 32;
 
-        this.tweener.moveBy(0, 300, 2000, "easeOutQuart").wait(1000).moveBy(0, -300, 2000).call(function(){this.remove();}.bind(this));
+        //行動パターン分岐
+        this.pattern = enterParam;
+        this.bulletPattern = "Hornet"+enterParam;
+        switch (enterParam) {
+            case 1:
+                this.tweener.moveBy(0, 300, 2000, "easeOutQuart").wait(1000).moveBy(0, -300, 2000).call(function(){this.remove();}.bind(this));
+                break;
+            case 2:
+                this.moveTo(app.player, 5, true);
+                break;
+            case 3:
+                this.tweener.moveBy(0, 300, 2000, "easeOutQuart").wait(1000).call(function(){this.phase++;}.bind(this));
+                break;
+        }
     },
 
     algorithm: function() {
@@ -52,6 +66,22 @@ pb3.enemyData['Hornet1'] = {
         if (this.time % 2 == 0) {
             this.roter.index = (this.roter.index+1)%4+32;
             this.roter.setFrameIndex(this.roter.index);
+        }
+
+        if (this.pattern == 2) {
+            this.x += this.vx;
+            this.y += this.vy;
+        }
+
+        if (this.pattern == 3) {
+            if (this.phase == 1) {
+                this.moveTo(app.player, 5, true);
+                this.phase++;
+            }
+            if (this.phase == 2) {
+                this.x += this.vx;
+                this.y += this.vy;
+            }
         }
     },
 };

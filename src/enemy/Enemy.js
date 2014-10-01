@@ -53,6 +53,7 @@ tm.define("pb3.Enemy", {
         var d = this.data = pb3.enemyData[name];
         if (!d) return false;
 
+        this.bulletPattern = d.bulletPattern;
         this.def = this.defMax = d.def;
 
         this.width = d.width || 32;
@@ -95,16 +96,16 @@ tm.define("pb3.Enemy", {
             }
         }
 
-        //弾幕定義        
-        this.bulletPattern = d.bulletPattern;
+        //パラメータセットアップ
+        this.parentScene = app.currentScene;
+        this.setup(param);
+
+        //弾幕定義
         if (this.bulletPattern instanceof Array) {
             this.nowBulletPattern = this.bulletPattern[0];
         } else {
             this.nowBulletPattern = this.bulletPattern;
         }
-
-        this.parentScene = app.currentScene;
-        this.setup(param);
 
         //bulletML起動
         var bulletMLparams = {

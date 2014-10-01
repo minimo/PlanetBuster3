@@ -141,14 +141,19 @@ pb3.bulletPattern["Hornet1"] = new bulletml.Root({
         ]),
     ]),
 });
-
-/*
- * 突撃ヘリ２「ホーネット」
- */
 pb3.bulletPattern["Hornet2"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
         $.repeat(3, [
+            $fireRS(3),
+            $.wait("$rand * 60"),
+        ]),
+    ]),
+});
+pb3.bulletPattern["Hornet3"] = new bulletml.Root({
+    top: $.action([
+        $.wait(60),
+        $.repeat(999, [
             $fireRS(3),
             $.wait("$rand * 60"),
         ]),
@@ -189,22 +194,11 @@ pb3.bulletPattern["MournBlade"] = new bulletml.Root({
     top0: $.action([
         $.wait(90),
         $.repeat(999, [
-            $.repeat(5, [
-                $fireBS(3),
+            $.repeat(3, [
+                $absoluteNway(3, 190, 170, $spd(2), RM),
                 $interval(10),
             ]),
             $interval(120),
-        ]),
-    ]),
-    top1: $.action([
-        $.wait(90),
-        $.repeat(999, [
-            $.repeat(3, [
-                $.fire($.direction(180, "absolute"), $spd(3), BM, $.offsetX(-32)),
-                $.fire($.direction(180, "absolute"), $spd(3), BM, $.offsetX( 32)),
-                $interval(15),
-            ]),
-            $interval(60),
         ]),
     ]),
 });
