@@ -87,57 +87,6 @@ pb3.enemyData['Hornet'] = {
 };
 
 /*
- *  攻撃ヘリ「ホーネット」（突撃型）
- */
-pb3.enemyData['Hornet2'] = {
-    //使用弾幕パターン
-    bulletPattern: "Hornet2",
-
-    //当り判定サイズ
-    width:  16,
-    height: 16,
-
-    //耐久力
-    def: 30,
-
-    //得点
-    point: 300,
-
-    //表示レイヤー番号
-    layer: LAYER_OBJECT,
-
-    //敵タイプ
-    type: ENEMY_SMALL,
-
-    //爆発タイプ
-    explodeType: EXPLODE_SMALL,
-
-    //機体用テクスチャ情報
-    texName: "tex1",
-    texWidth: 32,
-    texHeight: 32,
-    texIndex: 0,
-
-    setup: function() {
-        this.roter = tm.display.Sprite("tex1", 32, 32).addChildTo(this);
-        this.roter.setFrameIndex(32);
-        this.roter.index = 32;
-
-        this.moveTo(app.player, 5, true);
-    },
-
-    algorithm: function() {
-        if (this.time % 2 == 0) {
-            this.roter.index = (this.roter.index+1)%4+32;
-            this.roter.setFrameIndex(this.roter.index);
-        }
-
-        this.x += this.vx;
-        this.y += this.vy;
-    },
-};
-
-/*
  *  中型攻撃ヘリ「ジガバチ」
  */
 pb3.enemyData['MudDauber'] = {
@@ -319,15 +268,15 @@ pb3.enemyData['MournBlade'] = {
 };
 
 /*
- *  砲台「」
+ *  砲台「フラガラッハ」
  */
-pb3.enemyData[''] = {
+pb3.enemyData['Fragarach'] = {
     //使用弾幕パターン
-    bulletPattern: "nop",
+    bulletPattern: "Fragarach",
 
     //当り判定サイズ
-    width:  128,
-    height: 20,
+    width:  64,
+    height: 64,
 
     //耐久力
     def: 800,
@@ -361,7 +310,7 @@ pb3.enemyData[''] = {
 };
 
 /*
- *  中型輸送キャリア「トイボックス」
+ *  中型輸送機「トイボックス」
  */
 pb3.enemyData['ToyBox'] = {
     //使用弾幕パターン
@@ -418,8 +367,8 @@ pb3.enemyData['ToyBox'] = {
 １面中ボス  装甲輸送列車「トールハンマー」
 １面ボス    局地制圧型巨大戦車「ゴリアテ」
 
-２面中ボス  
-２面ボス    浮揚空母「ストームブリンガー」
+２面中ボス  大型爆撃機「レイブンブランド」
+２面ボス    空中空母「ストームブリンガー」
 
 ３面中ボス  
 ３面ボス    大型超高高度爆撃機「ガルーダ」

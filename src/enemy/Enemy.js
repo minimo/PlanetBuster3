@@ -21,6 +21,7 @@ tm.define("pb3.Enemy", {
     isOnScreen: false,  //画面内に入った
     isGround: false,    //地上フラグ
     isEnemy: true,      //敵機判別
+    isAttack: true,     //攻撃フラグ
 
     //キャラクタ情報
     name: null,
@@ -112,7 +113,7 @@ tm.define("pb3.Enemy", {
             rank: this.parentScene.rank,
             target: app.player,
             createNewBullet: function(runner, attr) {
-                if (this.isGround && distanceSq(this, app.player) < 4096 ) return;  //地上敵で自機に近い場合は弾を撃たない
+                if (!this.isAttack) return;
                 pb3.Bullet(runner, attr, this.id).addChildTo(this.parentScene);
             }.bind(this)
         };
@@ -155,6 +156,14 @@ tm.define("pb3.Enemy", {
 
         //瀕死
         if (this.def < this.defMax*0.2) this.nearDeath();
+
+        //地上敵で自機に近い場合は弾を撃たない
+        if (this.isGround) {
+            if (distanceSq(this, app.player) < 4096)
+                this.isAttack = false;
+            else
+                this.isAttack = true;
+        }
 
         this.beforeX = this.x;
         this.beforeY = this.y;

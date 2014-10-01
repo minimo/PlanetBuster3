@@ -88,11 +88,11 @@ pb3.enemyUnit = {
  *  中型爆撃機「ビッグウィング」
  */
 "BigWing-left": [
-    { "name": "BigWing", "x":GS_W*0.2, "y":-100 },
+    { "name": "BigWing", "x":GS_W*0.2, "y":-GS_H*0.1 },
 ],
 
 "BigWing-right": [
-    { "name": "BigWing", "x":GS_W*0.8, "y":-100 },
+    { "name": "BigWing", "x":GS_W*0.8, "y":-GS_H*0.1 },
 ],
 
 /*
@@ -107,9 +107,8 @@ pb3.enemyUnit = {
 ],
 
 /*
- * アイテムキャリア「トイボックス」
+ *  中型輸送機「トイボックス」
  */
-
 //パワーアップ
 "ToyBox-p-left": [
     { "name": "ToyBox", "x":GS_W*0.2, "y":-GS_H*0.3, param:"power" },
@@ -120,7 +119,6 @@ pb3.enemyUnit = {
 "ToyBox-p-right": [
     { "name": "ToyBox", "x":GS_W*0.8, "y":-GS_H*0.3, param:"power" },
 ],
-
 //ボム
 "ToyBox-b-left": [
     { "name": "ToyBox", "x":GS_W*0.2, "y":-GS_H*0.3, param:"bomb" },
@@ -131,17 +129,6 @@ pb3.enemyUnit = {
 "ToyBox-b-right": [
     { "name": "ToyBox", "x":GS_W*0.8, "y":-GS_H*0.3, param:"bomb" },
 ],
-
-//ステージ１中ボス 軌道走行列車「トールハンマー」
-"ThorHammer": [
-    { "name": "ThorHammer", "x":GS_W*0.5, "y":-100 },
-],
-
-//ステージ１ボス　局地制圧用大型戦車「トール」
-"Thor": [
-    { "name": "Thor", "x":GS_W*0.5, "y":-GS_H*0.2 },
-],
-
 
 }
 

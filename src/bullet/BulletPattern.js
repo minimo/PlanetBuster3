@@ -230,7 +230,25 @@ pb3.bulletPattern["BigWing"] = new bulletml.Root({
     ]),
 });
 
-//ToyBox
+/*
+ *  砲台「フラガラッハ」
+ */
+pb3.bulletPattern["Fragarach"] = new bulletml.Root({
+    top0: $.action([
+        $.wait(90),
+        $.repeat(999, [
+            $.repeat(3, [
+                $absoluteNway(3, 190, 170, $spd(2), RM),
+                $interval(10),
+            ]),
+            $interval(120),
+        ]),
+    ]),
+});
+
+/*
+ *  中型輸送機「トイボックス」
+ */
 pb3.bulletPattern["ToyBox"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
