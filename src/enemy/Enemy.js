@@ -86,6 +86,12 @@ tm.define("pb3.Enemy", {
             this.body.update = function() {this.rotation = -that.rotation;};
         }
 
+        if (VIEW_COLLISION) {
+            this.col = tm.display.Shape(this.width, this.height).addChildTo(this);
+            this.col.renderRectangle({fillStyle: "rgba(255,255,0,0.5)", strokeStyle: "rgba(255,255,0,0.5)"});
+            this.col.update = function() {this.rotation = -that.rotation;};
+        }
+
         if (DEBUG) {
             //耐久力表示
             var df = this.defDisp = tm.display.OutlineLabel("[0/0]", 20).addChildTo(this);
