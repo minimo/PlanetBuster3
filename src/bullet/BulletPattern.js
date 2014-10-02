@@ -210,9 +210,9 @@ pb3.bulletPattern["BigWing"] = new bulletml.Root({
     top0: $.action([
         $.wait(90),
         $.repeat(999, [
-            $.repeat(5, [
+            $.repeat(3, [
                 $absoluteNway(3, 200, 160, $spd(2), RM),
-                $interval(10),
+                $interval(20),
             ]),
             $interval(120),
         ]),

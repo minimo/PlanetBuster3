@@ -94,8 +94,8 @@ pb3.enemyData['MudDauber'] = {
     bulletPattern: "MudDauber",
 
     //当り判定サイズ
-    width:  100,
-    height: 20,
+    width:  60,
+    height: 26,
 
     //耐久力
     def: 800,
@@ -162,8 +162,8 @@ pb3.enemyData['BigWing'] = {
     bulletPattern: "BigWing",
 
     //当り判定サイズ
-    width:  100,
-    height: 20,
+    width:  80,
+    height: 26,
 
     //耐久力
     def: 1000,
@@ -310,6 +310,48 @@ pb3.enemyData['Fragarach'] = {
 };
 
 /*
+ *  砲台「ブリュナーク」
+ */
+pb3.enemyData['Brionac'] = {
+    //使用弾幕パターン
+    bulletPattern: "Brionac",
+
+    //当り判定サイズ
+    width:  64,
+    height: 64,
+
+    //耐久力
+    def: 800,
+
+    //得点
+    point: 3000,
+
+    //表示レイヤー番号
+    layer: LAYER_OBJECT,
+
+    //敵タイプ
+    type: ENEMY_MIDDLE,
+
+    //爆発タイプ
+    explodeType: EXPLODE_MIDDLE,
+
+    //機体用テクスチャ情報
+    texName: "tex1",
+    texWidth: 48,
+    texHeight: 104,
+    texIndex: 0,
+
+    setup: function() {
+        this.index = this.texIndex;
+        this.phase = 0;
+        this.setFrameTrim(0, 128, 96, 104);
+    },
+
+    algorithm: function() {
+    },
+};
+
+/*
  *  中型輸送機「トイボックス」
  */
 pb3.enemyData['ToyBox'] = {
@@ -317,8 +359,8 @@ pb3.enemyData['ToyBox'] = {
     bulletPattern: "ToyBox",
 
     //当り判定サイズ
-    width:  40,
-    height: 100,
+    width:  30,
+    height: 90,
 
     //耐久力
     def: 500,
