@@ -352,6 +352,48 @@ pb3.enemyData['Brionac'] = {
 };
 
 /*
+ *  大型ミサイル「ミスティルテイン」
+ */
+pb3.enemyData['Mistilteinn'] = {
+    //使用弾幕パターン
+    bulletPattern: "nop",
+
+    //当り判定サイズ
+    width:  64,
+    height: 64,
+
+    //耐久力
+    def: 800,
+
+    //得点
+    point: 3000,
+
+    //表示レイヤー番号
+    layer: LAYER_OBJECT,
+
+    //敵タイプ
+    type: ENEMY_MIDDLE,
+
+    //爆発タイプ
+    explodeType: EXPLODE_MIDDLE,
+
+    //機体用テクスチャ情報
+    texName: "tex1",
+    texWidth: 48,
+    texHeight: 104,
+    texIndex: 0,
+
+    setup: function() {
+        this.index = this.texIndex;
+        this.phase = 0;
+        this.setFrameTrim(0, 128, 96, 104);
+    },
+
+    algorithm: function() {
+    },
+};
+
+/*
  *  中型輸送機「トイボックス」
  */
 pb3.enemyData['ToyBox'] = {

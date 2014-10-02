@@ -167,22 +167,18 @@ pb3.bulletPattern["MudDauber"] = new bulletml.Root({
     top0: $.action([
         $.wait(90),
         $.repeat(999, [
-            $.repeat(5, [
-                $fireBS(3),
+            $.repeat(3, [
+                $nway(4, -30, 30, &spd(3), RM, $.offsetX(-32)),
+                $nway(4, -30, 30, &spd(3), RM, $.offsetX( 32)),
+                $interval(10),
+            ]),
+            $interval(20),
+            $.repeat(3, [
+                $nway(5, -30, 30, &spd(3), BM, $.offsetX(-32)),
+                $nway(5, -30, 30, &spd(3), BM, $.offsetX( 32)),
                 $interval(10),
             ]),
             $interval(120),
-        ]),
-    ]),
-    top1: $.action([
-        $.wait(90),
-        $.repeat(999, [
-            $.repeat(3, [
-                $.fire($.direction(180, "absolute"), $spd(3), BM, $.offsetX(-32)),
-                $.fire($.direction(180, "absolute"), $spd(3), BM, $.offsetX( 32)),
-                $interval(15),
-            ]),
-            $interval(60),
         ]),
     ]),
 });
@@ -234,7 +230,20 @@ pb3.bulletPattern["BigWing"] = new bulletml.Root({
  *  砲台「フラガラッハ」
  */
 pb3.bulletPattern["Fragarach"] = new bulletml.Root({
-    top0: $.action([
+    top: $.action([
+        $.wait(20),
+        $.repeat(999, [
+            $interval(100),
+            $whip($spd3, 0.1, 3, $fire1),
+        ]),
+    ]),
+});
+
+/*
+ *  砲台「ブリュナーク」
+ */
+pb3.bulletPattern["Brionac"] = new bulletml.Root({
+    top: $.action([
         $.wait(90),
         $.repeat(999, [
             $.repeat(3, [
