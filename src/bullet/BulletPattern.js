@@ -168,14 +168,14 @@ pb3.bulletPattern["MudDauber"] = new bulletml.Root({
         $.wait(90),
         $.repeat(999, [
             $.repeat(3, [
-                $nway(4, -30, 30, &spd(3), RM, $.offsetX(-32)),
-                $nway(4, -30, 30, &spd(3), RM, $.offsetX( 32)),
+                $nway(4, -30, 30, $spd(3), RM, $.offsetX(-32)),
+                $nway(4, -30, 30, $spd(3), RM, $.offsetX( 32)),
                 $interval(10),
             ]),
             $interval(20),
             $.repeat(3, [
-                $nway(5, -30, 30, &spd(3), BM, $.offsetX(-32)),
-                $nway(5, -30, 30, &spd(3), BM, $.offsetX( 32)),
+                $nway(5, -30, 30, $spd(3), BM, $.offsetX(-32)),
+                $nway(5, -30, 30, $spd(3), BM, $.offsetX( 32)),
                 $interval(10),
             ]),
             $interval(120),
