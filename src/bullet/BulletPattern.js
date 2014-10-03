@@ -233,6 +233,7 @@ pb3.bulletPattern["Fragarach"] = new bulletml.Root({
     top: $.action([
         $.wait(20),
         $.repeat(999, [
+            $absoluteNway(3, 190, 170, $spd(2), RM),
             $interval(100),
         ]),
     ]),
