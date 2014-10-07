@@ -6,7 +6,7 @@
  */
 (function() {
 
-pb3.bulletPattern = [];
+pb3.bulletPattern = pb3.bulletPattern || [];
 var $ = bulletml.dsl;
 
 //ゲーム難易度
@@ -34,6 +34,10 @@ var BL = function(action) { return $.bullet(action, {type: "BL"}); };
 var RE = function(action) { return $.bullet(action, {type: "RE"}); };
 //楕円弾（青）(BlueEllipsean)
 var BE = function(action) { return $.bullet(action, {type: "BE"}); };
+//楕円弾（赤）(RedEllipsean)
+var RES = function(action) { return $.bullet(action, {type: "RES"}); };
+//楕円弾（青）(BlueEllipsean)
+var BES = function(action) { return $.bullet(action, {type: "BES"}); };
 
 //ランクを考慮したウェイト
 var $interval = function(v) {v = v===undefined?1:v; return $.wait(~~(v-$rank))};
@@ -44,6 +48,7 @@ var $spd = function(v) { v = v===undefined?1:v; return $.speed($rank*0.1*v+v);};
 //自機狙い弾
 var $fireBS = function(spd, x, y) { return $.fire($.direction(0), $.speed(spd) || $spd, BS, $.offsetX(x), $.offsetY(y)) };
 var $fireRS = function(spd, x, y) { return $.fire($.direction(0), $.speed(spd) || $spd, RS, $.offsetX(x), $.offsetY(y)) };
+var $file = function(spd, type, x, y) { return $.fire($.direction(0), $.speed(spd) || $spd, type || RS, $.offsetX(x), $.offsetY(y)) };
 
 /**
 
@@ -136,7 +141,7 @@ pb3.bulletPattern["Hornet1"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
         $.repeat(999, [
-            $fireRS(3),
+            $fireRS(2),
             $.wait("$rand * 60"),
         ]),
     ]),
