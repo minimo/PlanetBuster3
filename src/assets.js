@@ -16,11 +16,11 @@ pb3.assets = {
 
     "tex1":    "assets/images/tex1.png",
     "effect":  "assets/images/effect.png",
+    "cloud":   "assets/images/cloud.png",
 
     //マップ
-    "map1":    "assets/images/map1.tmx",
-    "map1g":   "assets/images/map1.png",
-    "cloud":   "assets/images/cloud.png",
+    "map1":    "assets/maps/map1.tmx",
+    "map1g":   "assets/maps/map1.png",
 
     //SE
     "powerup":       "assets/sounds/ta_ta_suraido01.mp3",
