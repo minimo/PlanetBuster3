@@ -14,6 +14,42 @@ pb3.enemyData = pb3.enemyData || [];
  *  装甲輸送列車「トールハンマー」
  *
  */
+pb3.enemyData['ThorHammer'] = {
+    //使用弾幕パターン
+    bulletPattern: "Hornet",
+
+    //当り判定サイズ
+    width:  98,
+    height: 196,
+
+    //耐久力
+    def: 1000,
+
+    //得点
+    point: 10000,
+
+    //表示レイヤー番号
+    layer: LAYER_OBJECT_LOWER,
+
+    //敵タイプ
+    type: ENEMY_MBOSS,
+
+    //爆発タイプ
+    explodeType: EXPLODE_MBOSS,
+
+    //機体用テクスチャ情報
+    texName: "boss1",
+    texWidth: 32,
+    texHeight: 32,
+    texIndex: 0,
+
+    setup: function(enterParam) {
+        this.phase = 0;
+    },
+
+    algorithm: function() {
+    },
+};
 
 /*
  *

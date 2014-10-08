@@ -231,6 +231,10 @@ pb3.enemyData['MournBlade'] = {
     texWidth: 48,
     texHeight: 104,
     texIndex: 0,
+    texTrimX: 0,
+    texTrimY: 128,
+    texTrimWidth: 96,
+    texTrimHeight: 104,
 
     setup: function() {
         this.index = this.texIndex;
@@ -383,6 +387,10 @@ pb3.enemyData['Mistilteinn'] = {
     texWidth: 48,
     texHeight: 104,
     texIndex: 0,
+    texTrimX: 0,
+    texTrimY: 128,
+    texTrimWidth: 96,
+    texTrimHeight: 104,
 
     setup: function() {
         this.index = this.texIndex;

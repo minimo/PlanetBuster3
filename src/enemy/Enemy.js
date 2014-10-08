@@ -74,6 +74,13 @@ tm.define("pb3.Enemy", {
             this.texWidth = d.texWidth;
             this.texHeight = d.texHeight;
             this.body = tm.display.Sprite(d.texName, d.texWidth, d.texHeight).addChildTo(this);
+
+            this.texTrimX = d.texTrimX || 0;
+            this.texTrimY = d.texTrimX || 0;
+            this.texTrimWidth = d.texTrimWidth || this.body.image.width;
+            this.texTrimHeight = d.texTrimHeight || this.body.image.height;
+
+            this.body.setFrameTrim(this.texTrimX, this.texTrimY, this.texTrimWidth, this.texTrimHeight);
             this.body.setFrameIndex(this.texIndex);
         } else {
             //当り判定ダミー表示

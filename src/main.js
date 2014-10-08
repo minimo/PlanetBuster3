@@ -57,6 +57,8 @@ ENEMY_ITEM = 9;
 EXPLODE_SMALL = 0;
 EXPLODE_MIDDLE = 1;
 EXPLODE_LARGE = 2;
+EXPLODE_MBOSS = 3;
+EXPLODE_BOSS = 4;
 
 var toRad = 3.14159/180;    //弧度法toラジアン変換
 var toDeg = 180/3.14159;    //ラジアンto弧度法変換
