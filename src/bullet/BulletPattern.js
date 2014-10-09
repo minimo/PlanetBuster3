@@ -31,9 +31,9 @@ var RL = function(action) { return $.bullet(action, {type: "RL"}); };
 var BL = function(action) { return $.bullet(action, {type: "BL"}); };
 
 //楕円弾（赤）(RedEllipsean)
-var RE = function(action) { return $.bullet(action, {type: "RE"}); };
+var REM = function(action) { return $.bullet(action, {type: "RE"}); };
 //楕円弾（青）(BlueEllipsean)
-var BE = function(action) { return $.bullet(action, {type: "BE"}); };
+var BEM = function(action) { return $.bullet(action, {type: "BE"}); };
 //楕円弾（赤）(RedEllipsean)
 var RES = function(action) { return $.bullet(action, {type: "RES"}); };
 //楕円弾（青）(BlueEllipsean)

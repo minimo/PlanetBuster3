@@ -63,15 +63,13 @@ pb3.PlanetBuster3 = tm.createClass({
             }.bind(this),
         });
 
-        //弾セットアップ
-        pb3.setupBullets();
-
         this.replaceScene(loadingScene);
     },
 
     _onLoadAssets: function() {
         [
             "tex1",
+            "boss1",
         ].forEach(function(name) {
             //赤ビットマップ作成
             var tex = tm.asset.AssetManager.get(name);
