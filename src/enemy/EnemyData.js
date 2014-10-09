@@ -239,7 +239,6 @@ pb3.enemyData['MournBlade'] = {
     setup: function() {
         this.index = this.texIndex;
         this.phase = 0;
-        this.setFrameTrim(0, 128, 96, 104);
 
         this.roter = tm.display.Sprite("tex1", 114, 48).addChildTo(this);
         this.roter.setFrameTrim(96, 128, 192, 104);
