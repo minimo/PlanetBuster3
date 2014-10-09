@@ -141,8 +141,8 @@ pb3.bulletPattern["Hornet1"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
         $.repeat(999, [
-            $fireRS(2),
-            $.wait("$rand * 60"),
+            $fireRS(3),
+            $.wait("$rand * 150"),
         ]),
     ]),
 });
@@ -151,7 +151,7 @@ pb3.bulletPattern["Hornet2"] = new bulletml.Root({
         $.wait(60),
         $.repeat(3, [
             $fireRS(3),
-            $.wait("$rand * 60"),
+            $.wait("$rand * 150"),
         ]),
     ]),
 });
@@ -160,7 +160,7 @@ pb3.bulletPattern["Hornet3"] = new bulletml.Root({
         $.wait(60),
         $.repeat(999, [
             $fireRS(3),
-            $.wait("$rand * 60"),
+            $.wait("$rand * 150"),
         ]),
     ]),
 });
