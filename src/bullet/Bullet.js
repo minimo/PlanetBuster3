@@ -38,10 +38,10 @@ tm.define("pb3.Bullet", {
         switch (param.type) {
             case "RS":  type = 1; size = 0.6; index = 0; break;
             case "BS":  type = 1; size = 0.6; index = 1; break;
-            case "RM":  type = 1; size = 1.0; index = 0; break;
-            case "BM":  type = 1; size = 1.0; index = 1; break;
-            case "RL":  type = 1; size = 1.2; index = 0; break;
-            case "BL":  type = 1; size = 1.2; index = 1; break;
+            case "RM":  type = 1; size = 0.8; index = 0; break;
+            case "BM":  type = 1; size = 0.8; index = 1; break;
+            case "RL":  type = 1; size = 1.0; index = 0; break;
+            case "BL":  type = 1; size = 1.0; index = 1; break;
 
             case "RES": type = 2; size = 0.6; index = 0; break;
             case "BES": type = 2; size = 0.6; index =16; break;
