@@ -39,6 +39,9 @@ var RES = function(action) { return $.bullet(action, {type: "RES"}); };
 //楕円弾（青）(BlueEllipsean)
 var BES = function(action) { return $.bullet(action, {type: "BES"}); };
 
+//針弾
+var THIN = function(action) { return $.bullet(action, {type: "THIN"}); };
+
 //ランクを考慮したウェイト
 var $interval = function(v) {v = v===undefined?1:v; return $.wait(~~(v-$rank))};
 
@@ -141,7 +144,7 @@ pb3.bulletPattern["Hornet1"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
         $.repeat(999, [
-            $fireRS(3),
+            $file(3, THIN),
             $.wait("$rand * 150"),
         ]),
     ]),
@@ -159,7 +162,7 @@ pb3.bulletPattern["Hornet3"] = new bulletml.Root({
     top: $.action([
         $.wait(60),
         $.repeat(999, [
-            $fireRS(3),
+            $file(3, THIN),
             $.wait("$rand * 150"),
         ]),
     ]),
