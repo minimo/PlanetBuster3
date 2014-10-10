@@ -65,17 +65,34 @@ tm.main(function() {
     bulletGraphic["B-1"] = tm.graphics.Canvas().resize(32, 32).setFillStyle(color1).fillRect(0, 0, 32, 32);
     bulletGraphic["B-2"] = tm.graphics.Canvas().resize(16, 16).setFillStyle(color2).fillRect(0, 0, 16, 16);
 
+    //通常（赤）
     var sp1 = tm.app.Object2D().addChildTo(scene).setPosition(12, 12);
     tm.display.Shape(24, 24).addChildTo(sp1).canvas = bulletGraphic["R-1"];
     tm.display.Shape(10, 10).addChildTo(sp1).setPosition( 0,-3).canvas = bulletGraphic["R-2"];
     tm.display.Shape(10, 10).addChildTo(sp1).setPosition(-3, 3).canvas = bulletGraphic["R-2"];
     tm.display.Shape(10, 10).addChildTo(sp1).setPosition( 3, 3).canvas = bulletGraphic["R-2"];
 
-    var sp1 = tm.app.Object2D().addChildTo(scene).setPosition(36, 12);
-    tm.display.Shape(24, 24).addChildTo(sp1).canvas = bulletGraphic["B-1"];
-    tm.display.Shape(10, 10).addChildTo(sp1).setPosition( 0,-3).canvas = bulletGraphic["B-2"];
-    tm.display.Shape(10, 10).addChildTo(sp1).setPosition(-3, 3).canvas = bulletGraphic["B-2"];
-    tm.display.Shape(10, 10).addChildTo(sp1).setPosition( 3, 3).canvas = bulletGraphic["B-2"];
+    //通常（青）
+    var sp2 = tm.app.Object2D().addChildTo(scene).setPosition(36, 12);
+    tm.display.Shape(24, 24).addChildTo(sp2).canvas = bulletGraphic["B-1"];
+    tm.display.Shape(10, 10).addChildTo(sp2).setPosition( 0,-3).canvas = bulletGraphic["B-2"];
+    tm.display.Shape(10, 10).addChildTo(sp2).setPosition(-3, 3).canvas = bulletGraphic["B-2"];
+    tm.display.Shape(10, 10).addChildTo(sp2).setPosition( 3, 3).canvas = bulletGraphic["B-2"];
+
+    var c = 240;
+    var color1 = tm.graphics.RadialGradient(8, 8, 0, 8, 8, 8)
+        .addColorStopList([
+            {offset:0.0, color: "rgba(128, 0, 0, 1.0)"},
+            {offset:0.9, color: "rgba(255,64,64, 1.0)"},
+            {offset:1.0, color: "rgba(  0, 0, 0, 0.0)"},
+        ]).toStyle();
+
+    bulletGraphic["T"] = tm.graphics.Canvas().resize(16, 16).setFillStyle(color1).fillRect(0, 0, 16, 16);
+
+    var sp3 = tm.app.Object2D().addChildTo(scene).setPosition(60, 12);
+    tm.display.Shape(10, 10).addChildTo(sp3).setPosition( 0,-3).canvas = bulletGraphic["T"];
+    tm.display.Shape(10, 10).addChildTo(sp3).setPosition(-3, 3).canvas = bulletGraphic["T"];
+    tm.display.Shape(10, 10).addChildTo(sp3).setPosition( 3, 3).canvas = bulletGraphic["T"];
 
     tm.dom.Element("#ok").event.click(function() {
         app.focus = null;
