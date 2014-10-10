@@ -53,11 +53,7 @@ tm.define("pb3.Bullet", {
         tm.display.Sprite("bullet"+type, 24, 24).addChildTo(this).setFrameIndex(index).setScale(size);
 
         this.on("enterframe", function(){
-            if (this.rolling) {
-                this.rotation += this.rollAngle;
-            } else {
-//                this.rotation = this.runner.direction*toDeg;
-            }
+            if (this.rolling) this.rotation += this.rollAngle;
 
             //自機との当り判定チェック
             if (app.player.isCollision) {
