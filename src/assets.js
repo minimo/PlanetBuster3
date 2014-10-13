@@ -15,6 +15,7 @@ pb3.assets = {
     "shot2":   "assets/images/shot2.png",
 
     "tex1":    "assets/images/tex1.png",
+    "tex2":    "assets/images/tex2.png",
     "boss1":   "assets/images/tex_boss1.png",
     "bullet1": "assets/images/bullet1.png",
     "bullet2": "assets/images/bullet2.png",

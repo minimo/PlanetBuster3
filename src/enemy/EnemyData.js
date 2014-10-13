@@ -272,21 +272,21 @@ pb3.enemyData['MournBlade'] = {
 };
 
 /*
- *  砲台「フラガラッハ」
+ *  移動砲台「フラガラッハ」
  */
 pb3.enemyData['Fragarach'] = {
     //使用弾幕パターン
     bulletPattern: "Fragarach",
 
     //当り判定サイズ
-    width:  64,
-    height: 64,
+    width:  48,
+    height: 48,
 
     //耐久力
-    def: 800,
+    def: 50,
 
     //得点
-    point: 3000,
+    point: 500,
 
     //表示レイヤー番号
     layer: LAYER_OBJECT,
@@ -298,15 +298,18 @@ pb3.enemyData['Fragarach'] = {
     explodeType: EXPLODE_MIDDLE,
 
     //機体用テクスチャ情報
-    texName: "tex1",
+    texName: "tex2",
     texWidth: 48,
-    texHeight: 104,
+    texHeight: 48,
     texIndex: 0,
 
     setup: function() {
         this.index = this.texIndex;
         this.phase = 0;
-        this.setFrameTrim(0, 128, 96, 104);
+
+        this.turret = tm.display.Sprite("tex1", 114, 48).addChildTo(this);
+        this.turret.setFrameTrim(96, 128, 192, 104);
+        this.turret.setFrameIndex(0);
     },
 
     algorithm: function() {
