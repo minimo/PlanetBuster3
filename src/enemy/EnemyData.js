@@ -292,7 +292,7 @@ pb3.enemyData['Fragarach'] = {
     layer: LAYER_OBJECT,
 
     //敵タイプ
-    type: ENEMY_MIDDLE,
+    type: ENEMY_SMALL,
 
     //爆発タイプ
     explodeType: EXPLODE_GROUND,
@@ -306,9 +306,24 @@ pb3.enemyData['Fragarach'] = {
     texHeight: 48,
     texIndex: 0,
 
-    setup: function() {
+    setup: function(param) {
         this.index = this.texIndex;
         this.phase = 0;
+
+        switch (param) {
+            case "c":
+                this.vx = 0;
+                this.vy = 1;
+                break;
+            case "l":
+                this.vx = 1;
+                this.vy = 0;
+                break;
+            case "r":
+                this.vx = -1;
+                this.vy = 0;
+                break;
+        }
 
         this.turret = tm.display.Sprite("tex1", 32, 32).addChildTo(this);
         this.turret.setFrameTrim(192, 32, 32, 32);
@@ -320,6 +335,8 @@ pb3.enemyData['Fragarach'] = {
             this.index = (this.index+1)%4;
             this.body.setFrameIndex(this.index);
         }
+        this.x += this.vx*0.2;
+        this.y += this.vy*0.2;
     },
 };
 
