@@ -71,7 +71,7 @@ pb3.Effect.enterExplodeGround = function(parentScene, x, y, vx, vy, delay) {
     vx = vx || 0;
     vy = vy || 0;
     delay = delay || 0;
-    pb3.Effect.ExplodeGround(delay).addChildTo(parentScene).setPosition(x, y).setVelocity(vx, vy, 0);
+    pb3.Effect.ExplodeGround(delay).addChildTo(parentScene).setPosition(x, y).setVelocity(vx, vy, 0).setScale(2.0);
 
     var val = rand(5, 10);
     for (var i = 0; i < val; i++) {

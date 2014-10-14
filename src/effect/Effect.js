@@ -39,6 +39,13 @@ tm.define("pb3.Effect.EffectBase", {
     velocityY: 0,   //Ｙ座標方向
     velocityD: 0,   //減衰率
 
+    //相対地上座標
+    groundX: 0,
+    groundY: 0,
+
+    //地上エフェクトフラグ
+    ifGround: false,
+
     time: 0,
 
     init: function(tex, width, height, interval, startIndex, maxIndex, delay) {
@@ -53,6 +60,8 @@ tm.define("pb3.Effect.EffectBase", {
         this.index = this.startIndex;
         this.setFrameIndex(this.index);
 
+        this.parentScene = app.currentScene;
+
         this.on("enterframe", this.defaultEnterFrame);
     },
 
@@ -63,6 +72,17 @@ tm.define("pb3.Effect.EffectBase", {
             return;
         }
         if (this.time == 0) this.visible = true;
+
+        //地上物現座標調整
+        if (this.isGround) {
+            var x = this.groundX-this.parentScene.ground.x;
+            var y = this.groundY-this.parentScene.ground.y;
+            this.x-=x;
+            this.y-=y;
+            this.groundX = this.parentScene.ground.x;
+            this.groundY = this.parentScene.ground.y;
+        }
+
         if (this.time % this.interval == 0) {
             this.setFrameIndex(this.index);
             this.index++;
@@ -156,11 +176,15 @@ tm.define("pb3.Effect.ExplodeLarge", {
 //爆発エフェクト（地上）
 tm.define("pb3.Effect.ExplodeGround", {
     superClass: "pb3.Effect.EffectBase",
-    layer: LAYER_EFFECT_UPPER,
+    layer: LAYER_EFFECT_LOWER,
+    isGround: true,
 
     init: function(delay) {
         this.setFrameTrim(256, 192, 256, 48);
-        this.superInit("effect", 32, 48, 2, 0, 7, delay);
+        this.superInit("effect", 32, 48, 4, 0, 7, delay);
+
+        this.groundX = this.parentScene.ground.x;
+        this.groundY = this.parentScene.ground.y;
     },
 });
 

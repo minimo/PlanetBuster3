@@ -44,7 +44,7 @@ tm.define("pb3.Enemy", {
     beforeX: 0,
     beforeY: 0,
 
-    //地上相対座標
+    //相対地上座標
     groundX: 0,
     groundY: 0,
 
