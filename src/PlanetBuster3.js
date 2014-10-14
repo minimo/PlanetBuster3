@@ -69,44 +69,46 @@ pb3.PlanetBuster3 = tm.createClass({
     _onLoadAssets: function() {
         [
             "tex1",
+            "tex2",
             "boss1",
         ].forEach(function(name) {
-            //赤ビットマップ作成
+            //瀕死用ビットマップ作成
             var tex = tm.asset.AssetManager.get(name);
             var canvas = tm.graphics.Canvas();
             canvas.resize(tex.width, tex.height);
             canvas.drawTexture(tex, 0, 0);
 
-            var bmRed = canvas.getBitmap();
-            bmRed.filter({
+            var bm = canvas.getBitmap();
+            bm.filter({
                 calc: function(pixel, index, x, y, bitmap) {
                     bitmap.setPixelIndex(index, pixel[0], 0, 0);
                 }
             });
-            var cvRed = tm.graphics.Canvas();
-            cvRed.resize(tex.width, tex.height);
-            cvRed.drawBitmap(bmRed, 0, 0);
-            tm.asset.AssetManager.set(name + "Red", cvRed);
+            var cv = tm.graphics.Canvas();
+            cv.resize(tex.width, tex.height);
+            cv.drawBitmap(bm, 0, 0);
+            tm.asset.AssetManager.set(name + "Red", cv);
 
-            //白ビットマップ作成
+            //ダメージ用ビットマップ作成
             var tex = tm.asset.AssetManager.get(name);
             var canvas = tm.graphics.Canvas();
             canvas.resize(tex.width, tex.height);
             canvas.drawTexture(tex, 0, 0);
 
-            var bmRed = canvas.getBitmap();
-            bmRed.filter({
+            var bm = canvas.getBitmap();
+            bm.filter({
                 calc: function(pixel, index, x, y, bitmap) {
                     var r = (pixel[0]==0?0:128);
                     var g = (pixel[1]==0?0:128);
                     var b = (pixel[2]==0?0:128);
-                    bitmap.setPixelIndex(index, r, g, b);
+//                    bitmap.setPixelIndex(index, r, g, b);
+                    bitmap.setPixelIndex(index, 0, 0, pixel[2]);
                 }
             });
-            var cvRed = tm.graphics.Canvas();
-            cvRed.resize(tex.width, tex.height);
-            cvRed.drawBitmap(bmRed, 0, 0);
-            tm.asset.AssetManager.set(name + "White", cvRed);
+            var cv = tm.graphics.Canvas();
+            cv.resize(tex.width, tex.height);
+            cv.drawBitmap(bmRed, 0, 0);
+            tm.asset.AssetManager.set(name + "White", cv);
         });
     },
 

@@ -44,6 +44,10 @@ tm.define("pb3.Enemy", {
     beforeX: 0,
     beforeY: 0,
 
+    //地上相対座標
+    goundX: 0,
+    goundY: 0,
+
     init: function(name, x, y, id, param) {
         this.superInit();
         this.setPosition(x, y);
@@ -110,9 +114,22 @@ tm.define("pb3.Enemy", {
             }
         }
 
+        //フラグセット
+        this.isCollision = d.isCollision || this.isCollision;
+        this.isDead      = d.isDead      || this.isDead;
+        this.isSelfCrash = d.isSelfCrash || this.isSelfCrash;
+        this.isMuteki    = d.isMuteki    || this.isMuteki
+        this.isBoss      = d.isBoss      || this.isBoss;
+        this.isOnScreen  = d.isOnScreen  || this.isOnScreen;
+        this.isGround    = d.isGround    || this.isGround;
+        this.isEnemy     = d.isEnemy     || this.isEnemy;
+        this.isAttack    = d.isAttack    || this.isAttack;
+
         //パラメータセットアップ
         this.parentScene = app.currentScene;
         this.setup(param);
+        this.goundX = this.parentScene.ground.x;
+        this.goundY = this.parentScene.ground.y;
 
         //弾幕定義
         if (this.bulletPattern instanceof Array) {
@@ -146,6 +163,18 @@ tm.define("pb3.Enemy", {
 
     update: function() {
         if (this.isDead) return;
+
+        //地上物現座標調整
+        if (this.isGround) {
+            var x = this.groundX-this.parentScene.ground.x;
+            var y = this.groundY-this.parentScene.ground.y;
+            this.x-=x;
+            this.y-=y;
+            this.groundX = this.parentScene.ground.x;
+            this.groundY = this.parentScene.ground.y;
+        }
+
+        //行動アルゴリズム
         this.algorithm();
 
         //スクリーン内入った判定

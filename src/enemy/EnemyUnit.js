@@ -107,6 +107,13 @@ pb3.enemyUnit = {
 ],
 
 /*
+ *  中型戦車「フラガラッハ」
+ */
+"Fragarach-center": [
+    { "name": "Fragarach", "x": GS_W*0.5, "y":-GS_H*0.1 },
+],
+
+/*
  *  中型輸送機「トイボックス」
  */
 //パワーアップ
