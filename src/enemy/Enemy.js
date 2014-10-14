@@ -45,8 +45,8 @@ tm.define("pb3.Enemy", {
     beforeY: 0,
 
     //地上相対座標
-    goundX: 0,
-    goundY: 0,
+    groundX: 0,
+    groundY: 0,
 
     init: function(name, x, y, id, param) {
         this.superInit();
@@ -128,8 +128,8 @@ tm.define("pb3.Enemy", {
         //パラメータセットアップ
         this.parentScene = app.currentScene;
         this.setup(param);
-        this.goundX = this.parentScene.ground.x;
-        this.goundY = this.parentScene.ground.y;
+        this.groundX = this.parentScene.ground.x;
+        this.groundY = this.parentScene.ground.y;
 
         //弾幕定義
         if (this.bulletPattern instanceof Array) {

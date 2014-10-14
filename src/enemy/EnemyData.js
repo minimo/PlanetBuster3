@@ -320,7 +320,6 @@ pb3.enemyData['Fragarach'] = {
             this.index = (this.index+1)%4;
             this.body.setFrameIndex(this.index);
         }
-        this.y++;
     },
 };
 

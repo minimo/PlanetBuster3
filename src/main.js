@@ -15,7 +15,7 @@ var fontLoadEnd = false;
 //デバッグ
 DEBUG = true;
 MUTEKI = false;
-VIEW_COLLISION = true;
+VIEW_COLLISION = false;
 
 //スクリーンサイズ
 SC_W = 480;

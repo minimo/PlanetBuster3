@@ -107,7 +107,7 @@ pb3.PlanetBuster3 = tm.createClass({
             });
             var cv = tm.graphics.Canvas();
             cv.resize(tex.width, tex.height);
-            cv.drawBitmap(bmRed, 0, 0);
+            cv.drawBitmap(bm, 0, 0);
             tm.asset.AssetManager.set(name + "White", cv);
         });
     },
