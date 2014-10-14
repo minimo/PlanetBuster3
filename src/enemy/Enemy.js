@@ -295,7 +295,8 @@ tm.define("pb3.Enemy", {
             pb3.Effect.enterExplode(this.parentScene, this.x, this.y, vx, vy);
             app.playSE("explodeSmall");
         }
-        if (this.data.explodeType >= EXPLODE_MIDDLE) {
+        if (this.data.explodeType == EXPLODE_MIDDLE ||
+            this.data.explodeType == EXPLODE_LARGE ) {
             var num = rand(20, 30)*this.data.explodeType;
             for (var i = 0; i < num; i++) {
                 var x = this.x+rand(-this.width, this.width);
@@ -304,6 +305,10 @@ tm.define("pb3.Enemy", {
                 pb3.Effect.enterExplode(this.parentScene, x, y, vx, vy, delay);
             }
             app.playSE("explodeLarge");
+        }
+        if (this.data.explodeType == EXPLODE_GROUND) {
+            pb3.Effect.enterExplodeGround(this.parentScene, this.x, this.y, vx, vy);
+            app.playSE("explodeSmall");
         }
 
         //弾消し

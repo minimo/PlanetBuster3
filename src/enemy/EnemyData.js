@@ -295,7 +295,7 @@ pb3.enemyData['Fragarach'] = {
     type: ENEMY_MIDDLE,
 
     //爆発タイプ
-    explodeType: EXPLODE_SMALL,
+    explodeType: EXPLODE_GROUND,
 
     //各種フラグ
     isGround: true,
