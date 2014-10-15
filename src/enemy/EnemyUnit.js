@@ -126,15 +126,15 @@ pb3.enemyUnit = {
 ],
 "Fragarach-left": [
     { "name": "Fragarach", "x":-GS_W*0.1, "y": GS_H*0.1, param:"l" },
-    { "name": "Fragarach", "x":-GS_W*0.2, "y": GS_H*0.1, param:"l" },
-    { "name": "Fragarach", "x":-GS_W*0.3, "y": GS_H*0.1, param:"l" },
-    { "name": "Fragarach", "x":-GS_W*0.4, "y": GS_H*0.1, param:"l" },
+    { "name": "Fragarach", "x":-GS_W*0.1, "y": GS_H*0.2, param:"l" },
+    { "name": "Fragarach", "x":-GS_W*0.2, "y": GS_H*0.3, param:"l" },
+    { "name": "Fragarach", "x":-GS_W*0.2, "y": GS_H*0.4, param:"l" },
 ],
 "Fragarach-right": [
     { "name": "Fragarach", "x": GS_W*1.1, "y": GS_H*0.1, param:"r" },
-    { "name": "Fragarach", "x": GS_W*1.2, "y": GS_H*0.1, param:"r" },
-    { "name": "Fragarach", "x": GS_W*1.3, "y": GS_H*0.1, param:"r" },
-    { "name": "Fragarach", "x": GS_W*1.4, "y": GS_H*0.1, param:"r" },
+    { "name": "Fragarach", "x": GS_W*1.1, "y": GS_H*0.2, param:"r" },
+    { "name": "Fragarach", "x": GS_W*1.2, "y": GS_H*0.3, param:"r" },
+    { "name": "Fragarach", "x": GS_W*1.2, "y": GS_H*0.4, param:"r" },
 ],
 
 /*

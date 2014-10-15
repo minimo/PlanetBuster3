@@ -25,6 +25,8 @@ tm.define("pb3.Stage1", {
         });
 
         this.add( 180, "Fragarach-center");
+        this.add( 60, "Fragarach-right");
+        this.add( 60, "Fragarach-left");
 
         //Stage data
         this.add( 180, "Hornet1-left");

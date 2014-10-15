@@ -328,6 +328,14 @@ pb3.enemyData['Fragarach'] = {
     },
 
     algorithm: function() {
+
+        //ターゲットの方向を向く
+        var ax = this.x - app.player.x;
+        var ay = this.y - app.player.y;
+        var rad = Math.atan2(ay, ax);
+        var deg = ~~(rad * toDeg);
+        this.turret.rotation = deg + 90;
+
         if (this.time % 4 == 0) {
             this.index = (this.index+1)%4;
             this.body.setFrameIndex(this.index);
