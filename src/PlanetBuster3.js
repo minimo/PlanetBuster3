@@ -72,8 +72,9 @@ pb3.PlanetBuster3 = tm.createClass({
             "tex2",
             "boss1",
         ].forEach(function(name) {
-            //瀕死用ビットマップ作成
             var tex = tm.asset.AssetManager.get(name);
+
+            //瀕死用ビットマップ作成
             var canvas = tm.graphics.Canvas();
             canvas.resize(tex.width, tex.height);
             canvas.drawTexture(tex, 0, 0);
@@ -90,7 +91,6 @@ pb3.PlanetBuster3 = tm.createClass({
             tm.asset.AssetManager.set(name + "Red", cv);
 
             //ダメージ用ビットマップ作成
-            var tex = tm.asset.AssetManager.get(name);
             var canvas = tm.graphics.Canvas();
             canvas.resize(tex.width, tex.height);
             canvas.drawTexture(tex, 0, 0);
@@ -101,14 +101,29 @@ pb3.PlanetBuster3 = tm.createClass({
                     var r = (pixel[0]==0?0:128);
                     var g = (pixel[1]==0?0:128);
                     var b = (pixel[2]==0?0:128);
-//                    bitmap.setPixelIndex(index, r, g, b);
-                    bitmap.setPixelIndex(index, 0, 0, pixel[2]);
+                    bitmap.setPixelIndex(index, r, g, b);
                 }
             });
             var cv = tm.graphics.Canvas();
             cv.resize(tex.width, tex.height);
             cv.drawBitmap(bm, 0, 0);
             tm.asset.AssetManager.set(name + "White", cv);
+
+            //ダメージ用ビットマップ作成２
+            var canvas = tm.graphics.Canvas();
+            canvas.resize(tex.width, tex.height);
+            canvas.drawTexture(tex, 0, 0);
+
+            var bm = canvas.getBitmap();
+            bm.filter({
+                calc: function(pixel, index, x, y, bitmap) {
+                    bitmap.setPixelIndex(index, 0, 0, pixel[2]);
+                }
+            });
+            var cv = tm.graphics.Canvas();
+            cv.resize(tex.width, tex.height);
+            cv.drawBitmap(bm, 0, 0);
+            tm.asset.AssetManager.set(name + "Blue", cv);
         });
     },
 
