@@ -39,8 +39,10 @@ tm.define("pb3.Enemy", {
     texWidth: 32,
     texHeight: 32,
 
+    //基本情報
     data: null,
 
+    //前フレーム座標
     beforeX: 0,
     beforeY: 0,
 
@@ -194,13 +196,16 @@ tm.define("pb3.Enemy", {
         }
 
         //親機が破壊された場合、自分も破壊
-        if (this.parentEnemy && this.parentEnemy.isDead) this.dead();
+        if (this.parentEnemy && this.parentEnemy.isDead) {
+            this.isSelfCrash = true;
+            this.dead();
+        }
 
         //瀕死
         if (this.def < this.defMax*0.2) this.nearDeath();
 
         //地上敵で自機に近い場合は弾を撃たない
-        if (this.isGround) {
+        if (this.isGround && !this.isBoss) {
             if (distanceSq(this, app.player) < 4096)
                 this.isAttack = false;
             else
@@ -234,8 +239,7 @@ tm.define("pb3.Enemy", {
             if (this.parentEnemy) this.parentEnemy.deadChild(this);
 
             //スコア加算
-            app.score += this.data.point;
-
+            if (!this.isSelfCrash) app.score += this.data.point;
 /*
             //得点表示
             var sc = tm.display.OutlineLabel(this.data.point, 30);
