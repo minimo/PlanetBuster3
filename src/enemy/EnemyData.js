@@ -312,16 +312,13 @@ pb3.enemyData['Fragarach'] = {
 
         switch (param) {
             case "c":
-                this.vx = 0;
-                this.vy = 1;
+                this.rotation = 0;
                 break;
             case "l":
-                this.vx = 1;
-                this.vy = 0;
+                this.rotation = 90;
                 break;
             case "r":
-                this.vx = -1;
-                this.vy = 0;
+                this.rotation = 270;
                 break;
         }
 
@@ -335,8 +332,8 @@ pb3.enemyData['Fragarach'] = {
             this.index = (this.index+1)%4;
             this.body.setFrameIndex(this.index);
         }
-        this.x += this.vx*0.2;
-        this.y += this.vy*0.2;
+        this.x += Math.cos((this.rotation+90)*toRad)*0.2;
+        this.y += Math.sin((this.rotation+90)*toRad)*0.2;
     },
 };
 

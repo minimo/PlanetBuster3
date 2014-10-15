@@ -110,10 +110,19 @@ pb3.enemyUnit = {
  *  中型戦車「フラガラッハ」
  */
 "Fragarach-center": [
-    { "name": "Fragarach", "x": GS_W*0.5, "y":-GS_H*0.1, param:"c" },
-    { "name": "Fragarach", "x": GS_W*0.5, "y":-GS_H*0.2, param:"c" },
-    { "name": "Fragarach", "x": GS_W*0.5, "y":-GS_H*0.3, param:"c" },
-    { "name": "Fragarach", "x": GS_W*0.5, "y":-GS_H*0.4, param:"c" },
+    { "name": "Fragarach", "x": GS_W*0.3, "y":-GS_H*0.1, param:"c" },
+    { "name": "Fragarach", "x": GS_W*0.3, "y":-GS_H*0.2, param:"c" },
+    { "name": "Fragarach", "x": GS_W*0.3, "y":-GS_H*0.3, param:"c" },
+    { "name": "Fragarach", "x": GS_W*0.3, "y":-GS_H*0.4, param:"c" },
+
+    { "name": "Fragarach", "x": GS_W*0.5, "y":-GS_H*0.35, param:"c" },
+    { "name": "Fragarach", "x": GS_W*0.5, "y":-GS_H*0.25, param:"c" },
+    { "name": "Fragarach", "x": GS_W*0.5, "y":-GS_H*0.45, param:"c" },
+
+    { "name": "Fragarach", "x": GS_W*0.7, "y":-GS_H*0.1, param:"c" },
+    { "name": "Fragarach", "x": GS_W*0.7, "y":-GS_H*0.2, param:"c" },
+    { "name": "Fragarach", "x": GS_W*0.7, "y":-GS_H*0.3, param:"c" },
+    { "name": "Fragarach", "x": GS_W*0.7, "y":-GS_H*0.4, param:"c" },
 ],
 "Fragarach-left": [
     { "name": "Fragarach", "x":-GS_W*0.1, "y": GS_H*0.1, param:"l" },
