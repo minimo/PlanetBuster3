@@ -242,7 +242,7 @@ pb3.bulletPattern["Fragarach"] = new bulletml.Root({
         $.wait(20),
         $.repeat(999, [
             $fireRS(3),
-            $interval("$rand*60+30"),
+            $.wait("$rand*90"),
         ]),
     ]),
 });
