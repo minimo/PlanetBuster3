@@ -276,4 +276,25 @@ pb3.bulletPattern["ToyBox"] = new bulletml.Root({
     ]),
 });
 
+
+
+/*
+ *
+ *  １面中ボス
+ *  装甲輸送列車「トールハンマー」
+ *
+ */
+pb3.bulletPattern["ThorHammer"] = new bulletml.Root({
+    top1: $.action([
+        $.wait(90),
+        $.repeat(999, [
+            $.repeat(10, [
+                $absoluteNway(7, 210, 270, $spd(3), BM, $.offset(-64)),
+                $absoluteNway(7,  30, 150, $spd(3), BM, $.offset( 64)),
+                $interval(30),
+            ]),
+            $interval(60),
+        ]),
+    ]),
+});
 })();

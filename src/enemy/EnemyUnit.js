@@ -161,6 +161,22 @@ pb3.enemyUnit = {
     { "name": "ToyBox", "x":GS_W*0.8, "y":-GS_H*0.3, param:"bomb" },
 ],
 
+/*
+ *
+ *  １面中ボス
+ *  装甲輸送列車「トールハンマー」
+ *
+ */
+"ThorHammer": [
+    { "name": "ThorHammer", "x":GS_W*0.5, "y": GS_H*1.3 },
+],
+
+
+
+
+
+
+
 }
 
 })();
