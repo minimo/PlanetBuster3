@@ -16,7 +16,7 @@ pb3.enemyData = pb3.enemyData || [];
  */
 pb3.enemyData['ThorHammer'] = {
     //使用弾幕パターン
-    bulletPattern: "Hornet",
+    bulletPattern: "ThorHammer",
 
     //当り判定サイズ
     width:  98,
