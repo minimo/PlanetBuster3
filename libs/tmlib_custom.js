@@ -13,6 +13,7 @@
  */
 var tm = tm || {};
 tm.global = window || global || this;
+tm.global.tm = tm;
 
 // node.js
 if (typeof module !== 'undefined' && module.exports) {
@@ -2509,10 +2510,10 @@ tm.util = tm.util || {};
         version = version || "r11";
         var path = null;
         if (["r6", "r7", "r8", "r9", "10"].indexOf(version) != -1) {
-            path = "http://rawgithub.com/mrdoob/stats.js/" + version + "/build/Stats.js";
+            path = "https://cdn.rawgit.com/mrdoob/stats.js/" + version + "/build/Stats.js";
         }
         else {
-            path = "http://rawgithub.com/mrdoob/stats.js/" + version + "/build/stats.min.js";
+            path = "http://cdn.rawgit.com/mrdoob/stats.js/" + version + "/build/stats.min.js";
         }
 
         return this.load(path);
@@ -2540,7 +2541,7 @@ tm.util = tm.util || {};
      * Three.js を動的ロード
      */
     tm.util.Script.loadThree = function(version) {
-        var THREE_JS_URL = "http://rawgithub.com/mrdoob/three.js/{version}/build/three.js";
+        var THREE_JS_URL = "http://cdn.rawgit.com/mrdoob/three.js/{version}/build/three.js";
 //        var THREE_JS_URL = "https://raw.github.com/mrdoob/three.js/{version}/build/three.min.js";
         version = version || "r55";
 
@@ -2555,7 +2556,7 @@ tm.util = tm.util || {};
      * BulletML.js を動的ロード
      */
     tm.util.Script.loadBulletML = function(version) {
-        var BULLETML_FOR_TMLIB_JS_URL   = "http://rawgithub.com/daishihmr/bulletml.js/{version}/target/bulletml.for.tmlib.js";
+        var BULLETML_FOR_TMLIB_JS_URL   = "http://cdn.rawgit.com/daishihmr/bulletml.js/{version}/target/bulletml.for.tmlib.js";
         version = version || "v0.4.2";
         var path = BULLETML_FOR_TMLIB_JS_URL.format({version: version});        
         return this.load(path);
@@ -6798,7 +6799,7 @@ tm.dom = tm.dom || {};
             // type が省略されている場合は拡張子から判定する
             type = type || path.split('?')[0].split('#')[0].split('.').last;
             
-            var asset = tm.asset.Loader._funcs[type](path);
+            var asset = tm.asset.Loader._funcs[type](path, key);
             this.set(key, asset);
             
             return asset;
@@ -16938,7 +16939,7 @@ tm.ui = tm.ui || {};
             bar.animationTime = 100;
             
             // ひよこさん
-//            this._createHiyoko(param).addChildTo(this.stage.piyoLayer);
+            this._createHiyoko(param).addChildTo(this.stage.piyoLayer);
 
             // load
             var stage = this.stage;
@@ -16973,12 +16974,10 @@ tm.ui = tm.ui || {};
 
         onpointingstart: function(app) {
             // ひよこさん生成
-/*
             var p = app.pointing;
             var piyo = this._createHiyoko(this.param).addChildTo(this.stage.piyoLayer);
             piyo.x = p.x;
             piyo.y = p.y;
-*/
         },
 
         _createHiyoko: function(param) {
@@ -18641,6 +18640,7 @@ tm.sound = tm.sound || {};
         _load: function(src) {
             if (!this.context) {
                 console.warn("本環境はWebAudio未対応です。(" + src + ")");
+                Alert("本環境はWebAudio未対応です。(" + src + ")");
                 return;
             }
 

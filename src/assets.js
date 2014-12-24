@@ -35,6 +35,10 @@ pb3.assets = {
     //BGM
     "stage1":  "assets/sounds/expsy.mp3",
     "warning": "assets/sounds/bgm_warning.mp3",
+
+    //Font
+    "Orbitron": "font/Orbitron-Regular.ttf",
+    "Ubuntu Mono": "font/UbuntuMono-Bold.ttf",
 }
 
 })();
