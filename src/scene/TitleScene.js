@@ -13,8 +13,9 @@ tm.define("pb3.TitleScene", {
         this.superInit();
         app.background = "rgba(0, 0, 0, 1.0)";
 
-        this.mask = tm.display.Shape(SC_W, SC_H).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
-        this.mask.renderRectangle({fillStyle: "rgba(0,0,0,0.5)", strokeStyle: "rgba(0,0,0,0.1)"});
+        this.mask = tm.display.RectangleShape({width:SC_W, height:SC_H, fillStyle:"rgba(0,0,0,0.5)", strokeStyle:"rgba(0,0,0,0.1)"})
+            .addChildTo(this)
+            .setPosition(SC_W*0.5, SC_H*0.5)
 
         //タイトルロゴ
         var t1 = this.title1 = tm.display.OutlineLabel("2D DANMAKU Shooting", 25).addChildTo(this);

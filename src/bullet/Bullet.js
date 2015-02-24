@@ -20,7 +20,8 @@ tm.define("pb3.Bullet", {
     isVanish: false,
     isVanishEffect: true,
 
-    speedRoll: 10,
+    rollAngle: 5,
+    rolling: true,
 
     init: function(runner, param, id) {
         this.superInit(runner);
@@ -34,51 +35,25 @@ tm.define("pb3.Bullet", {
 
         //弾種別グラフィック
 //        this.removeChildren();
-        var size = 20, pos = 2, gra = "NormalR-1";
+        var type = 1, size = 1, index = 0;
         switch (param.type) {
-            case "RS":
-                size = 16; pos = 2; gra = "NormalR"
-                break;
-            case "BS":
-                size = 16; pos = 2; gra = "NormalB"
-                break;
+            case "RS":  type = 1; size = 0.6; index = 0; break;
+            case "BS":  type = 1; size = 0.6; index = 1; break;
+            case "RM":  type = 1; size = 0.8; index = 0; break;
+            case "BM":  type = 1; size = 0.8; index = 1; break;
+            case "RL":  type = 1; size = 1.0; index = 0; break;
+            case "BL":  type = 1; size = 1.0; index = 1; break;
 
-            case "RM":
-                size = 20; pos = 3; gra = "NormalR"
-                break;
-            case "BM":
-                size = 20; pos = 3; gra = "NormalB"
-                break;
-
-            case "RL":
-                size = 32; pos = 3; gra = "NormalR"
-                break;
-            case "BL":
-                size = 32; pos = 3; gra = "NormalB"
-                break;
-
-            case "RE":
-                size = 32; pos = 3; gra = "NormalR"
-                this.scaleY = 0.8;
-                break;
-            case "BE":
-                size = 32; pos = 3; gra = "NormalB"
-                this.scaleY = 0.8;
-                break;
-
-            default:
-                size = 6; pos = 1; gra = "NormalR"
-//                this.body = tm.display.Shape(32, 32).addChildTo(this);
-//                this.body.canvas = pb3.bulletGraphic["NormalR-1"];
-                break;
+            case "RES": type = 2; size = 0.6; index = 0; break;
+            case "BES": type = 2; size = 0.6; index =16; break;
+            case "REM": type = 2; size = 1.0; index = 0; break;
+            case "BEM": type = 2; size = 1.0; index =16; break;
+            case "THIN":type = 2; size = 1.0; index =24; this.rolling = false; this.rotation = this.runner.direction*toDeg-90; break;
         }
-        var size_h = size/2;
-        tm.display.Shape(size,  size  ).addChildTo(this).canvas = pb3.bulletGraphic[gra+"-1"];
-        tm.display.Shape(size_h,size_h).addChildTo(this).setPosition(-pos,-pos).canvas = pb3.bulletGraphic[gra+"-2"];
-        tm.display.Shape(size_h,size_h).addChildTo(this).setPosition( pos, pos).canvas = pb3.bulletGraphic[gra+"-2"];
+        tm.display.Sprite("bullet"+type, 24, 24).addChildTo(this).setFrameIndex(index).setScale(size);
 
         this.on("enterframe", function(){
-            this.rotation += this.speedRoll;
+            if (this.rolling) this.rotation += this.rollAngle;
 
             //自機との当り判定チェック
             if (app.player.isCollision) {
@@ -174,75 +149,11 @@ tm.define("pb3.ShotBullet", {
     },
 
     vanish: function() {
-        pb3.Effect.EffectBase("shotimpact", 16, 16, 2, 0, 7).addChildTo(this.parentScene).setPosition(this.x, this.y);
+        pb3.Effect.ShotImpact().addChildTo(this.parentScene).setPosition(this.x, this.y);
         pb3.Effect.enterDebrisSmall(this.parentScene, this.x, this.y, 1);
         this.removeChildren();
     },
 });
 
-
-//弾の画像準備
-pb3.setupBullets = function() {
-    pb3.bulletGraphic = [];
-
-    var c = 320;
-    var color1 = tm.graphics.RadialGradient(16, 16, 0, 16, 16, 16)
-        .addColorStopList([
-            {offset:0.0, color: "hsla({0}, 50%, 50%, 0.0)".format(c)},
-            {offset:0.9, color: "hsla({0}, 50%, 50%, 1.0)".format(c)},
-            {offset:1.0, color: "hsla({0}, 50%, 50%, 0.0)".format(c)},
-        ]).toStyle();
-
-    var color2 = tm.graphics.RadialGradient(8, 8, 0, 8, 8, 8)
-        .addColorStopList([
-            {offset:0.0, color: "hsla({0}, 70%, 70%, 1.0)".format(c)},
-            {offset:0.9, color: "hsla({0}, 50%, 50%, 0.5)".format(c)},
-            {offset:1.0, color: "hsla({0}, 50%, 50%, 0.0)".format(c)},
-        ]).toStyle();
-
-    pb3.bulletGraphic["NormalR-1"] = tm.graphics.Canvas()
-        .resize(32, 32).setFillStyle(color1).fillRect(0, 0, 32, 32);
-    pb3.bulletGraphic["NormalR-2"] = tm.graphics.Canvas()
-        .resize(16, 16).setFillStyle(color2).fillRect(0, 0, 16, 16);
-
-    var c = 240;
-    var color1 = tm.graphics.RadialGradient(16, 16, 0, 16, 16, 16)
-        .addColorStopList([
-            {offset:0.0, color: "hsla({0}, 50%, 50%, 0.0)".format(c)},
-            {offset:0.9, color: "hsla({0}, 50%, 50%, 1.0)".format(c)},
-            {offset:1.0, color: "hsla({0}, 50%, 50%, 0.0)".format(c)},
-        ]).toStyle();
-
-    var color2 = tm.graphics.RadialGradient(8, 8, 0, 8, 8, 8)
-        .addColorStopList([
-            {offset:0.0, color: "hsla({0}, 70%, 70%, 1.0)".format(c)},
-            {offset:0.9, color: "hsla({0}, 50%, 50%, 0.5)".format(c)},
-            {offset:1.0, color: "hsla({0}, 50%, 50%, 0.0)".format(c)},
-        ]).toStyle();
-
-    pb3.bulletGraphic["NormalB-1"] = tm.graphics.Canvas()
-        .resize(32, 32).setFillStyle(color1).fillRect(0, 0, 32, 32);
-    pb3.bulletGraphic["NormalB-2"] = tm.graphics.Canvas()
-        .resize(16, 16).setFillStyle(color2).fillRect(0, 0, 16, 16);
-
-    //ショット
-    var shotPath = [
-        [16,0], [32,24], [16,32], [0,24],
-    ];
-    pb3.bulletGraphic["shot"] = tm.graphics.Canvas()
-        .resize(32, 32)
-        .setColorStyle("hsla(250, 50%, 50%, 1.0)", "hsla(250, 50%, 50%, 1.0)")
-        .setLineStyle(2)
-        .beginPath()
-        .moveTo(shotPath[0][0], shotPath[0][1]);
-    for (var i = 1; i < shotPath.length; i++) {
-        pb3.bulletGraphic["shot"].lineTo(shotPath[i][0], shotPath[i][1]);
-    }
-    pb3.bulletGraphic["shot"]
-        .lineTo(shotPath[0][0], shotPath[0][1])
-        .stroke()
-        .fill()
-        .closePath();
-}
 
 })();

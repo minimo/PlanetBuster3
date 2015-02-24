@@ -129,16 +129,16 @@ tm.define("pb3.Player", {
         var x = ~~this.x;
         var bx = ~~this.bx;
         if (bx > x) {
-            this.rollcount-=1;
+            this.rollcount-=2;
             if (this.rollcount < 0) this.rollcount = 0;
         }
         if (bx < x) {
-            this.rollcount+=1;
+            this.rollcount+=2;
             if (this.rollcount > 100) this.rollcount = 100;
         }
         var vx = Math.abs(bx - x);
         if (vx < 2) {
-            if (this.rollcount < 50) this.rollcount+=1; else this.rollcount-=1;
+            if (this.rollcount < 50) this.rollcount+=2; else this.rollcount-=2;
             if (this.rollcount < 0) this.rollcount = 0;
             if (this.rollcount > 100) this.rollcount = 100;
         }
@@ -389,9 +389,10 @@ tm.define("pb3.Item", {
     active: false,
 
     init: function(id) {
-        this.superInit("item", 32, 32);
+        this.superInit("tex1", 32, 32);
         this.parentScene = app.currentScene;
         this.id = id;
+        this.setFrameTrim(0, 97, 96, 32);
         this.setFrameIndex(id);
         this.setScale(2.0);
 

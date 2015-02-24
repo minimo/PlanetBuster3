@@ -56,8 +56,9 @@ tm.define("pb3.MainScene", {
         this.touches = tm.input.TouchesEx(this);
 
         //最下位マスク
-        this.mask = tm.display.Shape(SC_W, SC_H).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
-        this.mask.renderRectangle({fillStyle: "rgba(0,0,0,1.0)", strokeStyle: "rgba(0,0,0,1.0)"});
+        this.mask = tm.display.RectangleShape({width:SC_W, height:SC_H, fillStyle:"rgba(0,0,0,0.5)", strokeStyle:"rgba(0,0,0,0.1)"})
+            .addChildTo(this)
+            .setPosition(SC_W*0.5, SC_H*0.5)
 
         //レイヤー作成
         this.base = tm.app.Object2D().addChildTo(this).setPosition(GS_OFFSET, 0);
@@ -105,17 +106,15 @@ tm.define("pb3.MainScene", {
         this.bossGauge = pb3.BossGauge().addChildTo(this.systemBase).setPosition(0, -24);
 
         //最上位マスク
-        this.maskTop = tm.display.Shape(SC_W, SC_H).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
-        this.maskTop.renderRectangle({fillStyle: "rgba(255,255,255,1.0)", strokeStyle: "rgba(255,255,255,1.0)"});
+        this.maskTop = tm.display.RectangleShape({width:SC_W, height:SC_H, fillStyle:"rgba(255,255,255,1.0)", strokeStyle:"rgba(255,255,255,1.0)"})
+            .addChildTo(this)
+            .setPosition(SC_W*0.5, SC_H*0.5)
         this.maskTop.alpha = 0
 
         //左右画面マスク
-        this.systemMaskL = tm.display.Shape(80, SC_H).addChildTo(this).setPosition(0, 0);
-        this.systemMaskL.renderRectangle({fillStyle: "rgba(0,0,0,1.0)", strokeStyle: "rgba(0,0,0,1.0)"});
-        this.systemMaskL.origin.set(0, 0);
-        this.systemMaskR = tm.display.Shape(80, SC_H).addChildTo(this).setPosition(GS_W+80, 0);
-        this.systemMaskR.renderRectangle({fillStyle: "rgba(0,0,0,1.0)", strokeStyle: "rgba(0,0,0,1.0)"});
-        this.systemMaskR.origin.set(0, 0);
+        var param = {width:80, height:SC_H, fillStyle:"rgba(0,0,0,1.0)", strokeStyle:"rgba(0,0,0,1.0)"};
+        this.systemMaskL = tm.display.RectangleShape(param).addChildTo(this).setPosition(0, 0).setOrigin(0,0);
+        this.systemMaskR = tm.display.RectangleShape(param).addChildTo(this).setPosition(GS_W+80, 0).setOrigin(0,0);
 
         //ステージ制御
         this.initStage();

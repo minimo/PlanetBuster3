@@ -5,14 +5,15 @@
  *  This Program is MIT license.
  */
 (function() {
-pb3.enemyData = [];
+
+pb3.enemyData = pb3.enemyData || [];
 
 /*
  *  攻撃ヘリ「ホーネット」
  */
-pb3.enemyData['Hornet1'] = {
+pb3.enemyData['Hornet'] = {
     //使用弾幕パターン
-    bulletPattern: "Hornet1",
+    bulletPattern: "Hornet",
 
     //当り判定サイズ
     width:  16,
@@ -39,12 +40,26 @@ pb3.enemyData['Hornet1'] = {
     texHeight: 32,
     texIndex: 0,
 
-    setup: function() {
+    setup: function(enterParam) {
+        this.phase = 0;
         this.roter = tm.display.Sprite("tex1", 32, 32).addChildTo(this);
         this.roter.setFrameIndex(32);
         this.roter.index = 32;
 
-        this.tweener.moveBy(0, 300, 2000, "easeOutQuart").wait(1000).moveBy(0, -300, 2000).call(function(){this.remove();}.bind(this));
+        //行動パターン分岐
+        this.pattern = enterParam;
+        this.bulletPattern = "Hornet"+enterParam;
+        switch (enterParam) {
+            case 1:
+                this.tweener.moveBy(0, 300, 2000, "easeOutQuart").wait(1000).moveBy(0, -300, 2000).call(function(){this.remove();}.bind(this));
+                break;
+            case 2:
+                this.moveTo(app.player, 5, true);
+                break;
+            case 3:
+                this.tweener.moveBy(0, 300, 2000, "easeOutQuart").wait(1000).call(function(){this.phase++;}.bind(this));
+                break;
+        }
     },
 
     algorithm: function() {
@@ -53,57 +68,90 @@ pb3.enemyData['Hornet1'] = {
             this.roter.index = (this.roter.index+1)%4+32;
             this.roter.setFrameIndex(this.roter.index);
         }
+
+        if (this.pattern == 2) {
+            this.x += this.vx;
+            this.y += this.vy;
+        }
+
+        if (this.pattern == 3) {
+            if (this.phase == 1) {
+                this.moveTo(app.player, 5, true);
+                this.phase++;
+            }
+            if (this.phase == 2) {
+                this.x += this.vx;
+                this.y += this.vy;
+            }
+        }
     },
 };
 
 /*
- *  攻撃ヘリ「ホーネット」（突撃型）
+ *  中型攻撃ヘリ「ジガバチ」
  */
-pb3.enemyData['Hornet2'] = {
+pb3.enemyData['MudDauber'] = {
     //使用弾幕パターン
-    bulletPattern: "Hornet2",
+    bulletPattern: "MudDauber",
 
     //当り判定サイズ
-    width:  16,
-    height: 16,
+    width:  60,
+    height: 26,
 
     //耐久力
-    def: 30,
+    def: 800,
 
     //得点
-    point: 300,
+    point: 3000,
 
     //表示レイヤー番号
     layer: LAYER_OBJECT,
 
     //敵タイプ
-    type: ENEMY_SMALL,
+    type: ENEMY_MIDDLE,
 
     //爆発タイプ
-    explodeType: EXPLODE_SMALL,
+    explodeType: EXPLODE_MIDDLE,
 
     //機体用テクスチャ情報
     texName: "tex1",
-    texWidth: 32,
-    texHeight: 32,
-    texIndex: 0,
+    texWidth: 128,
+    texHeight: 64,
+    texIndex: 6,
 
     setup: function() {
-        this.roter = tm.display.Sprite("tex1", 32, 32).addChildTo(this);
-        this.roter.setFrameIndex(32);
-        this.roter.index = 32;
+        this.index = this.texIndex;
+        this.phase = 0;
 
-        this.moveTo(app.player, 5, true);
+        this.roter = tm.display.Sprite("tex1", 114, 48).addChildTo(this);
+        this.roter.setFrameTrim(288, 128, 228, 96);
+        this.roter.setFrameIndex(0);
+        this.roter.index = 0;
+
+        //行動設定
+        if (this.x < 0) {
+            this.px = 1;
+            this.tweener.moveBy( GS_W*0.6, 0, 3000, "easeOutCubic").call(function(){this.phase++;}.bind(this));
+        } else {
+            this.px = -1;
+            this.tweener.moveBy(-GS_W*0.6, 0, 3000, "easeOutCubic").call(function(){this.phase++;}.bind(this));
+        }
     },
 
     algorithm: function() {
-        if (this.time % 2 == 0) {
+        if (this.time % 4 == 0) {
             this.roter.index = (this.roter.index+1)%4+32;
             this.roter.setFrameIndex(this.roter.index);
         }
+        if (this.time % 10 == 0) {
+            this.index = (this.index+1)%2+6;
+            this.body.setFrameIndex(this.index);
+        }
 
-        this.x += this.vx;
-        this.y += this.vy;
+        if (this.phase == 1) {
+            this.y--;
+            this.x+=this.px;
+        }
     },
 };
 
@@ -113,6 +161,51 @@ pb3.enemyData['Hornet2'] = {
 pb3.enemyData['BigWing'] = {
     //使用弾幕パターン
     bulletPattern: "BigWing",
+
+    //当り判定サイズ
+    width:  80,
+    height: 26,
+
+    //耐久力
+    def: 1000,
+
+    //得点
+    point: 3000,
+
+    //表示レイヤー番号
+    layer: LAYER_OBJECT,
+
+    //敵タイプ
+    type: ENEMY_MIDDLE,
+
+    //爆発タイプ
+    explodeType: EXPLODE_MIDDLE,
+
+    //機体用テクスチャ情報
+    texName: "tex1",
+    texWidth: 128,
+    texHeight: 48,
+    texIndex: 2,
+
+    setup: function() {
+        this.index = this.texIndex;
+    },
+
+    algorithm: function() {
+        if (this.time % 2 == 0) this.y++;
+        if (this.time % 10 == 0) {
+            this.index = (this.index+1)%2+2;
+            this.body.setFrameIndex(this.index);
+        }
+    },
+};
+
+/*
+ *  飛空挺「モーンブレイド」
+ */
+pb3.enemyData['MournBlade'] = {
+    //使用弾幕パターン
+    bulletPattern: "MournBlade",
 
     //当り判定サイズ
     width:  128,
@@ -135,33 +228,221 @@ pb3.enemyData['BigWing'] = {
 
     //機体用テクスチャ情報
     texName: "tex1",
-    texWidth: 128,
-    texHeight: 48,
-    texIndex: 2,
+    texWidth: 48,
+    texHeight: 104,
+    texIndex: 0,
+    texTrimX: 0,
+    texTrimY: 128,
+    texTrimWidth: 96,
+    texTrimHeight: 104,
 
     setup: function() {
-        this.index = 0;
+        this.index = this.texIndex;
+        this.phase = 0;
+
+        this.roter = tm.display.Sprite("tex1", 114, 48).addChildTo(this);
+        this.roter.setFrameTrim(96, 128, 192, 104);
+        this.roter.setFrameIndex(0);
+        this.roter.index = 0;
+
+        //行動設定
+        if (this.x < 0) {
+            this.px = 1;
+            this.tweener.moveBy( GS_W*0.6, 0, 3000, "easeOutCubic").moveBy( GS_W*1.0, 0, 5000, "easeOutCubic");
+        } else {
+            this.px = -1;
+            this.tweener.moveBy(-GS_W*0.6, 0, 3000, "easeOutCubic").moveBy(-GS_W*1.0, 0, 5000, "easeOutCubic");
+        }
     },
 
     algorithm: function() {
-        if (this.time % 2 == 0) this.y++;
+        if (this.time % 4 == 0) {
+            this.roter.index = (this.roter.index+1)%4;
+            this.roter.setFrameIndex(this.roter.index);
+        }
         if (this.time % 10 == 0) {
-            this.index = (this.index+1)%2+2;
+            this.index = (this.index+1)%2;
             this.body.setFrameIndex(this.index);
+        }
+        if (this.phase == 1) {
+            this.y--;
+            this.x+=this.px;
         }
     },
 };
 
 /*
- *  中型輸送キャリア「トイボックス」
+ *  中型戦車「フラガラッハ」
+ */
+pb3.enemyData['Fragarach'] = {
+    //使用弾幕パターン
+    bulletPattern: "Fragarach",
+
+    //当り判定サイズ
+    width:  48,
+    height: 48,
+
+    //耐久力
+    def: 50,
+
+    //得点
+    point: 500,
+
+    //表示レイヤー番号
+    layer: LAYER_OBJECT,
+
+    //敵タイプ
+    type: ENEMY_SMALL,
+
+    //爆発タイプ
+    explodeType: EXPLODE_GROUND,
+
+    //各種フラグ
+    isGround: true,
+
+    //機体用テクスチャ情報
+    texName: "tex2",
+    texWidth: 48,
+    texHeight: 48,
+    texIndex: 0,
+
+    setup: function(param) {
+        this.index = this.texIndex;
+        this.phase = 0;
+
+        switch (param) {
+            case "c":
+                this.rotation = 0;
+                break;
+            case "l":
+                this.rotation = 90;
+                break;
+            case "r":
+                this.rotation = 270;
+                break;
+        }
+
+        this.turret = tm.display.Sprite("tex1", 32, 32).addChildTo(this);
+        this.turret.setFrameTrim(192, 32, 32, 32);
+        this.turret.setFrameIndex(0);
+    },
+
+    algorithm: function() {
+
+        //ターゲットの方向を向く
+        var ax = this.x - app.player.x;
+        var ay = this.y - app.player.y;
+        var rad = Math.atan2(ay, ax);
+        var deg = ~~(rad * toDeg);
+        this.turret.rotation = deg + 90;
+
+        if (this.time % 4 == 0) {
+            this.index = (this.index+1)%4;
+            this.body.setFrameIndex(this.index);
+        }
+        this.x += Math.cos((this.rotation+90)*toRad)*0.2;
+        this.y += Math.sin((this.rotation+90)*toRad)*0.2;
+    },
+};
+
+/*
+ *  砲台「ブリュナーク」
+ */
+pb3.enemyData['Brionac'] = {
+    //使用弾幕パターン
+    bulletPattern: "Brionac",
+
+    //当り判定サイズ
+    width:  64,
+    height: 64,
+
+    //耐久力
+    def: 800,
+
+    //得点
+    point: 3000,
+
+    //表示レイヤー番号
+    layer: LAYER_OBJECT,
+
+    //敵タイプ
+    type: ENEMY_MIDDLE,
+
+    //爆発タイプ
+    explodeType: EXPLODE_MIDDLE,
+
+    //機体用テクスチャ情報
+    texName: "tex1",
+    texWidth: 48,
+    texHeight: 104,
+    texIndex: 0,
+
+    setup: function() {
+        this.index = this.texIndex;
+        this.phase = 0;
+        this.setFrameTrim(0, 128, 96, 104);
+    },
+
+    algorithm: function() {
+    },
+};
+
+/*
+ *  大型ミサイル「ミスティルテイン」
+ */
+pb3.enemyData['Mistilteinn'] = {
+    //使用弾幕パターン
+    bulletPattern: "nop",
+
+    //当り判定サイズ
+    width:  64,
+    height: 64,
+
+    //耐久力
+    def: 800,
+
+    //得点
+    point: 3000,
+
+    //表示レイヤー番号
+    layer: LAYER_OBJECT,
+
+    //敵タイプ
+    type: ENEMY_MIDDLE,
+
+    //爆発タイプ
+    explodeType: EXPLODE_MIDDLE,
+
+    //機体用テクスチャ情報
+    texName: "tex1",
+    texWidth: 48,
+    texHeight: 104,
+    texIndex: 0,
+    texTrimX: 0,
+    texTrimY: 128,
+    texTrimWidth: 96,
+    texTrimHeight: 104,
+
+    setup: function() {
+        this.index = this.texIndex;
+        this.phase = 0;
+        this.setFrameTrim(0, 128, 96, 104);
+    },
+
+    algorithm: function() {
+    },
+};
+
+/*
+ *  中型輸送機「トイボックス」
  */
 pb3.enemyData['ToyBox'] = {
     //使用弾幕パターン
     bulletPattern: "ToyBox",
 
     //当り判定サイズ
-    width:  40,
-    height: 100,
+    width:  30,
+    height: 90,
 
     //耐久力
     def: 500,

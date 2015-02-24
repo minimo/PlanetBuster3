@@ -21,6 +21,7 @@ tm.define("pb3.Enemy", {
     isOnScreen: false,  //画面内に入った
     isGround: false,    //地上フラグ
     isEnemy: true,      //敵機判別
+    isAttack: true,     //攻撃フラグ
 
     //キャラクタ情報
     name: null,
@@ -38,10 +39,16 @@ tm.define("pb3.Enemy", {
     texWidth: 32,
     texHeight: 32,
 
+    //基本情報
     data: null,
 
+    //前フレーム座標
     beforeX: 0,
     beforeY: 0,
+
+    //相対地上座標
+    groundX: 0,
+    groundY: 0,
 
     init: function(name, x, y, id, param) {
         this.superInit();
@@ -53,6 +60,7 @@ tm.define("pb3.Enemy", {
         var d = this.data = pb3.enemyData[name];
         if (!d) return false;
 
+        this.bulletPattern = d.bulletPattern;
         this.def = this.defMax = d.def;
 
         this.width = d.width || 32;
@@ -72,6 +80,13 @@ tm.define("pb3.Enemy", {
             this.texWidth = d.texWidth;
             this.texHeight = d.texHeight;
             this.body = tm.display.Sprite(d.texName, d.texWidth, d.texHeight).addChildTo(this);
+
+            this.texTrimX = d.texTrimX || 0;
+            this.texTrimY = d.texTrimX || 0;
+            this.texTrimWidth = d.texTrimWidth || this.body.image.width;
+            this.texTrimHeight = d.texTrimHeight || this.body.image.height;
+
+            this.body.setFrameTrim(this.texTrimX, this.texTrimY, this.texTrimWidth, this.texTrimHeight);
             this.body.setFrameIndex(this.texIndex);
         } else {
             //当り判定ダミー表示
@@ -82,6 +97,12 @@ tm.define("pb3.Enemy", {
             this.body = tm.display.Shape(this.width, this.height).addChildTo(this);
             this.body.renderRectangle({fillStyle: "rgba(255,255,0,1.0)", strokeStyle: "rgba(255,255,0,1.0)"});
             this.body.update = function() {this.rotation = -that.rotation;};
+        }
+
+        if (VIEW_COLLISION) {
+            this.col = tm.display.Shape(this.width, this.height).addChildTo(this);
+            this.col.renderRectangle({fillStyle: "rgba(255,255,0,0.5)", strokeStyle: "rgba(255,255,0,0.5)"});
+            this.col.update = function() {this.rotation = -that.rotation;};
         }
 
         if (DEBUG) {
@@ -95,23 +116,36 @@ tm.define("pb3.Enemy", {
             }
         }
 
-        //弾幕定義        
-        this.bulletPattern = d.bulletPattern;
+        //フラグセット
+        this.isCollision = d.isCollision || this.isCollision;
+        this.isDead      = d.isDead      || this.isDead;
+        this.isSelfCrash = d.isSelfCrash || this.isSelfCrash;
+        this.isMuteki    = d.isMuteki    || this.isMuteki
+        this.isBoss      = d.isBoss      || this.isBoss;
+        this.isOnScreen  = d.isOnScreen  || this.isOnScreen;
+        this.isGround    = d.isGround    || this.isGround;
+        this.isEnemy     = d.isEnemy     || this.isEnemy;
+        this.isAttack    = d.isAttack    || this.isAttack;
+
+        //パラメータセットアップ
+        this.parentScene = app.currentScene;
+        this.setup(param);
+        this.groundX = this.parentScene.ground.x;
+        this.groundY = this.parentScene.ground.y;
+
+        //弾幕定義
         if (this.bulletPattern instanceof Array) {
             this.nowBulletPattern = this.bulletPattern[0];
         } else {
             this.nowBulletPattern = this.bulletPattern;
         }
 
-        this.parentScene = app.currentScene;
-        this.setup(param);
-
         //bulletML起動
         var bulletMLparams = {
             rank: this.parentScene.rank,
             target: app.player,
             createNewBullet: function(runner, attr) {
-                if (this.isGround && distanceSq(this, app.player) < 4096 ) return;  //地上敵で自機に近い場合は弾を撃たない
+                if (!this.isAttack) return;
                 pb3.Bullet(runner, attr, this.id).addChildTo(this.parentScene);
             }.bind(this)
         };
@@ -131,6 +165,18 @@ tm.define("pb3.Enemy", {
 
     update: function() {
         if (this.isDead) return;
+
+        //地上物現座標調整
+        if (this.isGround) {
+            var x = this.groundX-this.parentScene.ground.x;
+            var y = this.groundY-this.parentScene.ground.y;
+            this.x-=x;
+            this.y-=y;
+            this.groundX = this.parentScene.ground.x;
+            this.groundY = this.parentScene.ground.y;
+        }
+
+        //行動アルゴリズム
         this.algorithm();
 
         //スクリーン内入った判定
@@ -150,10 +196,21 @@ tm.define("pb3.Enemy", {
         }
 
         //親機が破壊された場合、自分も破壊
-        if (this.parentEnemy && this.parentEnemy.isDead) this.dead();
+        if (this.parentEnemy && this.parentEnemy.isDead) {
+            this.isSelfCrash = true;
+            this.dead();
+        }
 
         //瀕死
         if (this.def < this.defMax*0.2) this.nearDeath();
+
+        //地上敵で自機に近い場合は弾を撃たない
+        if (this.isGround && !this.isBoss) {
+            if (distanceSq(this, app.player) < 4096)
+                this.isAttack = false;
+            else
+                this.isAttack = true;
+        }
 
         this.beforeX = this.x;
         this.beforeY = this.y;
@@ -182,8 +239,7 @@ tm.define("pb3.Enemy", {
             if (this.parentEnemy) this.parentEnemy.deadChild(this);
 
             //スコア加算
-            app.score += this.data.point;
-
+            if (!this.isSelfCrash) app.score += this.data.point;
 /*
             //得点表示
             var sc = tm.display.OutlineLabel(this.data.point, 30);
@@ -243,7 +299,8 @@ tm.define("pb3.Enemy", {
             pb3.Effect.enterExplode(this.parentScene, this.x, this.y, vx, vy);
             app.playSE("explodeSmall");
         }
-        if (this.data.explodeType >= EXPLODE_MIDDLE) {
+        if (this.data.explodeType == EXPLODE_MIDDLE ||
+            this.data.explodeType == EXPLODE_LARGE ) {
             var num = rand(20, 30)*this.data.explodeType;
             for (var i = 0; i < num; i++) {
                 var x = this.x+rand(-this.width, this.width);
@@ -252,6 +309,10 @@ tm.define("pb3.Enemy", {
                 pb3.Effect.enterExplode(this.parentScene, x, y, vx, vy, delay);
             }
             app.playSE("explodeLarge");
+        }
+        if (this.data.explodeType == EXPLODE_GROUND) {
+            pb3.Effect.enterExplodeGround(this.parentScene, this.x, this.y, vx, vy);
+            app.playSE("explodeSmall");
         }
 
         //弾消し

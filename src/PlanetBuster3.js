@@ -63,41 +63,40 @@ pb3.PlanetBuster3 = tm.createClass({
             }.bind(this),
         });
 
-        //弾セットアップ
-        pb3.setupBullets();
-
         this.replaceScene(loadingScene);
     },
 
     _onLoadAssets: function() {
         [
             "tex1",
+            "tex2",
+            "boss1",
         ].forEach(function(name) {
-            //赤ビットマップ作成
             var tex = tm.asset.AssetManager.get(name);
+
+            //瀕死用ビットマップ作成
             var canvas = tm.graphics.Canvas();
             canvas.resize(tex.width, tex.height);
             canvas.drawTexture(tex, 0, 0);
 
-            var bmRed = canvas.getBitmap();
-            bmRed.filter({
+            var bm = canvas.getBitmap();
+            bm.filter({
                 calc: function(pixel, index, x, y, bitmap) {
                     bitmap.setPixelIndex(index, pixel[0], 0, 0);
                 }
             });
-            var cvRed = tm.graphics.Canvas();
-            cvRed.resize(tex.width, tex.height);
-            cvRed.drawBitmap(bmRed, 0, 0);
-            tm.asset.AssetManager.set(name + "Red", cvRed);
+            var cv = tm.graphics.Canvas();
+            cv.resize(tex.width, tex.height);
+            cv.drawBitmap(bm, 0, 0);
+            tm.asset.AssetManager.set(name + "Red", cv);
 
-            //白ビットマップ作成
-            var tex = tm.asset.AssetManager.get(name);
+            //ダメージ用ビットマップ作成
             var canvas = tm.graphics.Canvas();
             canvas.resize(tex.width, tex.height);
             canvas.drawTexture(tex, 0, 0);
 
-            var bmRed = canvas.getBitmap();
-            bmRed.filter({
+            var bm = canvas.getBitmap();
+            bm.filter({
                 calc: function(pixel, index, x, y, bitmap) {
                     var r = (pixel[0]==0?0:128);
                     var g = (pixel[1]==0?0:128);
@@ -105,10 +104,26 @@ pb3.PlanetBuster3 = tm.createClass({
                     bitmap.setPixelIndex(index, r, g, b);
                 }
             });
-            var cvRed = tm.graphics.Canvas();
-            cvRed.resize(tex.width, tex.height);
-            cvRed.drawBitmap(bmRed, 0, 0);
-            tm.asset.AssetManager.set(name + "White", cvRed);
+            var cv = tm.graphics.Canvas();
+            cv.resize(tex.width, tex.height);
+            cv.drawBitmap(bm, 0, 0);
+            tm.asset.AssetManager.set(name + "White", cv);
+
+            //ダメージ用ビットマップ作成２
+            var canvas = tm.graphics.Canvas();
+            canvas.resize(tex.width, tex.height);
+            canvas.drawTexture(tex, 0, 0);
+
+            var bm = canvas.getBitmap();
+            bm.filter({
+                calc: function(pixel, index, x, y, bitmap) {
+                    bitmap.setPixelIndex(index, 0, 0, pixel[2]);
+                }
+            });
+            var cv = tm.graphics.Canvas();
+            cv.resize(tex.width, tex.height);
+            cv.drawBitmap(bm, 0, 0);
+            tm.asset.AssetManager.set(name + "Blue", cv);
         });
     },
 
@@ -173,5 +188,43 @@ pb3.PlanetBuster3 = tm.createClass({
         return se;
     },
 });
+
+
+//SpriteのsetFrameIndexをちょっと改造
+tm.display.Sprite.prototype.setFrameIndex = function(index, width, height) {
+
+    //テクスチャのトリミング設定
+    var sx = this.frameTrimX || 0;
+    var sy = this.frameTrimY || 0;
+    var sw = this.frameTrimW || (this.image.width-sx);
+    var sh = this.frameTrimH || (this.image.height-sy);
+
+    var tw  = width || this.width;      // tw
+    var th  = height || this.height;    // th
+    var row = ~~(sw / tw);
+    var col = ~~(sh / th);
+    var maxIndex = row*col;
+    index = index%maxIndex;
+
+    var x   = index%row;
+    var y   = ~~(index/row);
+    this.srcRect.x = sx+x*tw;
+    this.srcRect.y = sy+y*th;
+    this.srcRect.width  = tw;
+    this.srcRect.height = th;
+
+    this._frameIndex = index;
+
+    return this;
+}
+
+//トリミング開始位置設定
+tm.display.Sprite.prototype.setFrameTrim = function(x, y, width, height) {
+    this.frameTrimX = x || 0;
+    this.frameTrimY = y || 0;
+    this.frameTrimW = width || this.image.width - this.frameTrimX;
+    this.frameTrimH = height || this.image.height - this.frameTrimY;
+    return this;
+}
 
 })();
