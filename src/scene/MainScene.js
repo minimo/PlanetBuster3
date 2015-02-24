@@ -283,7 +283,7 @@ tm.define("pb3.MainScene", {
 
     //全ステージクリア情報表示
     enterAllStageClear: function() {
-        var mask = tm.display.Shape(SC_W*0.8, SC_H*0.8).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
+        var mask = tm.display.Shape({width:SC_W*0.8, height:SC_H*0.8}).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
         mask.renderRectangle({fillStyle: "rgba(0,0,128,0.5)", strokeStyle: "rgba(128,128,128,0.5)"});
         mask.alpha = 0;
 
