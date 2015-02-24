@@ -36,3 +36,9 @@ tm.define("tm.asset.WebFont", {
 tm.asset.Loader.register("ttf", function(path, key) {
     return tm.asset.WebFont(path, key);
 });
+tm.asset.Loader.register("otf", function(path, key) {
+    return tm.asset.WebFont(path, key);
+});
+tm.asset.Loader.register("woff", function(path, key) {
+    return tm.asset.WebFont(path, key);
+});

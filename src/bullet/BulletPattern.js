@@ -284,6 +284,7 @@ pb3.bulletPattern["ToyBox"] = new bulletml.Root({
  *  装甲輸送列車「トールハンマー」
  *
  */
+/*
 pb3.bulletPattern["ThorHammer"] = new bulletml.Root({
     top1: $.action([
         $.wait(90),
@@ -297,4 +298,6 @@ pb3.bulletPattern["ThorHammer"] = new bulletml.Root({
         ]),
     ]),
 });
+*/
+
 })();
