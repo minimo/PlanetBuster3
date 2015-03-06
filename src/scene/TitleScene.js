@@ -66,17 +66,3 @@ tm.define("pb3.TitleScene", {
     },
 });
 
-tm.define("pb3.WaitScene", {
-    superClass: tm.app.Scene,
-
-    init: function() {
-        this.superInit();
-    },
-    update: function() {
-        if (fontLoadEnd) {
-            app.replaceScene(pb3.TitleScene());
-        }
-    },
-});
-
-
