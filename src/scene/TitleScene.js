@@ -48,21 +48,32 @@ tm.define("pb3.TitleScene", {
         this.time = 0;
     },
 
+    gameStart: function() {
+        app.background = "rgba(0, 0, 0, 0.8)";
+        app.score = 0;
+        var loadingScene = pb3.LoadingScene({
+            assets: pb3.assets["stage1"],
+            width: SC_W,
+            height: SC_H,
+            bgColor: 'rgba(0, 0, 0, 1)',
+            nextScene: function() {
+                return pb3.MainScene();
+            }.bind(this)
+        });
+        app.replaceScene(loadingScene);
+    },
+
     update: function() {
         //キーボード操作
         var kb = app.keyboard;
         if (this.time > 30 && app.keyboard.getKey("Z")) {
-            app.background = "rgba(0, 0, 0, 0.8)";
-            app.score = 0;
-           app.replaceScene(pb3.MainScene());
+            this.gameStart();
         }
         this.time++;
     },
 
     ontouchend: function() {
-        app.background = "rgba(0, 0, 0, 0.8)";
-        app.score = 0;
-        app.replaceScene(pb3.MainScene());
+        this.gameStart();
     },
 });
 
