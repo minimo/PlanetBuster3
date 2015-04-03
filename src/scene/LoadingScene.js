@@ -44,7 +44,7 @@ tm.define("pb3.LoadingScene", {
                     type: "tm.ui.Gauge",
                     init: [{
                         width: SC_W*0.4,
-                        height: 20,
+                        height: 10,
                         color: "blue",
                         bgColor: "rgba(20, 20, 20, 1)",
                         borderColor: "transparent",
@@ -89,7 +89,7 @@ tm.define("pb3.LoadingScene", {
                 .moveBy(0, -30, 300, "easeOutSine")
                 .moveBy(0, 30, 600, "easeOutBounce")
 
-            var chr = tm.display.Label(text.charAt(i), 46)
+            var chr = tm.display.Label(text.charAt(i), 30)
                 .addChildTo(base)
                 .setAlign("center")
                 .setBaseline("middle")
