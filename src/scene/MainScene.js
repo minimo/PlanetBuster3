@@ -237,7 +237,7 @@ tm.define("pb3.MainScene", {
         switch (this.nowStage) {
             case 1:
                 this.stage = pb3.Stage1(this, app.player);
-                this.ground = pb3.Stage1.Ground("map1g").setPosition(0, -700).addChildTo(this);
+                this.ground = pb3.Stage1.Ground().setPosition(0, -400).addChildTo(this);
                 break;
             case 2:
                 this.stage = pb3.Stage1(this, app.player);
