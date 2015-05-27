@@ -69,7 +69,6 @@ tm.define("pb3.Stage1.Ground", {
         this.position.y = GS_H/2;
 
         this.map = tm.display.Sprite("map1g").addChildTo(this.mapBase);
-/*
         this.map2 = tm.display.Sprite("map1g")
             .addChildTo(this.mapBase)
             .setPosition(-320,0);
@@ -82,7 +81,6 @@ tm.define("pb3.Stage1.Ground", {
         this.map5 = tm.display.Sprite("map1g")
             .addChildTo(this.mapBase)
             .setPosition(640,0);
-*/
 //        this.map = tm.display.MapSprite("map1").addChildTo(this.mapBase);
         this.map.alpha = 0;
     },
