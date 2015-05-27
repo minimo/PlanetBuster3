@@ -17,7 +17,7 @@ tm.define("pb3.PlayerDisp", {
         this.setScale(0.5);
 
         //コア
-        core = tm.display.Shape(16, 16).addChildTo(this);
+        core = tm.display.Shape({width:16, height:16}).addChildTo(this);
         core.canvas.setFillStyle(
             tm.graphics.RadialGradient(8, 8, 0, 8, 8, 8)
                 .addColorStopList([
@@ -49,7 +49,7 @@ tm.define("pb3.Result", {
         this.superInit();
         this.originX = this.originY = 0;
 
-        var mask = tm.display.Shape(SC_W*0.8, SC_H*0.6).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
+        var mask = tm.display.Shape({width:SC_W*0.8, height:SC_H*0.6}).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
         mask.renderRectangle({fillStyle: "rgba(0,0,128,0.5)", strokeStyle: "rgba(128,128,128,0.5)"});
         mask.alpha = 1;
         mask.tweener.fadeIn(1000);

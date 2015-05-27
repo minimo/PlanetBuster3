@@ -52,7 +52,7 @@ tm.define("pb3.Player", {
         this.setFrameIndex(4);
 
         //コア
-        this.core = tm.display.Shape(16, 16).addChildTo(this);
+        this.core = tm.display.Shape({width:16, height:16}).addChildTo(this);
         this.core.canvas.setFillStyle(
             tm.graphics.RadialGradient(8, 8, 0, 8, 8, 8)
                 .addColorStopList([
@@ -343,7 +343,7 @@ tm.define("pb3.PlayerPointer", {
     layer: LAYER_OBJECT_LOWER,
 
     init: function() {
-        this.superInit(32, 32);
+        this.superInit({width:32, height:32});
         this.canvas.lineWidth = 3;
         this.canvas.globalCompositeOperation = "lighter";
         this.canvas.strokeStyle = "rgb(255, 255, 255)";
@@ -397,7 +397,7 @@ tm.define("pb3.Item", {
         this.setScale(2.0);
 
         if (id == 0) {
-            this.core = tm.display.Shape(32, 32).addChildTo(this);
+            this.core = tm.display.Shape({width:32, height:32}).addChildTo(this);
             this.core.canvas.setFillStyle(
                 tm.graphics.RadialGradient(16, 16, 0, 16, 16, 16)
                     .addColorStopList([

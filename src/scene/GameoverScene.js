@@ -16,8 +16,9 @@ tm.define("pb3.GameoverScene", {
         this.superInit();
         app.background = "rgba(0, 0, 0, 0.5)";
 
-        this.mask = tm.display.Shape(SC_W*0.7, SC_H*0.5).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
-        this.mask.renderRectangle({fillStyle: "rgba(0,0,0,0.7)", strokeStyle: "rgba(0,0,0,0.7)"});
+        this.mask = tm.display.RectangleShape({width:SC_W*0.7, height:SC_H*0.5, fillStyle:"rgba(0,0,0,0.7)", strokeStyle:"rgba(0,0,0,0.7)"})
+            .addChildTo(this)
+            .setPosition(SC_W*0.5, SC_H*0.5)
 
         //リザルト表示
         this.result1 = "SCORE: "+app.score;

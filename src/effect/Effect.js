@@ -246,7 +246,7 @@ tm.define("pb3.Effect.Particle", {
     init: function(size, initialAlpha, alphaDecayRate, color) {
         size = size || 32;
         color = color || 0;
-        this.superInit(size, size);
+        this.superInit({width:size, height:size});
 
         if (initialAlpha === undefined) initialAlpha = 1;
         if (alphaDecayRate === undefined) alphaDecayRate = 0.9;
@@ -298,7 +298,7 @@ tm.define("pb3.Effect.BulletVanish", {
     init: function(bullet) {
         var size = bullet.size || 16;
         var type = bullet.param.type || "RL";
-        this.superInit(size, size);
+        this.superInit({width:size, height:size});
 
         this.size = size;
         this.blendMode = "lighter";
@@ -353,7 +353,7 @@ tm.define("pb3.Effect.ShockWave", {
 
     init: function(size, alphaDecayRate) {
         size = size || 64;
-        this.superInit(size, size);
+        this.superInit({width:size, height:size});
 
         if (alphaDecayRate === undefined) alphaDecayRate = 0.9;
 

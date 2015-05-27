@@ -20,7 +20,7 @@ tm.define("pb3.Stage1", {
             app.playBGM("stage1", true);
         });
         this.add(60, function() {
-            this.ground.tweener.clear().to({scaleX:1.0, scaleY:1.0}, 5000, "easeInOutCubic");
+            this.ground.tweener.clear().to({scaleX:1.0, scaleY:1.0, speed:2.0}, 5000, "easeInOutCubic");
             this.ground.map.tweener.clear().to({alpha:1}, 2000, "easeInOutQuad");
         });
 
@@ -69,6 +69,19 @@ tm.define("pb3.Stage1.Ground", {
         this.position.y = GS_H/2;
 
         this.map = tm.display.Sprite("map1g").addChildTo(this.mapBase);
+        this.map2 = tm.display.Sprite("map1g")
+            .addChildTo(this.mapBase)
+            .setPosition(-320,0);
+        this.map3 = tm.display.Sprite("map1g")
+            .addChildTo(this.mapBase)
+            .setPosition(320,0);
+        this.map4 = tm.display.Sprite("map1g")
+            .addChildTo(this.mapBase)
+            .setPosition(-640,0);
+        this.map5 = tm.display.Sprite("map1g")
+            .addChildTo(this.mapBase)
+            .setPosition(640,0);
+//        this.map = tm.display.MapSprite("map1").addChildTo(this.mapBase);
         this.map.alpha = 0;
     },
 });

@@ -6,8 +6,10 @@
  */
 (function() {
 
+pb3.assets = pb3.assets || [];
+
 //アセット一覧
-pb3.assets = {
+pb3.assets["main"] = {
     //images
     "bit":     "assets/images/bit1.png",
     "gunship": "assets/images/gunship1.png",
@@ -22,10 +24,6 @@ pb3.assets = {
     "effect":  "assets/images/effect.png",
     "cloud":   "assets/images/cloud.png",
 
-    //マップ
-    "map1":    "assets/maps/map1.tmx",
-    "map1g":   "assets/maps/map1.png",
-
     //SE
     "powerup":       "assets/sounds/ta_ta_suraido01.mp3",
     "explodeSmall":  "assets/sounds/sen_ge_taihou03.mp3", 
@@ -33,12 +31,20 @@ pb3.assets = {
     "explodePlayer": "assets/sounds/ta_ta_zuban_d01.mp3", 
 
     //BGM
-    "stage1":  "assets/sounds/expsy.mp3",
     "warning": "assets/sounds/bgm_warning.mp3",
 
     //Font
     "Orbitron": "font/Orbitron-Regular.ttf",
     "Ubuntu Mono": "font/UbuntuMono-Bold.ttf",
+};
+
+pb3.assets["stage1"] = {
+    //BGM
+    "stage1":  "assets/sounds/expsy.mp3",
+
+    //マップ
+    "map1":    "assets/maps/map1.tmx",
+    "map1g":   "assets/maps/map1.png",
 }
 
 })();

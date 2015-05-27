@@ -52,18 +52,23 @@ pb3.PlanetBuster3 = tm.createClass({
         this.keyboard = tm.input.Keyboard(window);
 
         //アセット読み込みシーン
-        var loadingScene = tm.ui.LoadingScene({
-            assets: pb3.assets,
+        var loadingScene = pb3.LoadingScene({
+            assets: pb3.assets["main"],
             width: SC_W,
             height: SC_H,
-            bgColor: "black",
+            bgColor: 'rgba(0, 0, 0, 1)',
             nextScene: function() {
                 this._onLoadAssets();
-                return pb3.WaitScene();
-            }.bind(this),
+                return pb3.TitleScene();
+            }.bind(this)
         });
 
         this.replaceScene(loadingScene);
+    },
+
+    exitApp: function() {
+        this.stop();
+        tm.social.Nineleap.postRanking(this.highScore, "");
     },
 
     _onLoadAssets: function() {
@@ -125,11 +130,6 @@ pb3.PlanetBuster3 = tm.createClass({
             cv.drawBitmap(bm, 0, 0);
             tm.asset.AssetManager.set(name + "Blue", cv);
         });
-    },
-
-    exitApp: function() {
-        this.stop();
-        tm.social.Nineleap.postRanking(this.highScore, "");
     },
 
     playBGM: function(asset, loop) {
