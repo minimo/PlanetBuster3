@@ -81,8 +81,10 @@ tm.define("pb3.MainScene", {
 
         //スコア表示ラベル
         app.score = 0;
-        var sc = this.scoreLabel = tm.display.OutlineLabel("SCORE:0", 20).addChildTo(this.systemBase).setPosition(GS_OFFSET, 0);
-        sc.fontFamily = "'Orbitron'"; sc.align = "left"; sc.baseline  = "top"; sc.fontWeight = 700; sc.outlineWidth = 2;
+        var sc = this.scoreLabel = tm.display.OutlineLabel("SCORE:0", 20)
+            .addChildTo(this.systemBase)
+            .setPosition(GS_OFFSET, 0)
+            .setParam({fontFamily: "Orbitron", align: "left", baseline: "top", fontWeight: 700, outlineWidth: 2});
         sc.update = function() {
             this.text = "SCORE:"+app.score;
         };
@@ -212,9 +214,10 @@ tm.define("pb3.MainScene", {
     enterWarning: function() {
         this.boss = true;
         app.playBGM("warning", false);
-        var wg = tm.display.OutlineLabel("WARNING!!", 60).addChildTo(this);
-        wg.x = -SC_W; wg.y = SC_H*0.5;
-        wg.fontFamily = "'Orbitron'"; wg.align = "center"; wg.baseline  = "middle"; wg.fontWeight = 800; wg.outlineWidth = 2;
+        var wg = tm.display.OutlineLabel("WARNING!!", 60)
+            .addChildTo(this)
+            .setPosition(-SC_W, SC_H*0.5)
+            .setParam({fontFamily: "Orbitron", align: "center", baseline: "middle", fontWeight: 800, outlineWidth: 2});
         wg.fillStyle = tm.graphics.LinearGradient(-SC_W*0.5, 0, SC_W*0.5, 64)
             .addColorStopList([
                 { offset: 0.1, color: "hsla(230, 90%, 50%, 0.5)"},
@@ -253,8 +256,10 @@ tm.define("pb3.MainScene", {
         this.stageMiss = 0;
 
         //ステージ番号表示
-        var m1 = tm.display.OutlineLabel("STAGE "+this.nowStage, 50).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
-        m1.fontFamily = "'Orbitron'"; m1.align = "center"; m1.baseline  = "middle"; m1.fontWeight = 800; m1.outlineWidth = 2;
+        var m1 = tm.display.OutlineLabel("STAGE "+this.nowStage, 50)
+            .addChildTo(this)
+            .setPosition(SC_W*0.5, SC_H*0.5)
+            .setParam({fontFamily: "Orbitron", align: "center", baseline: "middle", fontWeight: 800, outlineWidth: 2});
         m1.alpha = 0;
         m1.tweener.wait(500).fadeIn(250).wait(1000).fadeOut(250).call(function(){this.remove()}.bind(m1));
     },

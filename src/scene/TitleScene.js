@@ -9,6 +9,9 @@
 tm.define("pb3.TitleScene", {
     superClass: tm.app.Scene,
 
+    //ラベル用パラメータ
+    labelBasic: {fontFamily:"'UbuntuMono'", align: "center", baseline:"middle", fontWeight:300, outlineWidth:2 },
+
     init: function() {
         this.superInit();
         app.background = "rgba(0, 0, 0, 1.0)";
@@ -18,13 +21,15 @@ tm.define("pb3.TitleScene", {
             .setPosition(SC_W*0.5, SC_H*0.5)
 
         //タイトルロゴ
-        var t1 = this.title1 = tm.display.OutlineLabel("2D DANMAKU Shooting", 25).addChildTo(this);
-        t1.x = SC_W*0.5; t1.y = SC_H*0.4;
-        t1.setParam({fontFamily:"'UbuntuMono'", align: "center", baseline:"middle", fontWeight:300, outlineWidth:2 });
+        var t1 = this.title1 = tm.display.OutlineLabel("2D DANMAKU Shooting", 25)
+            .addChildTo(this)
+            .setPosition(SC_W*0.5, SC_H*0.4)
+            .setParam({fontFamily:"'UbuntuMono'", align: "center", baseline:"middle", fontWeight:300, outlineWidth:2 });
 
-        var t2 = this.title2 = tm.display.OutlineLabel("Planet Buster", 40).addChildTo(this);
-        t2.x = SC_W*0.5; t2.y = SC_H*0.5;
-        t2.setParam({fontFamily:"'Orbitron'", align: "center", baseline:"middle", fontWeight:800, outlineWidth:2 });
+        var t2 = this.title2 = tm.display.OutlineLabel("Planet Buster", 40)
+            .addChildTo(this)
+            .setPosition(SC_W*0.5, SC_H*0.5)
+            .setParam({fontFamily:"'Orbitron'", align: "center", baseline:"middle", fontWeight:800, outlineWidth:2 });
         t2.fillStyle = tm.graphics.LinearGradient(-SC_W*0.5, 0, SC_W*0.5, 64)
             .addColorStopList([
                 { offset: 0.1, color: "hsla(230, 90%, 50%, 0.5)"},
@@ -33,17 +38,21 @@ tm.define("pb3.TitleScene", {
             ]).toStyle();
         t2.shadowColor = "blue";
         t2.shadowBlur = 10;
-        var t3 = this.title3 = tm.display.OutlineLabel("tmlib label", 25).addChildTo(this);
-        t3.x = SC_W*0.5; t3.y = SC_H*0.6;
-        t3.setParam({fontFamily:"'UbuntuMono'", align: "center", baseline:"middle", fontWeight:300, outlineWidth:2 });
 
-        var ct = this.clickortouch = tm.display.OutlineLabel("Press[Z]key or touch", 20).addChildTo(this);
-        ct.x = SC_W*0.5; ct.y = SC_H*0.8;
-        ct.setParam({fontFamily:"'UbuntuMono'", align: "center", baseline:"middle", fontWeight:500, outlineWidth:2 });
+        var t3 = this.title3 = tm.display.OutlineLabel("tmlib label", 25)
+            .addChildTo(this)
+            .setPosition(SC_W*0.5, SC_H*0.6)
+            .setParam({fontFamily:"'UbuntuMono'", align: "center", baseline:"middle", fontWeight:300, outlineWidth:2 });
+
+        var ct = this.clickortouch = tm.display.OutlineLabel("Press[Z]key or touch", 20)
+            .addChildTo(this)
+            .setPosition(SC_W*0.5, SC_H*0.8)
+            .setParam({fontFamily:"'UbuntuMono'", align: "center", baseline:"middle", fontWeight:500, outlineWidth:2 });
 
         //スコア表示ラベル
-        var sc = this.scoreLabel = tm.display.OutlineLabel("HIGHSCORE:"+app.highScore, 20).addChildTo(this);
-        sc.setParam({fontFamily:"'Orbitron'", align: "left", baseline:"top", fontWeight:700, outlineWidth:2 });
+        var sc = this.scoreLabel = tm.display.OutlineLabel("HIGHSCORE:"+app.highScore, 20)
+            .addChildTo(this)
+            .setParam({fontFamily:"'Orbitron'", align: "left", baseline:"top", fontWeight:700, outlineWidth:2 });
 
         this.time = 0;
     },

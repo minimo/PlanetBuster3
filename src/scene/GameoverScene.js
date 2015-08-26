@@ -12,6 +12,9 @@ tm.define("pb3.GameoverScene", {
     result1: "",
     result2: "",
 
+    //ラベル用パラメータ
+    labelParam: {fontFamily: "Orbitron", align: "center", baseline: "middle", fontWeight: 500, outlineWidth: 2},
+
     init: function(stageNumber, boss, allclear) {
         this.superInit();
         app.background = "rgba(0, 0, 0, 0.5)";
@@ -29,14 +32,20 @@ tm.define("pb3.GameoverScene", {
         }
 
         //ゲームオーバー表示
-        var sc = tm.display.OutlineLabel("GAME OVER", 30).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.4);
-        sc.fontFamily = "'Orbitron'"; sc.align = "center"; sc.baseline  = "middle"; sc.fontWeight = 500; sc.outlineWidth = 2;
+        tm.display.OutlineLabel("GAME OVER", 30)
+            .addChildTo(this)
+            .setPosition(SC_W*0.5, SC_H*0.4)
+            .setParam(this.labelParam);
 
-        var sc = tm.display.OutlineLabel(this.result1, 20).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.5);
-        sc.fontFamily = "'Orbitron'"; sc.align = "center"; sc.baseline  = "middle"; sc.fontWeight = 500; sc.outlineWidth = 2;
+        tm.display.OutlineLabel(this.result1, 20)
+            .addChildTo(this)
+            .setPosition(SC_W*0.5, SC_H*0.5)
+            .setParam(this.labelParam);
 
-        var sc = tm.display.OutlineLabel("Press [Z] key or Touch", 20).addChildTo(this).setPosition(SC_W*0.5, SC_H*0.60);
-        sc.fontFamily = "'Orbitron'"; sc.align = "center"; sc.baseline  = "middle"; sc.fontWeight = 500; sc.outlineWidth = 2;
+        tm.display.OutlineLabel("Press [Z] key or Touch", 20)
+            .addChildTo(this)
+            .setPosition(SC_W*0.5, SC_H*0.60)
+            .setParam(this.labelParam);
 
         //ハイスコア更新
         if (app.highScore<app.score) app.highScore = app.score;

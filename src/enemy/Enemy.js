@@ -107,8 +107,9 @@ tm.define("pb3.Enemy", {
 
         if (DEBUG) {
             //耐久力表示
-            var df = this.defDisp = tm.display.OutlineLabel("[0/0]", 20).addChildTo(this);
-            df.setParam({fontFamily:"'UbuntuMono'", align: "center", baseline:"middle", fontWeight:300, outlineWidth:2 });
+            var df = this.defDisp = tm.display.OutlineLabel("[0/0]", 20)
+                .addChildTo(this)
+                .setParam({fontFamily:"'UbuntuMono'", align: "center", baseline:"middle", fontWeight:300, outlineWidth:2 });
             var that = this;
             df.update = function() {
                 this.rotation = -that.rotation;
