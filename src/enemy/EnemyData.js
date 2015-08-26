@@ -124,7 +124,7 @@ pb3.enemyData['MudDauber'] = {
         this.phase = 0;
 
         this.roter = tm.display.Sprite("tex1", 114, 48).addChildTo(this);
-        this.roter.setFrameTrim(288, 128, 228, 96);
+        this.roter.setFrameTrimming(288, 128, 228, 96);
         this.roter.setFrameIndex(0);
         this.roter.index = 0;
 
@@ -241,7 +241,7 @@ pb3.enemyData['MournBlade'] = {
         this.phase = 0;
 
         this.roter = tm.display.Sprite("tex1", 114, 48).addChildTo(this);
-        this.roter.setFrameTrim(96, 128, 192, 104);
+        this.roter.setFrameTrimming(96, 128, 192, 104);
         this.roter.setFrameIndex(0);
         this.roter.index = 0;
 
@@ -323,7 +323,7 @@ pb3.enemyData['Fragarach'] = {
         }
 
         this.turret = tm.display.Sprite("tex1", 32, 32).addChildTo(this);
-        this.turret.setFrameTrim(192, 32, 32, 32);
+        this.turret.setFrameTrimming(192, 32, 32, 32);
         this.turret.setFrameIndex(0);
     },
 
@@ -380,7 +380,7 @@ pb3.enemyData['Brionac'] = {
     setup: function() {
         this.index = this.texIndex;
         this.phase = 0;
-        this.setFrameTrim(0, 128, 96, 104);
+        this.setFrameTrimming(0, 128, 96, 104);
     },
 
     algorithm: function() {
@@ -426,7 +426,7 @@ pb3.enemyData['Mistilteinn'] = {
     setup: function() {
         this.index = this.texIndex;
         this.phase = 0;
-        this.setFrameTrim(0, 128, 96, 104);
+        this.setFrameTrimming(0, 128, 96, 104);
     },
 
     algorithm: function() {

@@ -86,7 +86,7 @@ tm.define("pb3.Enemy", {
             this.texTrimWidth = d.texTrimWidth || this.body.image.width;
             this.texTrimHeight = d.texTrimHeight || this.body.image.height;
 
-            this.body.setFrameTrim(this.texTrimX, this.texTrimY, this.texTrimWidth, this.texTrimHeight);
+            this.body.setFrameTrimming(this.texTrimX, this.texTrimY, this.texTrimWidth, this.texTrimHeight);
             this.body.setFrameIndex(this.texIndex);
         } else {
             //当り判定ダミー表示

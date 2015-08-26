@@ -392,7 +392,7 @@ tm.define("pb3.Item", {
         this.superInit("tex1", 32, 32);
         this.parentScene = app.currentScene;
         this.id = id;
-        this.setFrameTrim(0, 97, 96, 32);
+        this.setFrameTrimming(0, 97, 96, 32);
         this.setFrameIndex(id);
         this.setScale(2.0);
 

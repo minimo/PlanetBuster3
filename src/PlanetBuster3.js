@@ -51,6 +51,9 @@ pb3.PlanetBuster3 = tm.createClass({
         this.background = "rgba(0, 0, 0, 1.0)";
         this.keyboard = tm.input.Keyboard(window);
 
+        //サウンドセット
+        this.sounds = tm.extension.SoundSet();
+
         //アセット読み込みシーン
         var loadingScene = pb3.LoadingScene({
             assets: pb3.assets["main"],
@@ -72,6 +75,9 @@ pb3.PlanetBuster3 = tm.createClass({
     },
 
     _onLoadAssets: function() {
+        //アセット読み込み
+        this.sounds.readAsset();
+
         [
             "tex1",
             "tex2",
@@ -132,99 +138,53 @@ pb3.PlanetBuster3 = tm.createClass({
         });
     },
 
-    playBGM: function(asset, loop) {
-        if (this.bgm) {
-            if (this.bgmIsPlay) {
-                this.bgm.stop();
-                this.bgmIsPlay = false;
-            }
-        }
-        this.bgm = tm.asset.AssetManager.get(asset).clone();
-        if (this.bgm) {
-            this.bgm.loop = loop;
-            this.bgm.volume = this.volumeBGM*0.34;
-            this.bgm.play();
-            this.bgmIsPlay = true;
-        }
-        return this.bgm;
+    playBGM: function(asset) {
+        this.sounds.playBGM(asset);
+        return this;
     },
 
     stopBGM: function() {
-        if (this.bgm) {
-            if (this.bgmIsPlay) {
-                this.bgm.stop();
-                this.bgmIsPlay = false;
-            }
-            this.bgm = null;
-        }
+        this.sounds.stopBGM();
+        return this;
     },
 
     pauseBGM: function() {
-        if (this.bgm) {
-            if (this.bgmIsPlay) {
-                this.bgm.pause();
-                this.bgmIsPlay = false;
-            }
-        }
+        this.sounds.pauseBGM();
+        return this;
     },
 
     resumeBGM: function() {
-        if (this.bgm) {
-            if (!this.bgmIsPlay) {
-                this.bgm.resume();
-                this.bgm.volume = this.volumeBGM*0.34;
-                this.bgmIsPlay = true;
-            }
-        }
+        this.sounds.resumeBGM();
+        return this;
     },
 
-    playSE: function(asset, volume) {
-        var se = tm.asset.AssetManager.get(asset).clone();
-        if (se) {
-            se.loop = false;
-            se.volume = volume || this.volumeSE*0.34;
-            se.play();
-        }
-        return se;
+    playSE: function(asset) {
+        this.sounds.playSE(asset);
+        return this;
+    },
+
+    setVolumeBGM: function(vol) {
+        this.sounds.setVolumeBGM(vol);
+        return this;
+    },
+
+    setVolumeSE: function(vol) {
+        this.sounds.setVolumeSE(vol);
+        return this;
     },
 });
 
-
-//SpriteのsetFrameIndexをちょっと改造
-tm.display.Sprite.prototype.setFrameIndex = function(index, width, height) {
-
-    //テクスチャのトリミング設定
-    var sx = this.frameTrimX || 0;
-    var sy = this.frameTrimY || 0;
-    var sw = this.frameTrimW || (this.image.width-sx);
-    var sh = this.frameTrimH || (this.image.height-sy);
-
-    var tw  = width || this.width;      // tw
-    var th  = height || this.height;    // th
-    var row = ~~(sw / tw);
-    var col = ~~(sh / th);
-    var maxIndex = row*col;
-    index = index%maxIndex;
-
-    var x   = index%row;
-    var y   = ~~(index/row);
-    this.srcRect.x = sx+x*tw;
-    this.srcRect.y = sy+y*th;
-    this.srcRect.width  = tw;
-    this.srcRect.height = th;
-
-    this._frameIndex = index;
-
-    return this;
-}
-
-//トリミング開始位置設定
-tm.display.Sprite.prototype.setFrameTrim = function(x, y, width, height) {
-    this.frameTrimX = x || 0;
-    this.frameTrimY = y || 0;
-    this.frameTrimW = width || this.image.width - this.frameTrimX;
-    this.frameTrimH = height || this.image.height - this.frameTrimY;
-    return this;
-}
+pb3.PlanetBuster3.prototype.accessor("volumeBGM", {
+    "get": function() { return this.sounds.volumeBGM; },
+    "set": function(vol) {
+        this.setVolumeBGM(vol);
+    }
+});
+pb3.PlanetBuster3.prototype.accessor("volumeSE", {
+    "get": function() { return this.sounds.volumeSE; },
+    "set": function(vol) {
+        this.setVolumeSE(vol);
+    }
+});
 
 })();

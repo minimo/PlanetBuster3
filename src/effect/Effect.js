@@ -146,7 +146,7 @@ tm.define("pb3.Effect.ExplodeSmall", {
     layer: LAYER_EFFECT_UPPER,
 
     init: function(delay) {
-        this.setFrameTrim(256, 256, 128, 32);
+        this.setFrameTrimming(256, 256, 128, 32);
         this.superInit("effect", 16, 16, 4, 8, 15, delay);
     },
 });
@@ -157,7 +157,7 @@ tm.define("pb3.Effect.ExplodeSmall2", {
     layer: LAYER_EFFECT_UPPER,
 
     init: function(delay) {
-        this.setFrameTrim(256, 256, 128, 32);
+        this.setFrameTrimming(256, 256, 128, 32);
         this.superInit("effect", 16, 16, 4, 0, 7, delay);
     },
 });
@@ -168,7 +168,7 @@ tm.define("pb3.Effect.ExplodeLarge", {
     layer: LAYER_EFFECT_UPPER,
 
     init: function(delay) {
-        this.setFrameTrim(0, 192, 192, 96);
+        this.setFrameTrimming(0, 192, 192, 96);
         this.superInit("effect", 48, 48, 4, 0, 7, delay);
     },
 });
@@ -180,7 +180,7 @@ tm.define("pb3.Effect.ExplodeGround", {
     isGround: true,
 
     init: function(delay) {
-        this.setFrameTrim(256, 192, 256, 48);
+        this.setFrameTrimming(256, 192, 256, 48);
         this.superInit("effect", 32, 48, 4, 0, 7, delay);
 
         this.groundX = this.parentScene.ground.x;
@@ -198,11 +198,11 @@ tm.define("pb3.Effect.Debri", {
         num = num || 0;
         num = Math.clamp(num, 0, 3);
         if (num == 0) {
-            this.setFrameTrim(192, 128, 64, 48);
+            this.setFrameTrimming(192, 128, 64, 48);
             this.superInit("effect", 8, 8, 2, 0, 8, delay);
         } else {
             num--;
-            this.setFrameTrim(384, 128, 128, 48);
+            this.setFrameTrimming(384, 128, 128, 48);
             this.superInit("effect", 16, 16, 4, num*8, (num+1)*8-1, delay);
         }
     },
@@ -214,7 +214,7 @@ tm.define("pb3.Effect.ExplodePlayer", {
     layer: LAYER_EFFECT_UPPER,
 
     init: function(delay) {
-        this.setFrameTrim(0, 288, 384, 48);
+        this.setFrameTrimming(0, 288, 384, 48);
         this.superInit("effect", 48, 48, 4, 0, 7, delay);
     },
 });
@@ -225,7 +225,7 @@ tm.define("pb3.Effect.ShotImpact", {
     layer: LAYER_EFFECT_UPPER,
 
     init: function() {
-        this.setFrameTrim(256, 240, 128, 16);
+        this.setFrameTrimming(256, 240, 128, 16);
         this.superInit("effect", 16, 16, 2, 0, 7);
     },
 });
