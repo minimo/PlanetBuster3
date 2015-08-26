@@ -54,7 +54,7 @@ if (typeof module !== 'undefined' && module.exports) {
         else if (/opera/i.test(navigator.userAgent))    { return "Opera";   }
         else if (/getcko/i.test(navigator.userAgent))   { return "Getcko";  }
         else if (/msie/i.test(navigator.userAgent))     { return "IE";      }
-        else { return null; }
+        else { return ''; }
     })();
 
     /**
@@ -232,8 +232,36 @@ if (typeof module !== 'undefined' && module.exports) {
     };
     
     tm.globalize = function(obj) {
-        tm.global.$strict(obj);
-        
+        tm.$forIn(function(key, value) {
+            if (typeof value !== 'object') {
+                return ;
+            }
+            else if (key === "classes") {
+                return ;
+            }
+            else if (key === "global") {
+                return ;
+            }
+            else if (key === "event") {
+                return ;
+            }
+            else if (key === "dom") {
+                return ;
+            }
+
+            // console.log("#### " + key + " ###########");
+            value.$forIn(function(key, value) {
+                if (!window[key]) {
+                    // console.log(key);
+                    window[key] = value;
+                }
+                else {
+                    // TODO: 名前を考えなおす
+                    // console.log(key);
+                }
+            });
+        });
+
         return this;
     };
     
@@ -336,49 +364,27 @@ if (typeof module !== 'undefined' && module.exports) {
 (function() {
     if (!window.document) return ;
 
-    _loadCheckList = [];
-    tm.addLoadCheckList = function(obj) {
-        console.assert(obj.isLoaded !== undefined, "isLoaded が定義されていません!!");
+    var _mainListeners = [];
 
-        _loadCheckList.push(obj);
-    };
-
-    _preloadListners = [];
-    _mainListners = [];
-
-    tm.preload = function(fn) { _preloadListners.push(fn); };
-    tm.main    = function(fn) { _mainListners.push(fn); };
-
-    var _preload = function() {
-
-        for (var i=0,len=_preloadListners.length; i<len; ++i) {
-            _preloadListners[i]();
+    tm.main    = function(fn) {
+        if (fn) {
+            _mainListeners.push(fn);
         }
-        _preloadListners = [];
+        else {
+            _main();
+        }
     };
 
     var _main = function() {
-        for (var i=0,len=_loadCheckList.length; i<len; ++i) {
-            var c = _loadCheckList[i];
-            if (c.isLoaded() == false) {
-                setTimeout(arguments.callee, 0);
-                return ;
-            }
+        for (var i=0,len=_mainListeners.length; i<len; ++i) {
+            _mainListeners[i]();
         }
 
-        for (var i=0,len=_mainListners.length; i<len; ++i) {
-            _mainListners[i]();
-        }
-
-        _mainListners = [];
+        _mainListeners = [];
     };
 
     window.addEventListener("load", function() {
-
-        _preload();
-
         _main();
-
     }, false);
 
 })();
@@ -1844,7 +1850,7 @@ tm.event = tm.event || {};
             
             return this;
         },
-        
+
         /**
          * type に登録されたイベントがあるかをチェック
          */
@@ -1887,6 +1893,13 @@ tm.event = tm.event || {};
      * fire と同じ
      */
     proto.dispatchEvent         = proto.fire;
+    
+    /**
+     * @member  tm.event.EventDispatcher
+     * @method  trigger
+     * fire と同じ
+     */
+    proto.trigger = proto.fire;
     
 })();
 
@@ -2445,129 +2458,6 @@ tm.util = tm.util || {};
     
 })();
 /*
- * script.js
- */
-
-tm.util = tm.util || {};
-
-
-(function() {
-    
-    /**
-     * @class tm.util.Script
-     * スクリプトクラス
-     */
-
-    tm.define("tm.util.Script", {
-
-        superClass: "tm.event.EventDispatcher",
-
-        /** element */
-        element: null,
-        /** loaded */
-        loaded: false,
-        
-        /**
-         * @constructor
-         */
-        init: function(src) {
-            this.superInit();
-
-            this.loaded = false;
-            this.element = document.createElement("script");
-            this.element.type = "text/javascript";
-            this.element.src = src;
-            this.element.charset = "UTF-8";
-            this.element.setAttribute("defer", true);
-            document.head.appendChild(this.element);
-            
-            var self = this;
-            this.element.onload = function() {
-                self.loaded = true;
-                self.fire(tm.event.Event("load"));
-            };
-        },
-        
-        /**
-         * getElement
-         */
-        getElement: function() {
-            return this.element;
-        },
-        
-    });
-
-    tm.util.Script.load = function(src) {
-        var script = tm.util.Script(src);
-
-        return script;
-    };
-
-    /**
-     * @static
-     * @method
-     * Stats を動的ロード
-     */
-    tm.util.Script.loadStats = function(version) {
-        version = version || "r11";
-        var path = null;
-        if (["r6", "r7", "r8", "r9", "10"].indexOf(version) != -1) {
-            path = "http://rawgithub.com/mrdoob/stats.js/" + version + "/build/Stats.js";
-        }
-        else {
-            path = "http://rawgithub.com/mrdoob/stats.js/" + version + "/build/stats.min.js";
-        }
-
-        return this.load(path);
-    };
-
-    /**
-     * @static
-     * @method
-     * datGUI を動的ロード
-     */
-    tm.util.Script.loadDatGUI = function(version) {
-        // http://dat-gui.googlecode.com/git/build/dat.gui.min.js
-        // https://dat-gui.googlecode.com/git-history/0.5/build/dat.gui.min.js
-
-        version = version || "0.5";
-//        var path = "https://dat-gui.googlecode.com/git-history/" + version + "/build/dat.gui.min.js";
-//        var path = "http://dat-gui.googlecode.com/git/build/dat.gui.min.js";
-        var path = "http://dat-gui.googlecode.com/git/build/dat.gui.js";
-        return this.load(path);
-    };
-
-    /**
-     * @static
-     * @method
-     * Three.js を動的ロード
-     */
-    tm.util.Script.loadThree = function(version) {
-        var THREE_JS_URL = "http://rawgithub.com/mrdoob/three.js/{version}/build/three.js";
-//        var THREE_JS_URL = "https://raw.github.com/mrdoob/three.js/{version}/build/three.min.js";
-        version = version || "r55";
-
-        var path = THREE_JS_URL.format({version: version});
-
-        return this.load(path);
-    };
-
-    /**
-     * @static
-     * @method
-     * BulletML.js を動的ロード
-     */
-    tm.util.Script.loadBulletML = function(version) {
-        var BULLETML_FOR_TMLIB_JS_URL   = "http://rawgithub.com/daishihmr/bulletml.js/{version}/target/bulletml.for.tmlib.js";
-        version = version || "v0.4.2";
-        var path = BULLETML_FOR_TMLIB_JS_URL.format({version: version});        
-        return this.load(path);
-    };
-
-
-})();
-
-/*
  * querystring.js
  */
 
@@ -2810,6 +2700,39 @@ tm.define("tm.util.Flow", {
     }
 });
 
+
+/*
+ * グリッドシステム
+ */
+tm.define("tm.util.GridSystem", {
+    width: 640, // 幅
+    col: 12,    // 列数
+    
+    init: function(width, col) {
+        if (typeof arguments[0] === 'object') {
+            var param = arguments[0];
+            width = param.width;
+            col = param.col;
+        }
+        
+        this.width = width;
+        this.col = col;
+        this.unitWidth = this.width/this.col;
+    },
+    
+    // スパン指定で値を取得(負数もok)
+    span: function(index) {
+        index += this.col;
+        index %= this.col;
+
+        return this.unitWidth * index;
+    },
+    
+    // 真ん中
+    center: function() {
+        return this.unitWidth * (this.col/2);
+    },
+});
 
 /*
  * vector2.js
@@ -6983,6 +6906,12 @@ tm.dom = tm.dom || {};
         return file;
     };
 
+    var _loadScript = function(path) {
+        var script = tm.asset.Script(path);
+
+        return script;
+    };
+
     // image
     tm.asset.Loader.register("png", _textureFunc);
     tm.asset.Loader.register("gif", _textureFunc);
@@ -7003,8 +6932,9 @@ tm.dom = tm.dom || {};
     
     // spritesheet for tmlib.js
     tm.asset.Loader.register("tmss", _tmssFunc);
-
-
+    
+    // script file
+    tm.asset.Loader.register("js", _loadScript);
     
 })();
 
@@ -7380,7 +7310,7 @@ tm.dom = tm.dom || {};
             var map = xml.getElementsByTagName("map")[0];
             var layers = [];
             each.call(map.childNodes, function(elm) {
-                if (elm.tagName == "layer" || elm.tagName == "objectgroup") {
+                if (elm.tagName == "layer" || elm.tagName == "objectgroup" || elm.tagName == "imagelayer") {
                     layers.push(elm);
                 }
             });
@@ -7420,6 +7350,22 @@ tm.dom = tm.dom || {};
 
                         l.objects.push(d);
                     }.bind(this));
+
+                    data.push(l);
+                }
+                else if (layer.tagName == "imagelayer") {
+                    var l = {
+                        type: "imagelayer",
+                        name: layer.getAttribute("name"),
+                        x: layer.getAttribute("x") || 0,
+                        y: layer.getAttribute("y") || 0,
+                        alpha: layer.getAttribute("opacity") || 1,
+                        visible: (layer.getAttribute("visible") === undefined || layer.getAttribute("visible") != 0),
+                    };
+                    var imageElm = layer.getElementsByTagName("image")[0];
+                    l.image = {
+                        source: imageElm.getAttribute("source")
+                    };
 
                     data.push(l);
                 }
@@ -7501,9 +7447,25 @@ tm.dom = tm.dom || {};
          */
         _checkImage: function() {
             var self = this;
+            var imageSoruces = [];
+
+            // for tile set
             if (this.tilesets.length) {
+                Array.prototype.push.apply(imageSoruces, this.tilesets.map(function(tile) {
+                    return tile.image;
+                }));
+            }
+
+            // for image layer
+            this.layers.each(function(layer) {
+                if (layer.type == "imagelayer") {
+                    imageSoruces.push(layer.image.source);
+                }
+            });
+
+            if (imageSoruces.length) {
                 var i = 0;
-                var len = this.tilesets.length;
+                var len = imageSoruces.length;
 
                 var _onloadimage = function() {
                     i++;
@@ -7514,8 +7476,8 @@ tm.dom = tm.dom || {};
                     }
                 }.bind(this);
 
-                this.tilesets.each(function(elm) {
-                    var image = tm.asset.Manager.get(elm.image)
+                imageSoruces.each(function(imageName) {
+                    var image = tm.asset.Manager.get(imageName);
 
                     if (image) {
                         if (image.loaded) {
@@ -7533,8 +7495,8 @@ tm.dom = tm.dom || {};
                     }
                     else {
                         var loader = tm.asset.Loader();
-                        loader.load(elm.image);
-                        var texture = tm.asset.Manager.get(elm.image);
+                        loader.load(imageName);
+                        var texture = tm.asset.Manager.get(imageName);
                         texture.addEventListener("load", _onloadimage);
                     }
                 });
@@ -7568,20 +7530,18 @@ tm.asset = tm.asset || {};
         },
     });
 
-    tm.asset.Font.checkLoaded = function(font, callback) {
-        var element = tm.dom.Element("body").create("span");
-        element.style
-            .set("color", "rgba(0, 0, 0, 0)")
-            .set("fontSize", "40px");
-        element.text = "QW@HhsXJ=/()あいうえお＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝";
+    tm.asset.Font.checkLoaded = function (font, callback) {
+        var canvas = tm.graphics.Canvas();
+        var DEFAULT_FONT = canvas.context.font.split(' ')[1];
+        canvas.context.font = '40px ' + DEFAULT_FONT;
 
-        var before = element.element.offsetWidth;
-        element.style
-            .set("fontFamily", "'{0}', 'monospace'".format(font));
+        var checkText = "1234567890-^\\qwertyuiop@[asdfghjkl;:]zxcvbnm,./\!\"#$%&'()=~|QWERTYUIOP`{ASDFGHJKL+*}ZXCVBNM<>?_１２３４５６７８９０－＾￥ｑｗｅｒｔｙｕｉｏｐａｓｄｆｇｈｊｋｌｚｘｃｖｂｎｍ，．あいうかさたなをん時は金なり";
 
-        var checkLoadFont = function() {
-            if (element.element.offsetWidth !== before) {
-                element.remove();
+        var before = canvas.context.measureText(checkText).width;
+        canvas.context.font = '40px ' + font + ', ' + DEFAULT_FONT;
+
+        var checkLoadFont = function () {
+            if (canvas.context.measureText(checkText).width !== before) {
                 callback && callback();
             } else {
                 setTimeout(checkLoadFont, 100);
@@ -7602,6 +7562,129 @@ tm.asset = tm.asset || {};
     tm.asset.Loader.register("woff2", function(path, key) {
         return tm.asset.Font(path, key, "woff2");
     });
+
+})();
+
+/*
+ * script.js
+ */
+
+tm.util = tm.util || {};
+
+
+(function() {
+    
+    /**
+     * @class tm.asset.Script
+     * スクリプトクラス
+     */
+
+    tm.define("tm.asset.Script", {
+
+        superClass: "tm.event.EventDispatcher",
+
+        /** element */
+        element: null,
+        /** loaded */
+        loaded: false,
+        
+        /**
+         * @constructor
+         */
+        init: function(src) {
+            this.superInit();
+
+            this.loaded = false;
+            this.element = document.createElement("script");
+            this.element.type = "text/javascript";
+            this.element.src = src;
+            this.element.charset = "UTF-8";
+            this.element.setAttribute("defer", true);
+            document.head.appendChild(this.element);
+            
+            var self = this;
+            this.element.onload = function() {
+                self.loaded = true;
+                self.fire(tm.event.Event("load"));
+            };
+        },
+        
+        /**
+         * getElement
+         */
+        getElement: function() {
+            return this.element;
+        },
+        
+    });
+
+    tm.asset.Script.load = function(src) {
+        var script = tm.asset.Script(src);
+
+        return script;
+    };
+
+    /**
+     * @static
+     * @method
+     * Stats を動的ロード
+     */
+    tm.asset.Script.loadStats = function(version) {
+        version = version || "r11";
+        var path = null;
+        if (["r6", "r7", "r8", "r9", "10"].indexOf(version) != -1) {
+            path = "http://rawgithub.com/mrdoob/stats.js/" + version + "/build/Stats.js";
+        }
+        else {
+            path = "http://rawgithub.com/mrdoob/stats.js/" + version + "/build/stats.min.js";
+        }
+
+        return this.load(path);
+    };
+
+    /**
+     * @static
+     * @method
+     * datGUI を動的ロード
+     */
+    tm.asset.Script.loadDatGUI = function(version) {
+        // http://dat-gui.googlecode.com/git/build/dat.gui.min.js
+        // https://dat-gui.googlecode.com/git-history/0.5/build/dat.gui.min.js
+
+        version = version || "0.5";
+//        var path = "https://dat-gui.googlecode.com/git-history/" + version + "/build/dat.gui.min.js";
+//        var path = "http://dat-gui.googlecode.com/git/build/dat.gui.min.js";
+        var path = "http://dat-gui.googlecode.com/git/build/dat.gui.js";
+        return this.load(path);
+    };
+
+    /**
+     * @static
+     * @method
+     * Three.js を動的ロード
+     */
+    tm.asset.Script.loadThree = function(version) {
+        var THREE_JS_URL = "http://rawgithub.com/mrdoob/three.js/{version}/build/three.js";
+//        var THREE_JS_URL = "https://raw.github.com/mrdoob/three.js/{version}/build/three.min.js";
+        version = version || "r55";
+
+        var path = THREE_JS_URL.format({version: version});
+
+        return this.load(path);
+    };
+
+    /**
+     * @static
+     * @method
+     * BulletML.js を動的ロード
+     */
+    tm.asset.Script.loadBulletML = function(version) {
+        var BULLETML_FOR_TMLIB_JS_URL   = "http://rawgithub.com/daishihmr/bulletml.js/{version}/target/bulletml.for.tmlib.js";
+        version = version || "v0.4.2";
+        var path = BULLETML_FOR_TMLIB_JS_URL.format({version: version});        
+        return this.load(path);
+    };
+
 
 })();
 
@@ -9225,12 +9308,12 @@ tm.graphics = tm.graphics || {};
                 var rate = e.height/e.width;
                 
                 if (rateWidth > rateHeight) {
-                    s.width  = innerWidth+"px";
-                    s.height = innerWidth*rate+"px";
+                    s.width  = (innerWidth).floor()+"px";
+                    s.height = (innerWidth*rate).floor()+"px";
                 }
                 else {
-                    s.width  = innerHeight/rate+"px";
-                    s.height = innerHeight+"px";
+                    s.width  = (innerHeight/rate).floor()+"px";
+                    s.height = (innerHeight).floor()+"px";
                 }
             }.bind(this);
             
@@ -12148,6 +12231,13 @@ tm.app = tm.app || {};
          * 指定で要素を取得
          */
         getChildAt: function(child) {
+            return this.children.at(child);
+        },
+        
+        /**
+         * 指定で要素を取得
+         */
+        getChildIndex: function(child) {
             return this.children.indexOf(child);
         },
         
@@ -12230,10 +12320,12 @@ tm.app = tm.app || {};
                 
                 console.assert(Object.keys(_class).length !== 0, _class + " is not defined.");
                 
-                var elm = _class.apply(null, args).addChildTo(this);
+                var elm = _class.apply(null, args);
                 elm.fromJSON(data);
                 
                 this[name] = elm;
+                
+                elm.addChildTo(this);
             }.bind(this);
             
             for (var key in data) {
@@ -12363,7 +12455,7 @@ tm.app = tm.app || {};
             if (this.parent) {
                 matrix.multiply(this.parent.getFinalMatrix());
             }
-            matrix.translate(this.centerX, this.centerY);
+            matrix.translate(this.x, this.y);
             matrix.rotateZ(this.rotation*Math.DEG_TO_RAD);
             matrix.scale(this.scaleX, this.scaleY);
  
@@ -12882,34 +12974,38 @@ tm.app = tm.app || {};
      * @property    top
      * 左
      */
-    tm.app.Object2D.prototype.getter("top", function() {
-        return this.y - this.height*this.originY;
+    tm.app.Object2D.prototype.accessor("top", {
+        "get": function()   { return this.y - this.height*this.originY; },
+        "set": function(v)  { this.y = v + this.height*this.originY; },
     });
  
     /**
      * @property    right
      * 左
      */
-    tm.app.Object2D.prototype.getter("right", function() {
-        return this.x + this.width*(1-this.originX);
+    tm.app.Object2D.prototype.accessor("right", {
+        "get": function()   { return this.x + this.width*(1-this.originX); },
+        "set": function(v)  { this.x = v - this.width*(1-this.originX); },
     });
  
     /**
      * @property    bottom
      * 左
      */
-    tm.app.Object2D.prototype.getter("bottom", function() {
-        return this.y + this.height*(1-this.originY);
+    tm.app.Object2D.prototype.accessor("bottom", {
+        "get": function()   { return this.y + this.height*(1-this.originY); },
+        "set": function(v)  { this.y = v - this.height*(1-this.originY); },
     });
  
     /**
      * @property    left
      * 左
      */
-    tm.app.Object2D.prototype.getter("left", function() {
-        return this.x - this.width*this.originX;
+    tm.app.Object2D.prototype.accessor("left", {
+        "get": function()   { return this.x - this.width*this.originX; },
+        "set": function(v)  { this.x = v + this.width*this.originX; },
     });
- 
+
     /**
      * @property    centerX
      * centerX
@@ -13007,6 +13103,60 @@ tm.app = tm.app || {};
     
 })();
 
+
+
+
+;(function() {
+
+
+    /**
+     * @class tm.app.Grid
+     * @extends tm.app.Object2d
+     * グリッド
+     */
+    tm.define("tm.app.Grid", {
+        superClass: "tm.app.Object2D",
+
+        cellWidth: 64,
+        cellHeight: 64,
+        maxPerLine: 8,
+        arrangement: "horizontal", // vertical
+        
+        /**
+         * @constructor
+         */
+        init: function(param) {
+            this.superInit();
+
+        },
+
+        reposition: function() {
+            var childs = this.children;
+
+            if (this.arrangement == "horizontal") {
+                childs.each(function(child, i) {
+                    var xIndex = (i%this.maxPerLine);
+                    var yIndex = (i/this.maxPerLine)|0;
+                    var x = this.cellWidth*xIndex;
+                    var y = this.cellHeight*yIndex;
+                    child.setPosition(x, y);
+                }, this);
+            }
+            else {
+                childs.each(function(child, i) {
+                    var xIndex = (i/this.maxPerLine)|0;
+                    var yIndex = (i%this.maxPerLine);
+                    var x = this.cellWidth*xIndex;
+                    var y = this.cellHeight*yIndex;
+                    child.setPosition(x, y);
+                }, this);
+            }
+        },
+    });
+
+})();
+
+
 /*
  * scene.js
  */
@@ -13024,6 +13174,8 @@ tm.app = tm.app || {};
     tm.app.Scene = tm.createClass({
         superClass: tm.app.Object2D,
 
+        app: null,
+
         /** ManagerScene 経由で生成された際に次にどのシーンに遷移するかのラベル */
         nextLabel: "",
 
@@ -13040,6 +13192,28 @@ tm.app = tm.app || {};
             
             // タッチに反応させる
             this.setInteractive(true);
+        },
+
+        exit: function(param) {
+            if (!this.app) return ;
+
+            if (typeof param !== 'object') {
+                var temp = {};
+                temp.nextLabel = arguments[0];
+                temp.nextArguments = arguments[1];
+                param = temp;
+            }
+
+            if (param.nextLabel) {
+                this.nextLabel = param.nextLabel;
+            }
+            if (param.nextArguments) {
+                this.nextArguments = param.nextArguments;
+            }
+
+            this.app.popScene();
+
+            return this;
         },
 
     });
@@ -13252,6 +13426,7 @@ tm.app = tm.app || {};
 
                 if (this.loop === true) {
                     this._index = 0;
+                    return this._updateTask(app);
                 }
                 else {
                     this.isPlaying = false;
@@ -14079,7 +14254,7 @@ tm.display = tm.display || {};
      * 高さ
      */
     tm.display.CanvasApp.prototype.accessor("background", {
-        "get": function()   { return this.canvas._background; },
+        "get": function()   { return this._background; },
         "set": function(v)  {
             this._background = v;
             this.element.style.background = v;
@@ -15087,8 +15262,8 @@ tm.display = tm.display || {};
 
 (function() {
     
-    var dummyCanvas  = null;
-    var dummyContext = null;
+    var dummyCanvas = document.createElement("canvas");
+    var dummyContext = dummyCanvas.getContext('2d');
 
     /**
      * @class tm.display.Label
@@ -15105,11 +15280,15 @@ tm.display = tm.display || {};
         stroke: false,
         /** デバッグボックス */
         debugBox: false,
+        /** キャッシュ */
+        _cache: null,
+
 
         /** @property _fontSize @private */
         /** @property _fontFamily @private */
         /** @property _fontWeight @private */
         /** @property _lineHeight @private */
+        /** @property _rowWidth @private */
         /** @property align */
         /** @property baseline */
         /** @property maxWidth */
@@ -15120,7 +15299,7 @@ tm.display = tm.display || {};
         init: function(text, size) {
             this.superInit();
             
-            this.text       = text || "";
+            this.text       = text;
             
             this._fontSize   = size || 24;
             this._fontFamily = tm.display.Label.default.fontFamily;
@@ -15179,19 +15358,85 @@ tm.display = tm.display || {};
          */
         _updateFont: function() {
             this.fontStyle = "{fontWeight} {fontSize}px {fontFamily}".format(this);
-            if (!dummyCanvas) {
-                dummyCanvas = document.createElement("canvas");
-                dummyContext = dummyCanvas.getContext('2d');
-            }
-            dummyContext.font = this.fontStyle;
-            this.textSize = dummyContext.measureText('あ').width * this.lineHeight;
+
+            this._cache = tm.display.Label._cache[this.fontStyle];
+
+            this.textSize = this.measure('あ') * this.lineHeight;
         },
 
         /**
          * @private
          */
         _updateLines: function() {
-            this._lines = (this._text+'').split('\n');
+            var lines = this._lines = (this._text + '').split('\n');
+
+            if (this._rowWidth) {
+                var rowWidth = this._rowWidth;
+                //どのへんで改行されるか目星つけとく
+                var defaultIndex = rowWidth / this.measure('あ') | 0;
+                var cache = this._cache || (this._cache = tm.display.Label._cache[this.fontStyle] = {});
+                for (var i = lines.length; i--;) {
+                    var text = lines[i], index, len, j = 0, width, char;
+                    while (true) {
+                        if (rowWidth > (cache[text] || (cache[text] = dummyContext.measureText(text).width))) break;
+
+                        index = index || defaultIndex;
+                        len = text.length;
+                        if (len <= index) index = len - 1;
+
+                        if (rowWidth < (width = cache[char = text.substring(0, index)] || (cache[char] = dummyContext.measureText(char).width))) {
+                            while (rowWidth < (width -= cache[char = text[--index]] || (cache[char] = dummyContext.measureText(char).width)));
+                        } else {
+                            while (rowWidth >= (width += cache[char = text[index++]] || (cache[char] = dummyContext.measureText(char).width)));
+                            --index;
+                        }
+
+                        //index が 0 のときは無限ループになるので、1にしとく
+                        if (index === 0) index = 1;
+                        lines.splice(i + j++, 1, text.substring(0, index), text = text.substring(index, len));
+                    }
+
+                }
+            }
+        },
+
+        /**
+         * このLabelインスタンスの設定で文字を描画したときの幅
+         * newLine true 指定で\nによる改行も考慮する
+         */
+        measure: function (text, newLine) {
+            dummyContext.font = this.fontStyle;
+            text = text == null ? '' : text + '';
+
+            if (newLine) {
+                text = text.split('\n');
+                var max = 0;
+
+                text.forEach(function (text) {
+                    var width = dummyContext.measureText(text).width;
+                    if (width > max) max = width;
+                });
+
+                return max;
+            }
+
+            return dummyContext.measureText(text).width;
+        },
+
+        /**
+         * 列の幅をセット
+         */
+        setRowWidth: function (rowWidth) {
+            this.rowWidth = rowWidth;
+            return this;
+        },
+
+        /**
+         * 文字列をセット
+         */
+        setText: function (text) {
+            this.text = text;
+            return this;
         },
         
     });
@@ -15202,13 +15447,9 @@ tm.display = tm.display || {};
      */
     tm.display.Label.prototype.accessor("text", {
         "get": function() { return this._text; },
-        "set": function(v){
-            if (v == null || v == undefined) {
-                this._text = "";
-            }
-            else {
-                this._text = v;
-            }
+        "set": function (v) {
+            if (this._text === v) return;
+            this._text = (v != null) ? v : '';
             this._updateLines();
         }
     });
@@ -15250,6 +15491,17 @@ tm.display = tm.display || {};
             this._lineHeight = v; this._updateFont();
         },
     });
+
+
+    /**
+     * @property rowWidth
+     */
+    tm.display.Label.prototype.accessor("rowWidth", {
+        "get": function () { return this._rowWidth; },
+        "set": function (v) {
+            this._rowWidth = v; this._updateLines();
+        },
+    });
     
     tm.display.Label.default = {
         align: "center",
@@ -15258,6 +15510,8 @@ tm.display = tm.display || {};
         // align: "start",
         // baseline: "alphabetic",
     };
+
+    tm.display.Label._cache = {};
 
     
 })();
@@ -15465,6 +15719,9 @@ tm.display = tm.display || {};
                 if (layer.type == "objectgroup") {
                     self._buildObject(layer);
                 }
+                else if (layer.type == "imagelayer") {
+                    self._buildImageLayer(layer);
+                }
                 else {
                     self._buildLayer(layer);
                 }
@@ -15576,8 +15833,8 @@ tm.display = tm.display || {};
             var self = this;
 
             var group = tm.display.CanvasElement().addChildTo(self);
-            group.width = layer.width;
-            group.height = layer.height;
+            group.width = self.width;
+            group.height = self.height;
 
             layer.objects.forEach(function(obj) {
                 var _class = tm.using(obj.type);
@@ -15608,6 +15865,19 @@ tm.display = tm.display || {};
             self[layer.name] = group;
 
         },
+
+        /**
+         * @private
+         */
+        _buildImageLayer: function(layer) {
+            var sprite = tm.display.Sprite(layer.image.source).setOrigin(0, 0).addChildTo(this);
+            sprite.x = layer.x;
+            sprite.y = layer.y;
+            sprite.alpha = layer.alpha;
+            sprite.visible = layer.visible;
+
+            this[layer.name] = sprite;
+        }
 
     });
 
@@ -15978,7 +16248,49 @@ tm.ui = tm.ui || {};
 tm.ui = tm.ui || {};
 
 
-(function() {
+;(function() {
+
+    tm.define("tm.ui.BaseButton", {
+        superClass: "tm.display.CanvasElement",
+
+        init: function(param) {
+            this.superInit();
+
+            param = param || {};
+            this.width = param.width || 64;
+            this.height = param.height || 64;
+
+            this.setInteractive(true);
+            this.boundingType = "rect";
+
+            this.on("pointingend", function() {
+                this.flare('push');
+            });
+        },
+    });
+
+})();
+
+
+;(function() {
+
+    tm.define("tm.ui.SpriteButton", {
+        superClass: "tm.ui.BaseButton",
+
+        init: function(image) {
+            this.superInit();
+
+            this.sprite = tm.display.Sprite(image).addChildTo(this);
+
+            this.width = this.sprite.width;
+            this.height = this.sprite.height;
+        },
+    });
+
+})();
+
+
+;(function() {
     
     /**
      * @class tm.ui.LabelButton
@@ -16043,25 +16355,14 @@ tm.ui = tm.ui || {};
         /**
          * @constructor
          */
-        init: function(texture) {
-            if (texture) {
-                this.superInit(texture, texture.width, texture.height);
-            }
-            else {
-                this.superInit();
-            }
-            
-            this.alpha = tm.ui.IconButton.DEFAULT_ALPHA;
+        init: function() {
+            this.superInit.apply(this, arguments);
             
             this.setInteractive(true);
             this.boundingType = "rect";
-            this.addEventListener("pointingover", function() {
-                this.tweener.clear();
-                this.tweener.fade(1, 250);
-            });
-            this.addEventListener("pointingout", function() {
-                this.tweener.clear();
-                this.tweener.fade(tm.ui.LabelButton.DEFAULT_ALPHA, 250);
+
+            this.on("pointingend", function() {
+                this.flare('push');
             });
         },
     });
@@ -16179,7 +16480,7 @@ tm.ui = tm.ui || {};
      * @extends tm.display.Shape
      */
     tm.define("tm.ui.FlatButton", {
-        superClass: "tm.display.RoundRectangleShape",
+        superClass: "tm.ui.BaseButton",
 
         /**
          * @constructor
@@ -16189,11 +16490,7 @@ tm.ui = tm.ui || {};
 
             this.superInit(param);
 
-            this.setInteractive(true);
-            this.setBoundingType("rect");
-            this.on("pointingend", function() {
-                this.flare('push');
-            });
+            this.shape = tm.display.RoundRectangleShape(param).addChildTo(this);
 
             this.label = tm.display.Label(param.text).addChildTo(this);
             this.label.setFontSize(param.fontSize).setFontFamily(param.fontFamily).setAlign("center").setBaseline("middle");
@@ -16276,8 +16573,8 @@ tm.ui = tm.ui || {};
             this.menu = [].concat(params.menu);
             this._selected = ~~params.defaultSelected;
             this.showExit = !!params.showExit;
-            if (params.menuDesctiptions) {
-                this.descriptions = params.menuDesctiptions;
+            if (params.menuDescriptions) {
+                this.descriptions = params.menuDescriptions;
             } else {
                 this.descriptions = [].concat(params.menu);
             }
@@ -16639,7 +16936,7 @@ tm.ui = tm.ui || {};
          * 空っぽかをチェック
          */
         isEmpty: function() {
-            return this._value == 0;
+            return this._value === 0;
         },
 
         /**
@@ -16647,8 +16944,7 @@ tm.ui = tm.ui || {};
          */
         _reset: function(direction) {
             this.originX = 0;
-            this._value = 100;
-            this._value = this._maxValue = 100;
+            this._realValue = this._value = this._maxValue = 100;
         },
 
         /**
@@ -16704,6 +17000,14 @@ tm.ui = tm.ui || {};
             return this.value;
         },
 
+
+        /**
+         * 値をゲット
+         */
+        getRealValue: function () {
+            return this._realValue;
+        },
+
         /**
          * 値を％でセット
          */
@@ -16714,24 +17018,38 @@ tm.ui = tm.ui || {};
         /**
          * 値を％でゲット
          */
-        getPercent: function() {
-            return (this._value/this._maxValue)*100;
+        getPercent: function () {
+            return (this._value / this._maxValue) * 100;
+        },
+
+        /**
+         * 値を％でゲット
+         */
+        getRealPercent: function () {
+            return (this._realValue / this._maxValue) * 100;
         },
 
         /**
          * 値を比率でセット
          */
         setRatio: function(ratio) {
-            return this.setValue(this._maxValue*percent);
+            return this.setValue(this._maxValue*ratio);
         },
 
         /**
          * 値を比率でゲット
          */
-        getRatio: function() {
-            return this._value/this._maxValue;
+        getRatio: function () {
+            return this._value / this._maxValue;
         },
-        
+
+        /**
+         * 値を比率でゲット
+         */
+        getRealRatio: function () {
+            return this._realValue / this._maxValue;
+        },
+
         isAnimation: function() {
             return this.animationFlag;
         },
@@ -16769,6 +17087,20 @@ tm.ui = tm.ui || {};
         },
     });
 
+
+    /**
+     * @property    realValue
+     * 値
+     */
+    tm.ui.Gauge.prototype.accessor("realValue", {
+        get: function () {
+            return this._realValue;
+        },
+        set: function (v) {
+            this.setValue(v);
+        },
+    });
+
     /**
      * @property    percent
      * パーセント
@@ -16779,6 +17111,19 @@ tm.ui = tm.ui || {};
         },
         set: function(v) {
             this.setPercent(v);
+        },
+    });
+
+    /**
+     * @property    percent
+     * パーセント
+     */
+    tm.ui.Gauge.prototype.accessor("realPercent", {
+        get: function () {
+            return this.getRealPercent();
+        },
+        set: function (v) {
+            this.setRealPercent(v);
         },
     });
     
@@ -16792,6 +17137,19 @@ tm.ui = tm.ui || {};
             return this.getRatio();
         },
         set: function(v) {
+            this.setRatio(v);
+        },
+    });
+
+    /**
+     * @property    ratio
+     * 比率
+     */
+    tm.ui.Gauge.prototype.accessor("realRatio", {
+        get: function () {
+            return this.getRealRatio();
+        },
+        set: function (v) {
             this.setRatio(v);
         },
     });
@@ -17058,6 +17416,119 @@ tm.ui = tm.ui || {};
     
 })();
 
+
+;(function() {
+
+    tm.game = tm.game || {};
+
+
+    tm.game.setup = function(param) {
+        param.$safe({
+            query: "#world",
+            title: "Title",
+            background: "rgba(250, 250, 250, 1.0)",
+            width: 640,
+            height: 960,
+            startLabel: 'title',
+            fitting: true,
+            fps: 30,
+            assets: window.ASSETS || null,
+        });
+
+        tm.globalize();
+
+        this.expand(param);
+
+        var scenes = [
+            {
+                className: "SplashScene",
+                arguments: {
+                    width: param.width,
+                    height: param.height,
+                },
+                label: "splash",
+                nextLabel: "title",
+            },
+            {
+                className: "TitleScene",
+                arguments: {
+                    title: param.title,
+                    width: param.width,
+                    height: param.height,
+                },
+                label: "title",
+            },
+            {
+                className: "GameScene",
+                label: "game",
+                nextLabel: "result",
+            },
+            {
+                className: "ResultScene",
+                arguments: {
+                    message: param.title,
+                    width: param.width,
+                    height: param.height,
+                },
+                label: "result",
+                nextLabel: "title",
+            },
+
+            {
+                className: "PauseScene",
+                label: "pause",
+            },
+        ];
+
+        tm.main(function() {
+            var app = tm.app.CanvasApp(param.query);    // 生成
+            app.resize(SCREEN_WIDTH, SCREEN_HEIGHT);    // サイズ(解像度)設定
+            if (param.fitting) { app.fitWindow(); }     // 自動フィッティング有効
+            app.background = param.background;          // 背景色
+            app.fps = param.fps;                        // fps
+
+            tm.game.app = app;
+
+            if (param.assets) {
+                var loading = tm.game.LoadingScene({
+                    assets: param.assets,
+                    width: SCREEN_WIDTH,
+                    height: SCREEN_HEIGHT,
+                });
+                loading.onload = function() {
+                    app.replaceScene(tm.game.ManagerScene({
+                        startLabel: param.startLabel,
+                        scenes: scenes,
+                    }));
+                };
+                app.replaceScene(loading);
+            }
+            else {
+                app.replaceScene(tm.game.ManagerScene({
+                    startLabel: param.startLabel,
+                    scenes: scenes,
+                }));
+            }
+
+            app.run();
+        });
+    };
+
+    tm.game.expand = function(param) {
+        tm.global.$extend({
+            SCREEN_WIDTH: param.width,
+            SCREEN_HEIGHT: param.height,
+            SCREEN_CENTER_X: param.width/2,
+            SCREEN_CENTER_Y: param.height/2,
+            SCREEN_GRID_X: GridSystem(param.width, 16),
+            SCREEN_GRID_Y: GridSystem(param.height, 16),
+            QUERY: tm.util.QueryString.parse(location.search.substr(1)),
+        });
+
+    };
+
+})();
+
 /*
  * TitleScene
  */
@@ -17065,13 +17536,13 @@ tm.ui = tm.ui || {};
     
 (function() {
 
-    tm.define("tm.scene.TitleScene", {
+    tm.define("tm.game.TitleScene", {
         superClass: "tm.app.Scene",
 
         init: function(param) {
             this.superInit();
 
-            param = {}.$extend(tm.scene.TitleScene.default, param);
+            param = {}.$extend(tm.game.TitleScene.default, param);
             this.param = param;
 
             this.fromJSON({
@@ -17166,7 +17637,7 @@ tm.ui = tm.ui || {};
         },
     });
 
-    tm.scene.TitleScene.default = {
+    tm.game.TitleScene.default = {
         title: "Time is money",
         message: "",
         fontSize: 72,
@@ -17188,13 +17659,13 @@ tm.ui = tm.ui || {};
     
 (function() {
 
-    tm.define("tm.scene.ResultScene", {
+    tm.define("tm.game.ResultScene", {
         superClass: "tm.app.Scene",
 
         init: function(param) {
             this.superInit();
 
-            param = {}.$extend(tm.scene.ResultScene.default, param);
+            param = {}.$extend(tm.game.ResultScene.default, param);
             this.param = param;
 
             var userData = this._getUserData();
@@ -17380,8 +17851,8 @@ tm.ui = tm.ui || {};
         },
     });
 
-    tm.scene.ResultScene.default = {
-        score: 256,
+    tm.game.ResultScene.default = {
+        score: 0,
         message: "this is tmlib.js project.",
         hashtags: "tmlibjs,game",
         related: "tmlib.js tmlife javascript",
@@ -17413,7 +17884,7 @@ tm.ui = tm.ui || {};
         bgColor: "transparent",
     };
     
-    tm.define("tm.scene.LoadingScene", {
+    tm.define("tm.game.LoadingScene", {
         superClass: "tm.app.Scene",
         
         init: function(param) {
@@ -17601,6 +18072,52 @@ tm.ui = tm.ui || {};
 
 
 
+/*
+ * splash
+ */
+
+;(function() {
+    var SPLASH_IMAGE_PATH = "https://files.gitter.im/phi-jp/tmlib.js/t5F7/splash.png";
+
+    tm.define("SplashScene", {
+        superClass: "tm.app.Scene",
+
+        init: function(param) {
+            this.superInit();
+
+            this.param = param;
+
+            this.splashImage = tm.asset.Texture(param.path || SPLASH_IMAGE_PATH);
+            this.splashImage.onload = this._init.bind(this);
+        },
+
+        _init: function() {
+            var width = this.param.width;
+            var height = this.param.height;
+            
+            tm.display.Shape({
+                width: width,
+                height: height,
+                bgColor: "white"
+            }).setOrigin(0, 0).addChildTo(this);
+
+            tm.display.Sprite(this.splashImage, width, height)
+                .setOrigin(0, 0)
+                .setAlpha(0)
+                .addChildTo(this)
+                .tweener
+                    .clear()
+                    .wait(250)
+                    .fadeIn(500)
+                    .wait(1000)
+                    .fadeOut(500)
+                    .wait(250)
+                    .call(function() {
+                        this.app.popScene();
+                    }.bind(this));
+        },
+    });
+})();
 
 
 /*
@@ -17610,11 +18127,11 @@ tm.ui = tm.ui || {};
 ;(function() {
 
     /**
-     * @class tm.scene.ManagerScene
+     * @class tm.game.ManagerScene
      * マネージャーシーン
      * @extends tm.app.Scene
      */
-    tm.define("tm.scene.ManagerScene", {
+    tm.define("tm.game.ManagerScene", {
         superClass: "tm.app.Scene",
 
         /**
@@ -17753,7 +18270,7 @@ tm.ui = tm.ui || {};
 
 ;(function() {
 
-	tm.define("tm.scene.NumericalInputScene", {
+	tm.define("tm.game.NumericalInputScene", {
 		superClass: "tm.app.Scene",
 
 		init: function(param) {
@@ -17837,6 +18354,96 @@ tm.ui = tm.ui || {};
 
 })();
 
+/*
+ * countscene.js
+ */
+
+;(function() {
+
+    tm.define("tm.game.CountScene", {
+        superClass: "tm.app.Scene",
+
+        init: function(param) {
+            this.superInit();
+
+            param = param.$safe({
+                width: 640,
+                height: 960,
+                bgColor: '#444',
+                count: 3,
+                autopop: true,
+                fontSize: 180,
+            });
+
+            param = param || {};
+
+            this.fromJSON({
+                children: {
+                    bg: {
+                        type: "tm.display.Shape",
+                        width: param.width,
+                        height: param.height,
+                        bgColor: param.bgColor,
+                        originX: 0,
+                        originY: 0,
+                    },
+                    label: {
+                        type: "tm.display.Label",
+                        fillStyle: "white",
+                        fontSize: param.fontSize,
+                        x: SCREEN_CENTER_X,
+                        y: SCREEN_CENTER_Y,
+                    },
+                }
+            });
+
+            if (param.count instanceof Array) {
+                this.countList = param.count.reverse();
+            }
+            else {
+                this.countList = Array.range(1, param.count+1);
+            }
+            this.counter = this.countList.length;
+            this.autopop = param.autopop;
+            this._updateCount();
+        },
+
+        _updateCount: function() {
+            var endFlag = this.counter <= 0;
+            var index = --this.counter;
+
+            this.label.text = this.countList[index];
+
+            this.label.scale.set(1, 1);
+            this.label.tweener
+                .clear()
+                .to({
+                    scaleX: 1,
+                    scaleY: 1,
+                    alpha: 1,
+                }, 250)
+                .wait(500)
+                .to({
+                    scaleX: 1.5,
+                    scaleY: 1.5,
+                    alpha: 0.0
+                }, 250)
+                .call(function() {
+                    if (this.counter <= 0) {
+                        this.flare('finish');
+                        if (this.autopop) {
+                            this.app.popScene();
+                        }
+                    }
+                    else {
+                        this._updateCount();
+                    }
+                }, this);
+        },
+
+    });
+
+})();
 /*
  * three.js
  */
@@ -18453,112 +19060,6 @@ tm.sound = tm.sound || {};
     
 })();
 
-
-(function(){
-    
-    //? モバイル系ブラウザ対応
-    var DEFAULT_CACHE_NUM = (tm.isMobile) ? 1 : 4;
-    
-    /**
-     * @class tm.sound.SoundManager
-     * サウンドを管理するクラス
-     */
-    tm.sound.SoundManager = {
-        sounds: {}
-    };
-    
-    /**
-     * @static
-     * @method
-     * サウンドを追加
-     */
-    tm.sound.SoundManager.add = function(name, src, cache) {
-        cache = cache || DEFAULT_CACHE_NUM;
-        
-        // 拡張子チェック
-        if (src.split('/').at(-1).indexOf('.') == -1) {
-            src += "." + tm.sound.Sound.SUPPORT_EXT;
-        }
-        
-        var cacheList = this.sounds[name] = [];
-        for (var i=0; i<cache; ++i) {
-            var sound = tm.sound.Sound(src);
-            cacheList.push( sound );
-        }
-        
-        return this;
-    };
-    
-    /**
-     * @static
-     * @method
-     * サウンドを取得
-     */
-    tm.sound.SoundManager.get = function(name) {
-        var cacheList = this.sounds[name];
-        for (var i=0,len=cacheList.length; i<len; ++i) {
-            if (cacheList[i].isPlay == false) {
-                return cacheList[i];
-            }
-        }
-        // 仕方なく0番目を返す
-        return cacheList[0];
-    };
-    
-    /**
-     * @static
-     * @method
-     * サウンドを取得(index 指定版)
-     */
-    tm.sound.SoundManager.getByIndex = function(name, index) {
-        return this.sounds[name][index];
-    };
-    
-    /**
-     * @static
-     * @method
-     * サウンドを削除
-     */
-    tm.sound.SoundManager.remove = function(name) {
-        // TODO:
-        
-        return this;
-    };
-    
-    /**
-     * @static
-     * @method
-     * ボリュームをセット
-     */
-    tm.sound.SoundManager.setVolume = function(name, volume) {
-        // TODO:
-        
-        return this;
-    };
-    
-    /**
-     * @static
-     * @method
-     * ロードチェック
-     */
-    tm.sound.SoundManager.isLoaded = function() {
-        for (var key in this.sounds) {
-            var soundList = this.sounds[key];
-            
-            for (var i=0,len=soundList.length; i<len; ++i) {
-                if (soundList[i].loaded == false) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    };
-    
-    tm.addLoadCheckList(tm.sound.SoundManager);
-    
-})();
-
-
 /*
  * webaudio.js
  */
@@ -18791,12 +19292,13 @@ tm.sound = tm.sound || {};
         _setup: function() {
             this.source     = this.context.createBufferSource();
             this.gainNode   = this.context.createGain();
-            this.panner     = this.context.createPanner();
+            // this.panner     = this.context.createPanner();
             this.analyser   = this.context.createAnalyser();
 
             this.source.connect(this.gainNode);
-            this.gainNode.connect(this.panner);
-            this.panner.connect(this.analyser);
+            // this.gainNode.connect(this.panner);
+            // this.panner.connect(this.analyser);
+            this.gainNode.connect(this.analyser);
             this.analyser.connect(this.context.destination);
 
             // TODO 暫定的対応
@@ -18907,15 +19409,17 @@ tm.sound = tm.sound || {};
     });
 
     /** @static @property */
-    tm.sound.WebAudio.isAvailable = (tm.global.webkitAudioContext || tm.global.mozAudioContext || tm.global.AudioContext) ? true : false;
+    tm.sound.WebAudio.isAvailable = (tm.global.AudioContext || tm.global.webkitAudioContext || tm.global.mozAudioContext) ? true : false;
 
     tm.sound.WebAudio.createContext = function() {
-        if (tm.global.webkitAudioContext) {
-            context = new webkitAudioContext();
-        } else if (tm.global.mozAudioContext) {
-            context = new mozAudioContext();
-        } else if (tm.global.AudioContext) {
+        if (tm.global.AudioContext) {
             context = new AudioContext();
+        }
+        else if (tm.global.webkitAudioContext) {
+            context = new webkitAudioContext();
+        }
+        else if (tm.global.mozAudioContext) {
+            context = new mozAudioContext();
         }
 
         tm.sound.WebAudio.context = context;
@@ -18937,6 +19441,188 @@ tm.sound = tm.sound || {};
 })();
 
 
+
+
+/*
+ * soundmanager.js
+ */
+
+;(function() {
+
+    /*
+     * tm.sound.SoundManager
+     * ### Ref
+     * - http://evolve.reintroducing.com/_source/classes/as3/SoundManager/SoundManager.html
+     * - https://github.com/nicklockwood/SoundManager
+     */
+    tm.sound.SoundManager = {
+        volume: 0.8,
+        musicVolume: 0.8,
+        muteFlag: false,
+        currentMusic: null,
+
+        /*
+         * 再生
+         */
+        play: function(name, volume, startTime, loop) {
+            var origin = tm.asset.Manager.get(name);
+            if (origin == null) {
+                console.warn('not found ' + name);
+                return ;
+            }
+            var sound = origin.clone();
+
+            sound.volume = this.getVolume();
+            sound.play();
+
+            return sound;
+        },
+        stop: function() {
+            // TODO: 
+        },
+        pause: function() {
+            // TODO: 
+        },
+        fade: function() {
+            // TODO: 
+        },
+        setVolume: function(volume) {
+            this.volume = volume;
+        },
+        getVolume: function() {
+            return this.isMute() ? 0 : this.volume;
+        },
+        /*
+         * ミュート(toggle)
+         */
+        mute: function() {
+            this.muteFlag = (this.muteFlag === true) ? false : true;
+
+            if (this.currentMusic) {
+                this.currentMusic.volume = this.getVolumeMusic();
+            }
+
+            return this;
+        },
+        isMute: function() {
+            return this.muteFlag;
+        },
+
+        /*
+         * 音楽を再生
+         */
+        playMusic: function(name, fadeTime, loop) {
+            if (this.currentMusic) {
+                this.stopMusic(fadeTime);
+            }
+
+            var origin = tm.asset.Manager.get(name);
+            if (origin == null) {
+                console.warn('not found ' + name);
+                return ;
+            }
+            var music = origin.clone();
+
+            music.setLoop(true);
+            music.volume = this.getVolumeMusic();
+            music.play();
+
+            if (fadeTime > 0) {
+                var count = 32;
+                var counter = 0;
+                var unitTime = fadeTime/count;
+                var volume = this.getVolumeMusic();
+
+                music.volume = 0;
+                var id = setInterval(function() {
+                    counter += 1;
+                    var rate = counter/count;
+                    music.volume = rate*volume;
+
+                    if (rate >= 1) {
+                        clearInterval(id);
+                        return false;
+                    }
+
+                    return true;
+                }, unitTime);
+            }
+            else {
+                music.volume = this.getVolumeMusic();
+            }
+
+            this.currentMusic = music;
+
+            return this.currentMusic;
+        },
+
+        /*
+         * 音楽を停止
+         */
+        stopMusic: function(fadeTime) {
+            if (!this.currentMusic) { return ; }
+
+            var music = this.currentMusic;
+
+            if (fadeTime > 0) {
+                var count = 32;
+                var counter = 0;
+                var unitTime = fadeTime/count;
+                var volume = this.getVolumeMusic();
+
+                music.volume = 0;
+                var id = setInterval(function() {
+                    counter += 1;
+                    var rate = counter/count;
+                    music.volume = volume*(1-rate);
+
+                    if (rate >= 1) {
+                        music.stop();
+                        clearInterval(id);
+                        return false;
+                    }
+
+                    return true;
+                }, unitTime);
+            }
+            else {
+                this.currentMusic.stop();
+            }
+        },
+        /*
+         * 音楽を一時停止
+         */
+        pauseMusic: function() {
+            if (!this.currentMusic) { return ; }
+            this.currentMusic.pause();
+        },
+        /*
+         * 音楽を再開
+         */
+        resumeMusic: function() {
+            if (!this.currentMusic) { return ; }
+            this.currentMusic.resume();
+        },
+        /*
+         * 音楽のボリュームを設定
+         */
+        setVolumeMusic: function(volume) {
+            this.musicVolume = volume;
+            if (this.currentMusic) {
+                this.currentMusic.volume = volume;
+            }
+
+            return this;
+        },
+        /*
+         * 音楽のボリュームを取得
+         */
+        getVolumeMusic: function(volume) {
+            return this.isMute() ? 0 : this.musicVolume;
+        },
+    };
+
+})();
 
 
 /*
@@ -19397,6 +20083,27 @@ tm.google = tm.google || {};
     }
     
     tm.asset.AssetManager = tm.asset.Manager;
-    tm.ui.LoadingScene = tm.scene.LoadingScene;
+
+    tm.util.getter('Script', function() {
+        console.warn('`tm.util.Script` は `tm.asset.Script` になりました!');
+    });
+
+    tm.ui.LoadingScene = function(param) {
+        console.warn('`tm.ui.LoadingScene` は `tm.game.LoadingScene` になりました!');
+        return tm.game.LoadingScene(param);
+    };
+
+    tm.scene = tm.scene || {};
+    tm.scene.ManagerScene = tm.game.ManagerScene;
+    tm.scene.LoadingScene = tm.game.LoadingScene;
+    tm.scene.TitleScene = tm.game.TitleScene;
+    tm.scene.ResultScene = tm.game.ResultScene;
+    tm.scene.NumericalInputScene = tm.game.NumericalInputScene;
+    
+    tm.getter('scene', function() {
+        debugger;
+        console.warn('tm.scene は tm.game に変更されました');
+        return tm.game;
+    });
 
 })();
