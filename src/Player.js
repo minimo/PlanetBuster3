@@ -416,6 +416,8 @@ tm.define("pb3.Item", {
         //当り判定設定
         this.boundingType = "rect";
 
+        this.phase = 0;
+        this.count = 0;
         this.time = 1;
     },
 
@@ -443,7 +445,29 @@ tm.define("pb3.Item", {
             this.remove();
         }
 
-        this.y++;
+        //移動パターン
+        if (this.phase == 0) {
+            this.y++;
+            if (this.y > SC_H-32) {
+                this.phase++;
+            }
+        } else if (this.phase == 1) {
+            var x = rand(SC_W*0.2, SC_W*0.8);
+            var y = rand(SC_H*0.2, SC_W*0.9);
+            this.tweener.clear()
+                .move(x, y, 3000, "easeInOutSine")
+                .call(function() {
+                    this.count++;
+                    if (this.count < 3) {
+                        this.phase = 1;
+                    } else {
+                        this.phase = 3;
+                    }
+                }.bind(this));
+            this.phase++;
+        } else if (this.phase == 3) {
+            this.y += 2;
+        }
 
         this.time++;
     },
