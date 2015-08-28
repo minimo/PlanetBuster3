@@ -58,7 +58,7 @@ tm.define("pb3.Stage1", {
 });
 
 //ステージ１地形管理
-tm.define("pb3.Stage1.Ground", {
+tm.define("pb3.Stage1Ground", {
     superClass: "pb3.Ground",
 
     init: function() {
