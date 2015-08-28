@@ -24,9 +24,7 @@ tm.define("pb3.Stage1", {
             this.ground.map.tweener.clear().to({alpha:1}, 2000, "easeInOutQuad");
         });
 
-        this.add( 180, "Fragarach-center");
-        this.add( 60, "Fragarach-right");
-        this.add( 60, "Fragarach-left");
+        this.add( 120, "ToyBox-p-right");
 
         //Stage data
         this.add( 180, "Hornet1-left");
