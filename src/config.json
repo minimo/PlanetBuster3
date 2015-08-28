@@ -16,6 +16,7 @@
     "Ground.js",
     "Interface.js",
     "Player.js",
+    "Item.js",
 
     "bullet/Bullet.js",
     "bullet/BulletPattern.js",
