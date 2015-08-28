@@ -27117,7 +27117,7 @@ tm.define("pb3.Stage1", {
 });
 
 //ステージ１地形管理
-tm.define("pb3.Stage1.Ground", {
+tm.define("pb3.Stage1Ground", {
     superClass: "pb3.Ground",
 
     init: function() {
@@ -27664,7 +27664,7 @@ tm.define("pb3.MainScene", {
         switch (this.nowStage) {
             case 1:
                 this.stage = pb3.Stage1(this, app.player);
-                this.ground = pb3.Stage1.Ground().setPosition(0, -400).addChildTo(this);
+                this.ground = pb3.Stage1Ground().setPosition(0, -400).addChildTo(this);
                 break;
             case 2:
                 this.stage = pb3.Stage1(this, app.player);
