@@ -64,7 +64,7 @@ tm.define("pb3.Bullet", {
             }
 
             //画面範囲外
-            if (this.x<-32 || this.x>GS_W+32 || this.y<-32 || this.y>GS_H+32) {
+            if (this.x<-32 || this.x>SC_W+32 || this.y<-32 || this.y>SC_H+32) {
                 this.isVanish = true;
                 this.isVanishEffect = false;
             }
@@ -129,7 +129,7 @@ tm.define("pb3.ShotBullet", {
         this.x += this.vx;
         this.y += this.vy;
 
-        if (this.x<-20 || this.x>GS_W+20 || this.y<-20 || this.y>GS_H+20) {
+        if (this.x<-20 || this.x>SC_W+20 || this.y<-20 || this.y>SC_H+20) {
             this.remove();
         }
 

@@ -18,13 +18,8 @@ MUTEKI = false;
 VIEW_COLLISION = false;
 
 //スクリーンサイズ
-SC_W = 480;
+SC_W = 320;
 SC_H = 480;
-
-//ゲームスクリーンサイズ
-GS_W = 320;
-GS_H = 480;
-GS_OFFSET = 80;
 
 //難易度
 DIFF_EASY   = 0;

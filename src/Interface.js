@@ -133,7 +133,7 @@ tm.define("pb3.BossGauge", {
         this.blendMode = "lighter";
         this.x = x || 0;
         this.y = y || 0;
-        this.width = width || GS_W-32;
+        this.width = width || SC_W-32;
         this.height = 16;
     },
 

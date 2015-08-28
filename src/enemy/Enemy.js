@@ -182,12 +182,12 @@ tm.define("pb3.Enemy", {
 
         //スクリーン内入った判定
         if (this.isOnScreen) {
-            if (this.x < -100 || this.x > GS_W+100 || this.y < -100 || this.y > GS_H+100) {
+            if (this.x < -100 || this.x > SC_W+100 || this.y < -100 || this.y > SC_H+100) {
                 this.remove();
                 this.isCollision = false;
             }
         } else {
-            if (0 < this.x && this.x < GS_W && 0 < this.y && this.y < GS_H) this.isOnScreen = true;
+            if (0 < this.x && this.x < SC_W && 0 < this.y && this.y < SC_H) this.isOnScreen = true;
         }
 
         //自機との当り判定チェック

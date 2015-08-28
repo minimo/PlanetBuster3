@@ -118,8 +118,8 @@ tm.define("pb3.Player", {
             }
 
             //移動範囲の制限
-            this.x = Math.clamp(this.x, 16, GS_W-16);
-            this.y = Math.clamp(this.y, 16, GS_H-16);
+            this.x = Math.clamp(this.x, 16, SC_W-16);
+            this.y = Math.clamp(this.y, 16, SC_H-16);
 
             //ショット
             if (this.shotON && this.time % this.shotInterval == 0) this.enterShot();
@@ -165,7 +165,7 @@ tm.define("pb3.Player", {
             this.parentScene.eraseBullet();
             this.parentScene.eraseBulletTime = 60;
         } else {
-            this.setPosition(GS_W*0.5, GS_H*3);
+            this.setPosition(SC_W*0.5, SC_H*3);
             this.control = false;
         }
     },
@@ -252,11 +252,11 @@ tm.define("pb3.Player", {
 
     //プレイヤー投入時演出
     startup: function() {
-        this.x = GS_W/2;
-        this.y = GS_H+128;
+        this.x = SC_W/2;
+        this.y = SC_H+128;
         this.tweener.clear()
             .wait(2000)
-            .to({x: GS_W/2, y: GS_H-128}, 2000, "easeOutQuint")
+            .to({x: SC_W/2, y: SC_H-128}, 2000, "easeOutQuint")
             .call(function(){
                 this.shotON = true;
                 this.control = true;
@@ -271,11 +271,11 @@ tm.define("pb3.Player", {
 
     //ステージ開始時演出
     stageStartup: function() {
-        this.x = GS_W/2;
-        this.y = GS_H+128;
+        this.x = SC_W/2;
+        this.y = SC_H+128;
         this.tweener.clear()
-            .to({x: GS_W/2, y: GS_H/2+32}, 1000, "easeOutCubic")
-            .to({x: GS_W/2, y: GS_H-64  }, 1000)
+            .to({x: SC_W/2, y: SC_H/2+32}, 1000, "easeOutCubic")
+            .to({x: SC_W/2, y: SC_H-64  }, 1000)
             .call(function(){
                 this.shotON = true;
                 this.control = true;
@@ -360,8 +360,8 @@ tm.define("pb3.PlayerPointer", {
             }
             this.x += (p.position.x - p.prevPosition.x);
             this.y += (p.position.y - p.prevPosition.y);
-            this.x = Math.clamp(this.x, 16, GS_W-16);
-            this.y = Math.clamp(this.y, 16, GS_H-16);
+            this.x = Math.clamp(this.x, 16, SC_W-16);
+            this.y = Math.clamp(this.y, 16, SC_H-16);
         } else {
             this.x = app.player.x;
             this.y = app.player.y;

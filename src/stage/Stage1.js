@@ -63,8 +63,8 @@ tm.define("pb3.Stage1Ground", {
 
     init: function() {
         this.superInit();
-        this.position.x = GS_W/2;
-        this.position.y = GS_H/2;
+        this.position.x = SC_W/2;
+        this.position.y = SC_H/2;
 
         this.map = tm.display.Sprite("map1g").addChildTo(this.mapBase);
         this.map2 = tm.display.Sprite("map1g")

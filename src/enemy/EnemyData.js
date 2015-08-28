@@ -131,10 +131,10 @@ pb3.enemyData['MudDauber'] = {
         //行動設定
         if (this.x < 0) {
             this.px = 1;
-            this.tweener.moveBy( GS_W*0.6, 0, 3000, "easeOutCubic").call(function(){this.phase++;}.bind(this));
+            this.tweener.moveBy( SC_W*0.6, 0, 3000, "easeOutCubic").call(function(){this.phase++;}.bind(this));
         } else {
             this.px = -1;
-            this.tweener.moveBy(-GS_W*0.6, 0, 3000, "easeOutCubic").call(function(){this.phase++;}.bind(this));
+            this.tweener.moveBy(-SC_W*0.6, 0, 3000, "easeOutCubic").call(function(){this.phase++;}.bind(this));
         }
     },
 
@@ -248,10 +248,10 @@ pb3.enemyData['MournBlade'] = {
         //行動設定
         if (this.x < 0) {
             this.px = 1;
-            this.tweener.moveBy( GS_W*0.6, 0, 3000, "easeOutCubic").moveBy( GS_W*1.0, 0, 5000, "easeOutCubic");
+            this.tweener.moveBy( SC_W*0.6, 0, 3000, "easeOutCubic").moveBy( SC_W*1.0, 0, 5000, "easeOutCubic");
         } else {
             this.px = -1;
-            this.tweener.moveBy(-GS_W*0.6, 0, 3000, "easeOutCubic").moveBy(-GS_W*1.0, 0, 5000, "easeOutCubic");
+            this.tweener.moveBy(-SC_W*0.6, 0, 3000, "easeOutCubic").moveBy(-SC_W*1.0, 0, 5000, "easeOutCubic");
         }
     },
 
@@ -472,7 +472,7 @@ pb3.enemyData['ToyBox'] = {
         if (enterParam == "power") this.kind = 0;
         if (enterParam == "bomb") this.kind = 1;
         if (enterParam == "1UP") this.kind = 2;
-        this.tweener.clear().moveBy(0, GS_H*0.5, 5000).wait(8000).moveBy(0, -GS_H, 10000);
+        this.tweener.clear().moveBy(0, SC_H*0.5, 5000).wait(8000).moveBy(0, -SC_H, 10000);
     },
 
     algorithm: function() {

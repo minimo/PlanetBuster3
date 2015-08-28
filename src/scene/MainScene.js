@@ -61,7 +61,7 @@ tm.define("pb3.MainScene", {
             .setPosition(SC_W*0.5, SC_H*0.5)
 
         //レイヤー作成
-        this.base = tm.app.Object2D().addChildTo(this).setPosition(GS_OFFSET, 0);
+        this.base = tm.app.Object2D().addChildTo(this).setPosition(0, 0);
         this.layers = [];
         for (var i = 0; i < LAYER_SYSTEM+1; i++) {
             this.layers[i] = tm.app.Object2D().addChildTo(this.base);
@@ -83,7 +83,7 @@ tm.define("pb3.MainScene", {
         app.score = 0;
         var sc = this.scoreLabel = tm.display.OutlineLabel("SCORE:0", 20)
             .addChildTo(this.systemBase)
-            .setPosition(GS_OFFSET, 0)
+            .setPosition(0, 0)
             .setParam({fontFamily: "Orbitron", align: "left", baseline: "top", fontWeight: 700, outlineWidth: 2});
         sc.update = function() {
             this.text = "SCORE:"+app.score;
@@ -95,7 +95,7 @@ tm.define("pb3.MainScene", {
         this.dispLife.life = 0;
         this.dispLife.inc = function() {
             this.life++;
-            this.players[this.life] = pb3.PlayerDisp().addChildTo(this).setPosition(GS_OFFSET+this.life*36-20, 40);
+            this.players[this.life] = pb3.PlayerDisp().addChildTo(this).setPosition(this.life*36-20, 40);
         }
         this.dispLife.dec = function() {
             if (this.life == 0) return;
@@ -112,11 +112,6 @@ tm.define("pb3.MainScene", {
             .addChildTo(this)
             .setPosition(SC_W*0.5, SC_H*0.5)
         this.maskTop.alpha = 0
-
-        //左右画面マスク
-        var param = {width:80, height:SC_H, fillStyle:"rgba(0,0,0,1.0)", strokeStyle:"rgba(0,0,0,1.0)"};
-        this.systemMaskL = tm.display.RectangleShape(param).addChildTo(this).setPosition(0, 0).setOrigin(0,0);
-        this.systemMaskR = tm.display.RectangleShape(param).addChildTo(this).setPosition(GS_W+80, 0).setOrigin(0,0);
 
         //ステージ制御
         this.initStage();
