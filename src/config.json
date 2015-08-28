@@ -1,0 +1,38 @@
+{
+  "files": [
+	"../libs/tmlib.js",
+	"../libs/bulletml.js",
+	"../libs/tmlib.bulletml.js",
+	"../libs/tmlib.custom.js",
+
+	"../libs/outlinelabel.js",
+	"../libs/soundset.js",
+	"../libs/touches.js",
+	"../libs/mt.js",
+
+    "main.js",
+    "PlanetBuster3.js",
+    "assets.js",
+    "Ground.js",
+    "Interface.js",
+    "Player.js",
+
+    "bullet/Bullet.js",
+    "bullet/BulletPattern.js",
+    "effect/Effect.js",
+    "effect/EffectUtility.js",
+    
+    "enemy/Enemy.js",
+    "enemy/EnemyData.js",
+    "enemy/EnemyDataBoss.js",
+    "enemy/EnemyUnit.js",
+
+    "stage/Stage1.js",
+    "stage/StageController.js",
+
+    "scene/GameoverScene.js",
+    "scene/LoadingScene.js",
+    "scene/MainScene.js",
+    "scene/TitleScene.js"
+  ]
+}
