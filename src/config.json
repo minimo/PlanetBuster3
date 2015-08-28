@@ -8,6 +8,7 @@
 	"libs/outlinelabel.js",
 	"libs/soundset.js",
 	"libs/touches.js",
+	"libs/button.js",
 	"libs/mt.js",
 
     "main.js",
