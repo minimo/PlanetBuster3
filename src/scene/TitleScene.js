@@ -23,13 +23,13 @@ tm.define("pb3.TitleScene", {
         //タイトルロゴ
         var t1 = this.title1 = tm.display.OutlineLabel("2D DANMAKU Shooting", 25)
             .addChildTo(this)
-            .setPosition(SC_W*0.5, SC_H*0.4)
+            .setPosition(SC_W*0.5, SC_H*0.3)
             .setParam({fontFamily:"'UbuntuMono'", align: "center", baseline:"middle", fontWeight:300, outlineWidth:2 });
 
         var t2 = this.title2 = tm.display.OutlineLabel("Planet Buster", 40)
             .addChildTo(this)
-            .setPosition(SC_W*0.5, SC_H*0.5)
-            .setParam({fontFamily:"'Orbitron'", align: "center", baseline:"middle", fontWeight:800, outlineWidth:2 });
+            .setPosition(SC_W*0.5, SC_H*0.4)
+            .setParam({fontFamily:"'Orbitron'", align: "center", baseline:"middle", fontWeight:500, outlineWidth:2 });
         t2.fillStyle = tm.graphics.LinearGradient(-SC_W*0.5, 0, SC_W*0.5, 64)
             .addColorStopList([
                 { offset: 0.1, color: "hsla(230, 90%, 50%, 0.5)"},
@@ -41,7 +41,7 @@ tm.define("pb3.TitleScene", {
 
         var t3 = this.title3 = tm.display.OutlineLabel("tmlib label", 25)
             .addChildTo(this)
-            .setPosition(SC_W*0.5, SC_H*0.6)
+            .setPosition(SC_W*0.5, SC_H*0.5)
             .setParam({fontFamily:"'UbuntuMono'", align: "center", baseline:"middle", fontWeight:300, outlineWidth:2 });
 
         var ct = this.clickortouch = tm.display.OutlineLabel("Press[Z]key or touch", 20)
