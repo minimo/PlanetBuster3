@@ -33,7 +33,8 @@ tm.define("pb3.Player", {
 
     timeMuteki: 0, //無敵フレーム残り時間
 
-    speed: 10,      //移動係数
+    speed: 4,       //移動係数
+    touchSpeed: 4,  //タッチ操作時移動係数
     type: 0,        //自機タイプ(0:赤 1:緑 2:青)
     power: 0,       //パワーアップ段階
     powerMax: 5,    //パワーアップ最大
@@ -90,8 +91,8 @@ tm.define("pb3.Player", {
             var p = app.pointing;
             if (p.getPointing()) {
                 var pt = this.parentScene.pointer;
-                this.x += (pt.x - this.x)/this.speed;
-                this.y += (pt.y - this.y)/this.speed;
+                this.x += (pt.x - this.x)/this.touchSpeed;
+                this.y += (pt.y - this.y)/this.touchSpeed;
 
                 this.mouseON = true;
                 this.shotON = true;
@@ -105,8 +106,8 @@ tm.define("pb3.Player", {
             var angle = kb.getKeyAngle();
             if (angle !== null) {
                 var m = KEYBOARD_MOVE[angle];
-                this.x += m.x*this.speed*0.4;
-                this.y += m.y*this.speed*0.4;
+                this.x += m.x*this.speed;
+                this.y += m.y*this.speed;
             }
             if (!this.mouseON) this.shotON = app.keyboard.getKey("Z");
 
